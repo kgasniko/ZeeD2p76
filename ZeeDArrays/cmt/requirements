@@ -1,0 +1,15 @@
+package ZeeDArrays
+
+author S. Glazov, A. Nikifov, R. Placakyte
+
+include_path none
+
+use  AtlasPolicy                AtlasPolicy-*
+use  AtlasROOT                  AtlasROOT-*                     External
+
+library ZeeDArrays -no_static *.cxx
+
+apply_tag ROOTBasicLibs
+apply_tag ROOTGraphicsLibs
+
+apply_pattern installed_library

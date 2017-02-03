@@ -1,0 +1,31 @@
+package ZeeDAnalysisSvc
+
+author S. Glazov, A. Nikifov, R. Placakyte
+
+include_path none 
+
+use  AtlasPolicy                AtlasPolicy-*
+
+private
+use  AtlasROOT                  AtlasROOT-*                     External
+
+public
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD 
+use  ZeeDMisc                   ZeeDMisc-*                      ZeeD
+
+public
+use  GaudiInterface             GaudiInterface-*                External
+use  AthenaBaseComps            AthenaBaseComps-*               Control
+use  egammaInterfaces           egammaInterfaces-*              Reconstruction/egamma
+
+use  JetSelectorTools           JetSelectorTools-*              PhysicsAnalysis/JetMissingEtID
+use  EventShapeInterface        EventShapeInterface-*           Reconstruction/EventShapes
+
+library ZeeDAnalysisSvc -no_static *.cxx -s=components *.cxx
+
+apply_tag ROOTBasicLibs
+apply_tag ROOTMathLibs
+
+apply_pattern component_library
+apply_pattern declare_python_modules files="*.py"
+

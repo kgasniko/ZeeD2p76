@@ -1,0 +1,23 @@
+package ZeeDExamples
+
+author S. Glazov, A. Nikiforov, R. Placakyte
+
+include_path none
+
+#---------------------------------------------------------------------
+# Setup the runtime environment for minimal Athena-based applications
+use  MinimalRunTime             MinimalRunTime-*                Control
+
+use  AtlasROOT                  AtlasROOT-*                     External
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD
+use  ZeeDCalculator             ZeeDCalculator-*                ZeeD
+use  ZeeDHist                   ZeeDHist-*                      ZeeD
+use  ZeeDInlineZ                ZeeDInlineZ-*
+use  egammaEvent                egammaEvent-*                   Reconstruction/egamma
+
+apply_tag ROOTBasicLibs
+apply_tag ROOTGraphicsLibs
+
+library ZeeDExamples -no_static *.cxx components/*.cxx
+apply_pattern component_library
+apply_pattern declare_joboptions files="ZeeDArraysExample_jobOptions.py"

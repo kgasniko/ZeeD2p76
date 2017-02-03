@@ -1,0 +1,40 @@
+package ZeeDROOTInterface
+
+author George Sedov
+
+public
+use AtlasPolicy	      AtlasPolicy-*
+
+use AtlasROOT           *                External
+use SGTools           SGTools-*          Control
+
+private
+use  AtlasBoost	      AtlasBoost-*	 External
+use  ZeeDEvent        ZeeDEvent-*        ZeeD
+use  ZeeDMisc         ZeeDMisc-*         ZeeD
+
+public
+
+library ZeeDROOTInterface *.cxx
+apply_pattern installed_library
+
+
+# Some black magick to use ROOT's reflex system
+
+#apply_tag ROOTBasicLibs
+#apply_tag ROOTRFIOLibs
+#apply_tag ROOTMathLibs
+#private
+
+private
+use AtlasReflex  AtlasReflex-*  External -no_auto_imports
+
+apply_pattern lcgdict dict=ZeeDROOTInterface \
+ selectionfile=selection.xml \
+ headerfiles="../ZeeDROOTInterface/ZeeDROOTInterfaceDict.h"
+
+macro_append ZeeDCalculator_cppflags " -DUSE_REL17"
+
+private
+macro cppdebugflags '$(cppdebugflags_s)'
+macro_remove componentshr_linkopts "-Wl,-s"

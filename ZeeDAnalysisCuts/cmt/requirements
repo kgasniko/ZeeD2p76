@@ -1,0 +1,32 @@
+package ZeeDAnalysisCuts
+
+author S. Glazov, A. Nikifov, R. Placakyte
+
+include_path none
+
+use  AtlasPolicy                AtlasPolicy-*
+
+private
+
+use  GaudiInterface             GaudiInterface-*                External
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD
+
+public
+use  egammaAnalysisUtils	egammaAnalysisUtils-*		Reconstruction/egamma/egammaAnalysis
+use  ZeeDMisc            	ZeeDMisc-*               	ZeeD
+use  ZeeDAnalysisSvc            ZeeDAnalysisSvc-*               ZeeD
+use  ZeeDTools           	ZeeDTools-*               	ZeeD
+use  ZeeDEvent            	ZeeDEvent-*               	ZeeD
+use  AtlasROOT                  AtlasROOT-*                     External
+use  ZeeDCuts                   ZeeDCuts-*                      ZeeD
+
+library ZeeDAnalysisCuts -no_static *.cxx
+apply_tag ROOTBasicLibs
+apply_tag ROOTMathLibs
+
+apply_pattern installed_library
+
+# uncomment the following three lines to have debug symbols
+private
+macro cppdebugflags '$(cppdebugflags_s)'
+macro_remove componentshr_linkopts "-Wl,-s"

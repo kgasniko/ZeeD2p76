@@ -1,0 +1,145 @@
+# CMT requirement file
+package ZeeDCalculator
+
+author S. Glazov, A. Nikiforov, R. Placakyte
+
+include_path none
+
+use  ZeeDExternal               ZeeDExternal-*                  ZeeD
+use  AtlasPolicy                AtlasPolicy-*
+use  GeneratorObjects           GeneratorObjects-*              Generators
+
+public
+use  JetEvent                   JetEvent-*                      Reconstruction/Jet
+use  TrigObjectMatching         TrigObjectMatching-*            Trigger/TrigAnalysis
+use  CaloEvent                  CaloEvent-*                     Calorimeter
+use  CaloUtils                  CaloUtils-*                     Calorimeter
+use  EventInfo                  EventInfo-*                     Event
+use  JetUtils                   JetUtils-*                      Reconstruction/Jet
+use  JetTagInfo                 JetTagInfo-*                    PhysicsAnalysis/JetTagging 
+use  MissingET                  MissingET-*                     Reconstruction
+use  MissingETUtility           MissingETUtility-*              Reconstruction
+use  MissingETEvent             MissingETEvent-*                Reconstruction
+use  METTrackUtil 				METTrackUtil-* 					Reconstruction/MET
+use  METSystematics             METSystematics-*                Reconstruction/MET
+use  ParticleTruth              ParticleTruth-*                 Reconstruction
+use  JetTagInfo                 JetTagInfo-*                    PhysicsAnalysis/JetTagging
+use  ApplyJetCalibration        ApplyJetCalibration-*           Reconstruction/Jet  
+use  JetResolution              JetResolution-*                 Reconstruction/Jet  
+use  ApplyJetResolutionSmearing ApplyJetResolutionSmearing-*    Reconstruction/Jet/JetAnalysisTools
+use  JetUncertainties           JetUncertainties-*              Reconstruction/Jet
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD
+use  MCTruthClassifier          MCTruthClassifier-*             PhysicsAnalysis
+use  VxVertex                   VxVertex-*                      Tracking/TrkEvent
+use  TrkEventPrimitives         TrkEventPrimitives-*            Tracking/TrkEvent
+use  egammaEvent                egammaEvent-*                   Reconstruction/egamma
+use  McParticleEvent            McParticleEvent-*               PhysicsAnalysis/TruthParticleID
+use  Particle                   Particle-*                      Reconstruction
+use  ZeeDTools            	ZeeDTools-*               	ZeeD
+use  JetSelectorTools		JetSelectorTools-*		PhysicsAnalysis/JetMissingEtID		
+use  muonEvent			muonEvent-*			Reconstruction/MuonIdentification
+use  MuonIDAnalysis             MuonIDAnalysis-*  	        PhysicsAnalysis/MuonID
+use  MuonRecHelperTools         MuonRecHelperTools-*		MuonSpectrometer/MuonReconstruction/MuonRecTools
+use  MuonCalibITools            MuonCalibITools-*       	MuonSpectrometer/MuonCalib
+use  MuonCombinedToolInterfaces MuonCombinedToolInterfaces-* 	Reconstruction/MuonIdentification
+use  ITrackToVertex             ITrackToVertex-*        	Reconstruction/RecoTools
+use  MuonUtils                  MuonUtils-*             	PhysicsAnalysis/MuonID
+use  tauEvent                   tauEvent-*                      Reconstruction
+use  TauDiscriminant            TauDiscriminant-*               PhysicsAnalysis/TauID
+use  MuonEfficiencyCorrections  MuonEfficiencyCorrections-*     PhysicsAnalysis/MuonID/MuonIDAnalysis
+use  MuonMomentumCorrections    MuonMomentumCorrections-*		PhysicsAnalysis/MuonID/MuonIDAnalysis
+use  TileTripReader             TileTripReader-*                PhysicsAnalysis/TileID
+use  BCHCleaningTool            BCHCleaningTool-*               Reconstruction/Jet/JetAnalysisTools
+
+public
+use  StoreGate                  StoreGate-*                     Control
+use  ZeeDInlineZ                ZeeDInlineZ-*                   ZeeD
+use  ZeeDMisc            	ZeeDMisc-*               	ZeeD
+use  egammaAnalysisUtils	egammaAnalysisUtils-*		Reconstruction/egamma/egammaAnalysis
+use  egammaInterfaces           egammaInterfaces-*              Reconstruction/egamma
+use  TruthUtils                 TruthUtils-*                    Generators/GenAnalysisTools
+use  ZeeDROOTInterface          ZeeDROOTInterface-*             ZeeD
+use  ZeeDTools                  ZeeDTools-*                     ZeeD
+use  ZeeDEvent                  ZeeDEvent-*                     ZeeD
+use  GaudiInterface             GaudiInterface-*                External
+use  AtlasROOT                  AtlasROOT-*                     External
+use  ZeeDAnalysisSvc            ZeeDAnalysisSvc-*               ZeeD
+use  GoodRunsLists              GoodRunsLists-*                 DataQuality
+use  PileupReweighting          PileupReweighting-*             PhysicsAnalysis/AnalysisCommon
+use  ElectronEfficiencyCorrection  ElectronEfficiencyCorrection-*  PhysicsAnalysis/ElectronPhotonID
+use  egammaInterfaces           egammaInterfaces-*      Reconstruction/egamma
+
+use  ElectronPhotonFourMomentumCorrection ElectronPhotonFourMomentumCorrection-* PhysicsAnalysis/ElectronPhotonID
+# FIXME: hack
+use  TrigDecisionTool           TrigDecisionTool-*              Trigger/TrigAnalysis
+
+use  AtlasBoost                 AtlasBoost-*                    External
+
+macro_remove cpp_linkopts ' $(ppcmd)"/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/x86_64-slc5-gcc43-opt/lib -llhapdf -llhapdf_dummy"
+macro_append cpp_linkopts ' $(ppcmd)" -lLHAPDF"
+macro_append componentshr_linkopts " -L/nfs/dust/atlas/user/kgasniko/lhapdf/lib -lLHAPDF "
+
+include_dirs "/nfs/dust/atlas/user/kgasniko/lhapdf/include"
+
+
+macro_append ZeeDCalculator_use_linkopts " -L/nfs/dust/atlas/user/kgasniko/lhapdf/lib -lLHAPDF "
+
+macro_append ZeeDCalculator_linkopts ' $(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/lib/libLHAPDF.a "
+#macro_remove LHAPDFROOT  '/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/AtlasEvent/17.2.7/External/Lhapdf'
+#macro_remove Lhapdf_root  '/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/AtlasEvent/17.2.7/External/Lhapdf'
+#macro_remove Lhapdf_lib '$(Lhapdf_home)/$(lhapdf_native_version)/$(Lhapdf_system)/lib'
+#macro_append LHAPDFROOT '/nfs/dust/atlas/user/kgasniko/lhapdf/'
+#macro_append Lhadpf_root '/nfs/dust/atlas/user/kgasniko/lhapdf/'
+#macro_append Lhapdf_lib '/nfs/dust/atlas/user/kgasniko/lhapdf/lib'
+#macro_remove Lhapdf_linkopts ' -llhapdf -llhapdf_dummy '
+macro_append Lhadpf_linkopts ' -lLHADPF'
+
+
+#macro_remove ZeeDCalculator_linkopts "-L/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/x86_64-slc5-gcc43-opt/lib -llhapdf -llhapdf_dummy"
+#macro_remove ZeeDCalculator_shlibflags "-L/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/x86_64-slc5-gcc43-opt/lib"
+macro_append ZeeDCalculator_linkopts " -lLHAPDF"
+#macro_remove ZeeDCalculator_shlibflags "-llhapdf_dummy"
+
+
+
+private
+
+apply_tag  ROOTBasicLibs
+apply_tag  ROOTMathLibs
+
+macro_append cpp_linkopts ' $(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/lib/libLHAPDF.a "
+macro_append includes '$(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/include"
+
+
+
+public
+library ZeeDCalculator -no_static *.cxx
+apply_pattern installed_library
+
+#macro_append ZeeDCalculator_cppflags " -DUSE_DEBUG_MESSAGES"
+
+macro_append ZeeDCalculator_cppflags " -DUSE_ATHENA_TTREE_READING"
+macro_append ZeeDCalculator_cppflags " -DUSE_REL17"
+
+macro_append ZeeDCalculator_cppflags " -DZEED_RECALIBRATEJETS"   #should be commented when running on AOD files!
+
+# FIXME: try to avoid a declaration about files in external package 
+apply_pattern declare_runtime files="-s=../../../PhysicsAnalysis/ElectronPhotonID/ElectronEfficiencyCorrection/data *.root"
+macro_remove use_pp_cppflags '$(Lhapdf_pp_cppflags)'
+macro_remove ZeeDCalculator_use_linkopts '$(Lhapdf_linkopts)'
+macro_remove use_linkopts '$(Lhapdf_linkopts)'
+macro_remove use_requirements '$(Lhapdf_root)/cmt/requirements'
+macro_remove use_includes '$(ppcmd)"/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/x86_64-slc5-gcc43-opt/include" $(ppcmd)"/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/AtlasEvent/17.2.7/InstallArea/include/Lhapdf"'
+macro_remove use_stamps '$(Lhapdf_stamps)'
+macro_remove use_cflags '$(Lhapdf_cflags)'
+macro_remove use_pp_cflags '$(Lhapdf_pp_cflags)'
+macro_remove use_cppflags '$(Lhapdf_cppflags)'
+macro_remove use_fflags '$(Lhapdf_fflags)'
+macro_remove use_pp_fflags '$(Lhapdf_pp_fflags)'
+macro_remove use_libraries '$(Lhapdf_libraries)'
+macro_remove Lhapdf_export_paths '$(Lhapdf_home)/$(lhapdf_native_version)/$(Lhapdf_system)'
+
+# uncomment the following three lines to have debug symbols
+private
+macro cppdebugflags '$(cppdebugflags_s)'
+macro_remove componentshr_linkopts "-Wl,-s"

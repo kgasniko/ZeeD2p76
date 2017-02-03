@@ -1,0 +1,17 @@
+To ignore files/folders do the following
+
+1. goto a directory where you want to ignore the files
+
+2. create list of the files to be ignored
+for example, use
+svn status | grep "^\?" | awk "{print \$2}" > ignoring.txt
+
+3. say to SVN that you want to ignore the files from the list
+svn propset svn:ignore -F ignoring.txt .
+
+be aware of the fact, that this action re-writes (_not_ add!) the previous
+ignore setup, so put _all_ the files to be ignored to the ignore list
+
+4. commit the action
+svn ci -m "change ignore list" .
+

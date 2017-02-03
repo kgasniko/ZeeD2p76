@@ -1,0 +1,78 @@
+package ZeeDAnalysis
+
+author S. Glazov, A. Nikiforov, R. Placakyte
+
+include_path none
+
+use  AtlasPolicy                AtlasPolicy-*
+
+use MinimalRunTime MinimalRunTime-* Control
+
+private
+use  ZeeDHistManager            ZeeDHistManager-*               ZeeD
+use  ZeeDAnalysisSvc            ZeeDAnalysisSvc-*               ZeeD
+use  ZeeDTools            	ZeeDTools-*               	ZeeD
+use  ZeeDHist                   ZeeDHist-*                      ZeeD
+
+public
+use  AthenaBaseComps            AthenaBaseComps-*               Control
+use  AtlasROOT                  AtlasROOT-*                     External
+use  GaudiInterface             GaudiInterface-*                External
+use  ZeeDMisc                  	ZeeDMisc-*                   	ZeeD
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD
+use  ZeeDTools                  ZeeDTools-*                   	ZeeD
+use  ZeeDEvent                  ZeeDEvent-*                   	ZeeD
+use  ZeeDCuts                   ZeeDCuts-*                      ZeeD
+use  ZeeDCalculator             ZeeDCalculator-*                ZeeD
+use  ZeeDAnalysisCuts           ZeeDAnalysisCuts-*              ZeeD
+
+library ZeeDAnalysis -no_static *.cxx components/*.cxx
+
+apply_tag ROOTBasicLibs
+apply_tag ROOTMathLibs
+apply_tag ROOTRooFitLibs
+
+apply_pattern component_library
+apply_pattern declare_joboptions files="ZeeDAnalysis_*.py ZeeDPlotter_*.py *.C *.sh"
+apply_pattern declare_scripts files="-s=../share ZeeDAnalysis.py"
+apply_pattern declare_python_modules files="-s=../python *.py"
+
+apply_pattern declare_runtime files="Binning Corrections OQMaps Sys_Source Calib PDF Vtx BosonPt Inline RandomRunNumber Pileup RunLumi GRL"
+
+macro_remove LHAPDFROOT  '/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/AtlasEvent/17.2.7/External/Lhapdf'
+macro_remove Lhapdf_root ' /cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/AtlasEvent/17.2.7/External/Lhapdf'
+macro_remove Lhapdf_lib '$(Lhapdf_home)/$(lhapdf_native_version)/$(Lhapdf_system)/lib'
+macro_append LHAPDFROOT '/nfs/dust/atlas/user/kgasniko/lhapdf/'
+macro_append Lhadpf_root ' /nfs/dust/atlas/user/kgasniko/lhapdf'
+macro_remove use_includes '$(ppcmd)"/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/x86_64-slc5-gcc43-opt/include" $(ppcmd)"/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/AtlasEvent/17.2.7/InstallArea/include/Lhapdf"'
+#macro_append Lhapdf_lib '/nfs/dust/atlas/user/kgasniko/lhapdf/lib'
+#macro_remove Lhapdf_linkopts ' -llhapdf -llhapdf_dummy '
+#macro_append Lhadpf_linkopts ' -lLHADPF'
+
+
+# no pileup
+#apply_pattern declare_runtime files="Binning Corrections OQMaps Sys_Source Calib PDF Vtx BosonPt Inline RandomRunNumber RunLumi"
+
+#macro_append cppflags " -DDEBUG_ON"
+#macro_append cppflags " -g"
+# uncomment the following three lines to have debug symbols
+private
+#macro cppdebugflags '$(cppdebugflags_s)'
+#macro_append cppflags " -o2 "
+macro_remove ZeeDAnalysis_use_linkopts '$(Lhapdf_linkopts)'
+macro_remove use_libraries '$(Lhapdf_libraries)'
+macro_remove use_pp_fflags '$(Lhapdf_pp_fflags)'
+macro_remove use_fflags '$(Lhapdf_fflags)'
+macro_remove use_cppflags '$(Lhapdf_cppflags)'
+macro_remove use_pp_cflags '$(Lhapdf_pp_cflags)'
+macro_remove use_cflags '$(Lhapdf_cflags)'
+macro_remove use_stamps '$(Lhapdf_stamps)'
+macro_remove use_requirements '$(Lhapdf_root)/cmt/requirements'
+macro_remove use_linkopts  '$(Lhapdf_linkopts)'
+macro_remove use_pp_cppflags '$(Lhapdf_pp_cppflags)'
+
+
+#macro_remove componentshr_linkopts "-Wl,-s"
+#macro_append cppflags " -O2 -ftree-vectorize -march=native -ftree-vectorizer-verbose=7 -ffast-math "
+#macro_append fflags " -O2 -ftree-vectorize -march=native -ftree-vectorizer-verbose=7 -ffast-math "
+#macro_append cflags " -O2 -ftree-vectorize -march=native -ftree-vectorizer-verbose=7 -ffast-math " 

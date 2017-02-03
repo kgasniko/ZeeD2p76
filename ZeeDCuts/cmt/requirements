@@ -1,0 +1,27 @@
+package ZeeDCuts
+
+author S. Glazov, A. Nikiforov, R. Placakyte
+
+include_path none
+
+use  AtlasPolicy                AtlasPolicy-*
+
+private
+use  AtlasBoost			AtlasBoost-*			External	
+use  GaudiInterface             GaudiInterface-*                External
+use  ZeeDAnalysisSvc            ZeeDAnalysisSvc-*               ZeeD
+use  ZeeDTools			ZeeDTools-*               	ZeeD
+use  ZeeDMisc           	ZeeDMisc-*                     	ZeeD
+
+public
+use  AtlasROOT                  AtlasROOT-*                     External
+use  ZeeDEvent                  ZeeDEvent-*                     ZeeD
+use  ZeeDHist                   ZeeDHist-*                      ZeeD
+use  ZeeDTools                  ZeeDTools-*                     ZeeD
+
+library ZeeDCuts -no_static *.cxx
+
+apply_tag ROOTBasicLibs
+apply_tag ROOTMathLibs
+
+apply_pattern installed_library

@@ -1,0 +1,15 @@
+package ZeeDLHAPDF
+#macro_append ZeeDlhapdf_linkopts " -L/nfs/dust/atlas/user/kgasniko/lhapdf/lib -lLHAPDF"
+include_dirs "/nfs/dust/atlas/user/kgasniko/lhapdf/include"
+#include_dirs "/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/boost/boost-1.55.0-python2.6-x86_64-slc5-gcc43/boost-1.55.0-python2.6-x86_64-slc5-gcc43/include"
+#include_dirs "/usr/include/boost"
+
+
+public
+macro_append ZeeDlhapdf_linkopts " -L/nfs/dust/atlas/user/kgasniko/lhapdf/lib -lLHAPDF"
+#macro_append ZeeDlhapdf_linkopts " -L/cvmfs/atlas.cern.ch/repo/ATLASLocalRootBase/x86_64/boost/boost-1.55.0-python2.6-x86_64-slc5-gcc43/boost-1.55.0-python2.6-x86_64-slc5-gcc43/lib -lboost_date_time-mt -lboost_date_time -lboost_filesystem-mt -lboost_filesystem -lboost_gr    aph-mt -lboost_graph -lboost_iostreams-mt -lboost_iostreams -lboost_math_c99-mt -lboost_math_c99 -lboost_math_c99f-mt -lboost_math_c99f -lb    oost_math_c99l-mt -lboost_math_c99l -lboost_math_tr1-mt -lboost_math_tr1 -lboost_math_tr1f-mt -lboost_math_tr1f -lboost_math_tr1l-mt -lboos    t_math_tr1l -lboost_prg_exec_monitor-mt -lboost_prg_exec_monitor -lboost_program_options-mt -lboost_program_options -lboost_python-mt -lboo    st_python -lboost_regex-mt -lboost_regex -lboost_serialization-mt -lboost_serialization -lboost_signals-mt -lboost_signals -lboost_system-m    t -lboost_system -lboost_thread-mt -lboost_unit_test_framework-mt -lboost_unit_test_framework -lboost_wave-mt -lboost_wserialization-mt -lb    oost_wserialization"
+#macro_append ZeeDlhapdf_linkopts " -L/usr/lib64 -lboost_date_time-mt -lboost_date_time -lboost_filesystem-mt -lboost_filesystem -lboost_graph-mt -lboost_graph -lboost_iostreams-mt -lboost_iostreams -lboost_math_c99-mt -lboost_math_c99 -lboost_math_c99f-mt -lboost_math_c99f -lboost_math_c99l-mt -lboost_math_c99l -lboost_math_tr1-mt -lboost_math_tr1 -lboost_math_tr1f-mt -lboost_math_tr1f -lboost_math_tr1l-mt -lboost_math_tr1l -lboost_prg_exec_monitor-mt -lboost_prg_exec_monitor -lboost_program_options-mt -lboost_program_options -lboost_python-mt -lboost_python -lboost_regex-mt -lboost_regex -lboost_serialization-mt -lboost_serialization -lboost_signals-mt -lboost_signals -lboost_system-mt -lboost_system -lboost_thread-mt -lboost_unit_test_framework-mt -lboost_unit_test_framework -lboost_wave-mt -lboost_wserialization-mt -lboost_wserialization "
+#macro ZeeDlhapdf_bin "$/nfs/dust/atlas/user/kgasniko/lhapdf/bin"
+#macro_append ZeeDlhapdf_linkopts ' $(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/lib/liblhapdf.a"
+#macro_append cpp_linkopts ' $(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/lib/liblhapdf.a"
+#macro_append includes '$(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/include"

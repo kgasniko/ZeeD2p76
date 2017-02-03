@@ -1,0 +1,32 @@
+package ZeeDInlineZ
+author M.
+
+include_path none
+
+public
+use  AtlasPolicy                AtlasPolicy-*
+
+use  AtlasROOT                  AtlasROOT-*                     External
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD
+use  Photos                     Photos-*                        External
+use  AtlasFortranPolicy         AtlasFortranPolicy-*
+use  ZeeDTools ZeeDTools-*      ZeeD
+
+
+private
+use  ZeeDAnalysisSvc            ZeeDAnalysisSvc-*               ZeeD
+use  GaudiInterface             GaudiInterface-*                External
+use  ZeeDTools                  ZeeDTools-*                     ZeeD
+use  ZeeDMisc ZeeDMisc-*      ZeeD
+
+public
+library ZeeDInlineZ -no_static *.cxx *.f
+
+apply_tag  ROOTBasicLibs
+apply_tag  ROOTMathLibs
+
+apply_pattern installed_library
+
+private
+macro Photos_libraries "$(PHOTOS_LIB_DIR)/libphotos.$(shlibsuffix)"
+end_private

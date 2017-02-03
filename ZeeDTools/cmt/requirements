@@ -1,0 +1,37 @@
+package ZeeDTools
+
+author Sasha Glazov <glazov@mail.desy.de>
+
+include_path none
+
+use  AtlasPolicy                AtlasPolicy-*
+
+use  AtlasROOT                  AtlasROOT-*                     External
+use  GaudiInterface             GaudiInterface-*                External
+
+private
+use  egammaEvent                egammaEvent-*                   Reconstruction/egamma
+use  egammaAnalysisUtils        egammaAnalysisUtils-*           Reconstruction/egamma/egammaAnalysis
+use  TrigDecisionTool           TrigDecisionTool-*              Trigger/TrigAnalysis
+use  TrigObjectMatching         TrigObjectMatching-*            Trigger/TrigAnalysis
+use  ZeeDAnalysisSvc            ZeeDAnalysisSvc-*               ZeeD
+use  StoreGate                  StoreGate-*                     Control
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD
+use  AtlasCLHEP                 AtlasCLHEP-*                    External
+use  MCTruthClassifier          MCTruthClassifier-*             PhysicsAnalysis
+
+use  GaudiSvc  v* -no_auto_imports
+
+public
+use  ZeeDMisc            	ZeeDMisc-*               	ZeeD
+
+library ZeeDTools -no_static *.cxx
+
+apply_tag ROOTBasicLibs
+apply_tag ROOTMathLibs
+
+apply_pattern installed_library
+
+#private
+#macro cppdebugflags '$(cppdebugflags_s)'
+#macro_remove componentshr_linkopts "-Wl,-s"

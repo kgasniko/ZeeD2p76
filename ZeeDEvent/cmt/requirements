@@ -1,0 +1,35 @@
+package ZeeDEvent
+
+include_path none
+
+use  AtlasPolicy                AtlasPolicy-*
+use  AtlasROOT                  AtlasROOT-*                     External
+use  ZeeDTools                  ZeeDTools-*                     ZeeD
+
+private
+use  ZeeDAnalysisSvc            ZeeDAnalysisSvc-*               ZeeD
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD 
+
+public
+use  ZeeDMisc                   ZeeDMisc-*                      ZeeD
+
+
+library ZeeDEvent -no_static *.cxx
+#library ZeeDEvent *.cxx
+
+apply_tag ROOTBasicLibs
+apply_tag ROOTMathLibs
+
+apply_pattern installed_library
+
+#private
+#macro cppdebugflags '$(cppdebugflags_s)'
+#macro_remove componentshr_linkopts "-Wl,-s"
+
+#apply_tag ROOTBasicLibs
+#apply_tag ROOTRFIOLibs
+#apply_tag ROOTMathLibs
+#
+#private
+#
+#apply_pattern have_root_headers root_headers="ZeeDBoson.h ZeeDBosonZ.h" headers_lib=ZeeDEvent

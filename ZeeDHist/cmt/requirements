@@ -1,0 +1,33 @@
+package ZeeDHist
+
+author S. Glazov, A. Nikiforov, R. Placakyte
+
+include_path none
+
+use  AtlasPolicy                AtlasPolicy-*
+use  AtlasROOT                  AtlasROOT-*                     External
+use  ZeeDTools                  ZeeDTools-*                     ZeeD
+
+private
+use  GaudiInterface             GaudiInterface-*                External
+
+public
+use  ZeeDAnalysisSvc            ZeeDAnalysisSvc-*               ZeeD
+use  ZeeDArrays                 ZeeDArrays-*                    ZeeD
+use  ZeeDMisc                   ZeeDMisc-*                      ZeeD
+use  ZeeDEvent                  ZeeDEvent-*                     ZeeD
+use  AtlasBoost			AtlasBoost-*			External	
+use  egammaAnalysisUtils	egammaAnalysisUtils-*		Reconstruction/egamma/egammaAnalysis
+
+
+library ZeeDHist -no_static *.cxx
+
+apply_tag ROOTBasicLibs
+apply_tag ROOTMathLibs
+
+apply_pattern installed_library
+
+# uncomment the following three lines to have debug symbols
+#private
+#macro cppdebugflags '$(cppdebugflags_s)'
+#macro_remove componentshr_linkopts "-Wl,-s"

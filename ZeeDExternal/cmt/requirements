@@ -1,0 +1,50 @@
+package ZeeDExternal
+
+author George Sedov
+
+include_path none
+
+#---------------------------------------------------------------------
+# This line is necessary to ensure that the Atlas policies and patterns
+# are enforced and available.
+public 
+use  AtlasPolicy               	AtlasPolicy-*
+#use  AtlasROOT      		*				External
+
+public
+
+#use  ZeeDLHAPDF                 ZeeDLHAPDF-*  ZeeD
+#use  Lhapdf                     Lhapdf-*                        External
+#use  LHAPDF			LHAPDF-*                        	
+
+#public
+#use  egammaAnalysisUtils	egammaAnalysisUtils-*		Reconstruction/egamma/egammaAnalysis
+#use  egammaEvent                egammaEvent-*			Reconstruction/egamma
+
+macro_remove cpp_linkopts ' $(ppcmd)"/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/x86_64-slc5-gcc43-opt/lib -llhapdf -llhapdf_dummy"
+macro_append cpp_linkopts ' $(ppcmd)" -lLHAPDF"
+macro_append componentshr_linkopts " -L/nfs/dust/atlas/user/kgasniko/lhapdf/lib -lLHAPDF "
+
+include_dirs "/nfs/dust/atlas/user/kgasniko/lhapdf/include"
+
+
+macro_append ZeeDExternal_use_linkopts " -L/nfs/dust/atlas/user/kgasniko/lhapdf/lib -lLHAPDF "
+
+macro_append ZeeDExternal_linkopts ' $(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/lib/libLHAPDF.a "
+
+library ZeeDExternal -no_static *.cxx
+apply_pattern installed_library
+
+macro_remove ZeeDExternal_linkopts "-L/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/x86_64-slc5-gcc43-opt/lib -llhapdf -llhapdf_dummy"
+macro_remove ZeeDExternal_shlibflags "-L/cvmfs/atlas.cern.ch/repo/sw/software/x86_64-slc5-gcc43-opt/17.2.7/sw/lcg/external/MCGenerators_hepmc2.06.05/lhapdf/5.8.5/x86_64-slc5-gcc43-opt/lib"
+macro_append ZeeDExternal_linkopts " -lLHAPDF"
+macro_remove ZeeDExternal_shlibflags "-llhapdf_dummy"
+
+private
+macro_append cpp_linkopts ' $(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/lib/libLHAPDF.a "
+macro_append includes '$(ppcmd)"/nfs/dust/atlas/user/kgasniko/lhapdf/include"
+
+# uncomment the following three lines to have debug symbols
+#private
+#macro cppdebugflags '$(cppdebugflags_s)'
+#macro_remove componentshr_linkopts "-Wl,-s"
