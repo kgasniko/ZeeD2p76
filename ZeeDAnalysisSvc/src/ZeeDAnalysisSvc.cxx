@@ -71,6 +71,7 @@ ZeeDAnalysisSvc::ZeeDAnalysisSvc(const std::string& name, ISvcLocator* sl)
 
     declareProperty("ReadEtMiss"                    , bReadEtMiss                   = false        , "");
     declareProperty("RecalcEtMiss"                  , bRecalcEtMiss                 = false        , "");
+    declareProperty("HadrRecoilFull"                , bHadrRecoilFull               = false        , "");
     declareProperty("DeleteSoftTerm"                , bDeleteSoftTerm               = false        , "");
     declareProperty("CalcW"                         , bCalcW                        = false        , "");
     declareProperty("CalcWmu"                       , bCalcWmu                      = false        , "");
@@ -657,6 +658,7 @@ const std::string ZeeDAnalysisSvc::print() const
     s << " \n \n Flags for tupes of Analysis \n	";
     s << " Read EtMiss "                              << ReadEtMiss()                             << std::endl;
     s << " Delete Soft Term "                         << DeleteSoftTerm()                         << std::endl;
+    s << " Calculate hadron recoil using all of the leptons in EtMiss" << HadrRecoilFull()        << std::endl;
     s << " W "                                        << CalcW()                                  << std::endl;
     s << " Wmu "                                      << CalcWmu()                                << std::endl;
     s << " Zmumu "                                    << CalcZmumu()                              << std::endl;

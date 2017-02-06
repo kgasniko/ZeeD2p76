@@ -142,6 +142,10 @@ public:
         return bRecalcEtMiss;
     }
 
+    bool HadrRecoilFull()                              const {
+        return bHadrRecoilFull;
+    }
+
     bool DeleteSoftTerm()                              const {
         return bDeleteSoftTerm;
     }
@@ -1025,6 +1029,7 @@ private:
 
     bool bReadEtMiss;
     bool bRecalcEtMiss;
+    bool bHadrRecoilFull;
     bool bDeleteSoftTerm;
     bool bCalcW;
     bool bCalcWmu;

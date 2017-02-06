@@ -662,7 +662,7 @@ void ZeeDCalcEtMiss::Calculate(ZeeDEvent* event)
               etMiss -> SetMET_SoftTermETSUM(fMETUtility->getMissingET(METUtil::SoftTerms).et()/GeV);  
               etMiss -> SetMET_JetET(fMETUtility->getMissingET(METUtil::RefJet).et()/GeV);  
               */
-    } else {
+    } else if ((*fAnaOptions)->HadrRecoilFull()) {
 
         Int_t nObjMET(etMiss->GetMETCompositionElectron_index().size());
 
@@ -734,8 +734,9 @@ void ZeeDCalcEtMiss::Calculate(ZeeDEvent* event)
 
         //Calculating corrections for hadrRecoil
 
+    } else { //leaving in Hadron Recoil just part with lepton in W
+        
     }
-
     //------------------------------------------------------
 
     //etMissArray->AddLast( etMissRec );

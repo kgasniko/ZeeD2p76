@@ -1,4 +1,4 @@
-#include "ZeeDHistManager/ZeeDControlHistManagerW.h"
+#include "ZeeDHistManager/ZeeDHistManagerCut.h"
 
 // Root includes
 #include <TLorentzVector.h>
@@ -16,20 +16,20 @@
 #include "ZeeDMisc/ZeeDMisc.h"
 
 //------------------------------------------------------
-ZeeDControlHistManagerW::ZeeDControlHistManagerW(TString name) : ZeeDHistManager(name)
+ZeeDHistManagerCut::ZeeDHistManagerCut(TString name) : ZeeDHistManager(name)
 {
     // Named constructor
 }
 
 //------------------------------------------------------
-ZeeDControlHistManagerW::~ZeeDControlHistManagerW()
+ZeeDHistManagerCut::~ZeeDHistManagerCut()
 {
     // Destructor
 
 }
 
 //------------------------------------------------------
-void ZeeDControlHistManagerW::BookHistos()
+void ZeeDHistManagerCut::BookHistos()
 {
     // Books histogram
     AddTH1D("nevents",   2,   0,   2, "number of events");
@@ -37,7 +37,7 @@ void ZeeDControlHistManagerW::BookHistos()
 }
 
 //------------------------------------------------------
-void ZeeDControlHistManagerW::Fill()
+void ZeeDHistManagerCut::Fill()
 {
     // Fills histos
     DEBUG_MES_START;

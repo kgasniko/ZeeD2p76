@@ -13,6 +13,7 @@
 #include "ZeeDHistManager/ZeeDHistManagerEtmiss.h"
 #include "ZeeDHistManager/ZeeDHistManagerEvent.h"
 #include "ZeeDHistManager/ZeeDHistManagerGenInfo.h"
+#include "ZeeDHistManager/ZeeDHistManagerCut.h"
 
 // Histogram managers
 #include "ZeeDHistManager/ZeeDControlHistManagerW.h"
@@ -33,21 +34,29 @@ ZeeDAnalysisCutHistManagerW::~ZeeDAnalysisCutHistManagerW()
 
 void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
 {
+    //Selection cuts
+    //basic event selection 
+    TString selectionEvent = "PriVtxZ+LAr+NTracksAtPrimVtx+LepTrig";
+    //electron selection
+    TString selectionElectron = "ElecClustEtaMaxW+EtaCrackElecW+ElecClustEtMinW+ElMediumPP+EtCone20+OQMaps";
+    //boson selection
+    TString selectionBoson = "EtMissMinW+MassTransvW";
 
-    TString selection = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinWOld+ElecClustEtMinW+MassTransvW+LepTrig+ElMediumPP+LAr+EtCone20";
-    TString selectionEtMissOld = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+MassTransvW+LepTrig+ElMediumPP+LAr+EtCone20";
-    TString pos       = selection+"+WPlus";
-    TString neg       = selection+"+WMinus";
+    //full selection (also for W+-)
+    TString selection = selectionEvent + "+" +selectionElectron+"+"+ selectionBoson;
+    TString selectionPlus = selection + "+WPlus";
+    TString selectionMinus= selection + "+WMinus";
 
-
-
-    //selection based on generator level cuts
+    //fiducial phase-space
     TString genSel        = "GenEta+GenPt+GenMt+GenEt";
 
     //end of booking selection
+
+    //retrieving analysis options
     ServiceHandle<IZeeDAnalysisSvc>* ZeeDAnaOptions = fSvcHelper.GetAnaSvc();
 
-
+    //Booking different weighs
+    //default do weight
     ZeeDDoWeight doWeight;
     doWeight.TrigSFSingle = kTRUE;
     doWeight.IDSFBothMediumPP = kTRUE;	
@@ -63,39 +72,50 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
 
     this->SetDefaultDoWeight(doWeight);
 
+    //do weight for QCD
     ZeeDDoWeight doWeightQCD;
     doWeightQCD.RecSF = kTRUE;
     doWeightQCD.TrigSFSingle = kTRUE;
     doWeightQCD.IDSFBothMediumPP = kFALSE;
     doWeightQCD.HadrRecoil = kTRUE;
 
+    //no additional weights
     ZeeDDoWeight doWeightNone;
-    //doWeightNone.RecSF = kFALSE;
-    //doWeightNone.IDSFBothMediumPP = kFALSE;
 
+    //adding calculator for weights
     ZeeDCalcWeightCutDepW* cw = new ZeeDCalcWeightCutDepW();
     this->AddCalcWeighter(cw);
+
+
 
     // Create/book control plots:
     ZeeDControlHistManagerW* analysisPlots = new ZeeDControlHistManagerW(this->getName() + "/" + "Boson");
     this->AddMaskLoose( selection, analysisPlots, doWeight );
 
     ZeeDControlHistManagerW* wpos = new ZeeDControlHistManagerW(this->getName()+"/"+"Plus");
-    this->AddMaskLoose(pos, wpos, doWeight);
+    this->AddMaskLoose(selectionPlus, wpos, doWeight);
 
     ZeeDControlHistManagerW* wneg = new ZeeDControlHistManagerW(this->getName()+"/"+"Minus");
-    this->AddMaskLoose(neg, wneg, doWeight);
-
-    ZeeDControlHistManagerW* wSim = new ZeeDControlHistManagerW(this->getName()+"/"+"BosonSim");
-    this->AddMaskLoose(selection+"+EtaSim", wSim, doWeight);
+    this->AddMaskLoose(selectionMinus, wneg, doWeight);
 
 
-    ZeeDControlHistManagerW* wposSim = new ZeeDControlHistManagerW(this->getName()+"/"+"PlusSim");
-    this->AddMaskLoose(pos+"+EtaSim", wposSim, doWeight);
 
-  ZeeDControlHistManagerW* wnegSim = new ZeeDControlHistManagerW(this->getName()+"/"+"MinusSim");
-    this->AddMaskLoose(neg+"+EtaSim", wnegSim, doWeight);
+
     if ((*ZeeDAnaOptions)->FillBkgHistograms()) {
+        //filling histograms for cutflow
+        ZeeDHistManagerCut* eventCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Event");
+        ZeeDHistManagerCut* leptonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Lepton");
+        ZeeDHistManagerCut* bosonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
+        this->AddMaskLoose(selectionEvent, eventCut, doWeightNone);
+        this->AddMaskLoose(selectionEvent+"+"+selectionElectron, leptonCut, doWeightNone);
+        this->AddMaskLoose(selection, bosonCut, doWeightNone);
+        ZeeDHistManagerCut* bosonCutPlus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
+        ZeeDHistManagerCut* bosonCutMinus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
+        this->AddMaskLoose(selectionPlus, bosonCutPlus, doWeightNone);
+        this->AddMaskLoose(selectionMinus, bosonCutMinus, doWeightNone);
+
+
+
 
         //QCD EtMiss fit
         // selection 
@@ -103,20 +123,17 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         TString QCDEtselPos = QCDEtsel+"+WPlus";
         TString QCDEtselNeg = QCDEtsel+"+WMinus";
 
-        /*    ZeeDHistManagerQCDBkgW* QCDEtselPlot2 = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/etMiss/QCDFit/"+"Boson2");
-              this->AddMaskLoose(QCDEtsel, QCDEtselPlot2, doWeight2);
-              */
-
         ZeeDHistManagerQCDBkgW* QCDEtselPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/etMiss/QCDFit/"+"Boson");
         this->AddMaskLoose(QCDEtsel, QCDEtselPlot);
         ZeeDHistManagerQCDBkgW* QCDEtselPosPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/etMiss/QCDFit/"+"Plus");
         this->AddMaskLoose(QCDEtselPos, QCDEtselPosPlot);
         ZeeDHistManagerQCDBkgW* QCDEtselNegPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/etMiss/QCDFit/"+"Minus");
         this->AddMaskLoose(QCDEtselNeg, QCDEtselNegPlot);
+
         /*
         //QCD Pt fit
-        //TString QCDFitPt = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinWOld+ElecClustEtMinW+LepTrig+ElMediumPP+LAr+EtCone20";
-        TString QCDFitPt  = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinWOld+ElecClustEtMinW+LepTrig+ElMediumPP+LAr+EtCone20";
+        //TString QCDFitPt = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+LepTrig+ElMediumPP+LAr+EtCone20";
+        TString QCDFitPt  = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+LepTrig+ElMediumPP+LAr+EtCone20";
 
         ZeeDHistManagerQCDBkgW* QCDPtPlot = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/mtW/QCDFit/"+"Boson");
         this->AddMaskLoose(QCDFitPt, QCDPtPlot);
@@ -141,8 +158,9 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         this->AddMaskLoose(QCDNeg, QCDNegPlot);
 
 
-    }	
-    if (fSys->isShiftInUse(ZeeDSystematics::eNoShift)) {
+    }
+
+    if ((*ZeeDAnaOptions)->FillBkgHistograms() && fSys->isShiftInUse(ZeeDSystematics::eNoShift)) {
 
         ZeeDHistManagerElectron* electronPlots = new ZeeDHistManagerElectron(this->getName()+"/"+"Electron");
         this->AddMaskLoose(selection, electronPlots);
@@ -158,8 +176,8 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         ZeeDHistManagerEtmiss* etMissPlotsM = new ZeeDHistManagerEtmiss(this->getName() + "/" + "EtMissMinus");
         this->AddMaskLoose( selection+"+WMinus", etMissPlotsM);
 
-        ZeeDHistManagerEtmiss* etMissPlotsOld = new ZeeDHistManagerEtmiss(this->getName() + "/" + "EtMissOld");
-        this->AddMaskLoose( selectionEtMissOld, etMissPlotsOld);
+        //ZeeDHistManagerEtmiss* etMissPlotsOld = new ZeeDHistManagerEtmiss(this->getName() + "/" + "EtMissOld");
+        //this->AddMaskLoose( selectionEtMissOld, etMissPlotsOld);
 
 
 
@@ -169,7 +187,7 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         //QCD Hist Managers 
         if ((*ZeeDAnaOptions)->FillBkgHistograms()) {
             //Check of Fit
-            TString QCDCheckFit = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinWOld+ElecClustEtMinW+MassTransvW+LepTrig+LAr+EtCone20";
+            TString QCDCheckFit = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+MassTransvW+LepTrig+LAr+EtCone20";
             ZeeDHistManagerQCDBkgW* QCDPlotsCh1 = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/etMiss/QCDVar/"+"Plus/Tight");
             this->AddMaskLoose(QCDCheckFit+"+nElTightPP+WPlus", QCDPlotsCh1, doWeight);
 
@@ -190,10 +208,10 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
 
 
             //QCD Pt 
-            //TString QCDSelectionPt = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinWOld+ElecClustEtMinW+LepTrig+nElMediumPP+LAr+EtCone20+ElLoosePP";
-            TString QCDSelectionPt =  "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinWOld+ElecClustEtMinW+LepTrig+nElMediumPP+LAr+EtCone20+ElLoosePP";
+            //TString QCDSelectionPt = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+LepTrig+nElMediumPP+LAr+EtCone20+ElLoosePP";
+            TString QCDSelectionPt =  "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+LepTrig+nElMediumPP+LAr+EtCone20+ElLoosePP";
 
-            TString QCDPtVar = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinWOld+ElecClustEtMinW+LepTrig+LAr+ElLoosePP+EtCone20";
+            TString QCDPtVar = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+LepTrig+LAr+ElLoosePP+EtCone20";
 
 
             //QCD Pt template
@@ -228,6 +246,16 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         //end of QCD plots    
     }
     if ((*ZeeDAnaOptions)->IsMC()){
+        
+        //booking histograms for systematics checks
+        ZeeDControlHistManagerW* wSim = new ZeeDControlHistManagerW(this->getName()+"/"+"BosonSim");
+        this->AddMaskLoose(selection+"+EtaSim", wSim, doWeight);
+
+        ZeeDControlHistManagerW* wposSim = new ZeeDControlHistManagerW(this->getName()+"/"+"PlusSim");
+        this->AddMaskLoose(selectionPlus+"+EtaSim", wposSim, doWeight);
+
+        ZeeDControlHistManagerW* wnegSim = new ZeeDControlHistManagerW(this->getName()+"/"+"MinusSim");
+        this->AddMaskLoose(selectionMinus+"+EtaSim", wnegSim, doWeight);
 
         ZeeDHistManagerGenInfo * gen = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfo");
         this->AddMaskLoose(genSel, gen, doWeightNone);

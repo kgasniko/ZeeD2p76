@@ -84,6 +84,7 @@ public:
 
     virtual bool ReadEtMiss()                 const = 0;
     virtual bool RecalcEtMiss()               const = 0;
+    virtual bool HadrRecoilFull()             const = 0;
     virtual bool DeleteSoftTerm()             const = 0;
 
     virtual bool CalcW()                      const = 0;

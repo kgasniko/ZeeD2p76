@@ -128,14 +128,34 @@ ZeeDBosonW* ZeeDCalcW::CreateW (const ZeeDLepton* elec){
         Error("ZeeDCalcW::ReadEtMiss", "Et miss objects are not filled");
         gSystem->Exit(EXIT_FAILURE);
     }
-
-    ZeeDEtMiss* fEtMiss= (ZeeDEtMiss*) etMissArray->At(0);
-    W->SetEtMissPtr(fEtMiss);  
-
     // Make transverse electron  4-vector
     TLorentzVector p_el = elec4Vec;
     p_el.SetE( elec4Vec.Et() );
     p_el.SetPz(0.);
+
+
+    ZeeDEtMiss* fEtMiss= (ZeeDEtMiss*) etMissArray->At(0);
+    if (!(*fAnaOptions)->RecalcEtMiss() && !(*fAnaOptions)->HadrRecoilFull()){
+
+        TLorentzVector newLv;
+
+        newLv.SetPxPyPzE(fEtMiss->GetCorRecoilEtX(), fEtMiss->GetCorRecoilEtY(), 0, fEtMiss->GetCorRecoilEt());
+        double corEtX=fEtMiss->GetCorRecoilEtX();
+        double corEtY=fEtMiss->GetCorRecoilEtY();
+        cout << "EtMiss = " << TMath::Sqrt(corEtX*corEtX+corEtY*corEtY) << newLv.Et()<< endl;
+
+        newLv+=p_el;
+
+        double Et2 =newLv.Px()*newLv.Px()+newLv.Py()*newLv.Py();
+        Et2=TMath::Sqrt(Et2);
+        newLv.SetPxPyPzE(-newLv.Px(),-newLv.Py(), 0, Et2);
+        fEtMiss->SetEt(Et2);
+        fEtMiss->SetEtX(newLv.Px());
+        fEtMiss->SetEtY(newLv.Py());
+        fEtMiss->SetPhi(newLv.Phi());
+    }
+
+    W->SetEtMissPtr(fEtMiss);  
 
 
     // Make transverse neutrino 4-vector
@@ -147,29 +167,30 @@ ZeeDBosonW* ZeeDCalcW::CreateW (const ZeeDLepton* elec){
     Double_t neutrinoPhi = p_nu.Phi();
 
     TLorentzVector p_W = p_nu + p_el;
+
     double bias=0;
     if ((*fAnaOptions)->IsMC() && (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEt))){
         const ZeeDGenParticle* Boson = fEventInProcess->GetGenBoson(ZeeDEnum::MCFSRLevel::Born);
         double ptTruth = Boson->GetMCFourVector().Pt();
-      
+
         //Calculate HadronRecoilCorrections
         int binYn = pCor->GetYaxis()->FindBin(p_W.Pt());
         int binXn = pCor->GetXaxis()->FindBin(fEtMiss->GetCorRecoilSumet());
         int totBin = pCor->GetBin(binXn, binYn);
         double sf = pCor->GetBinContent(totBin);
         double sfErr = pCor->GetBinError(totBin);
-/*
-        if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtUp))     {
-            sf += sfErr;
-        } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtDown)) {
-            sf -= sfErr;
-        } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtOff)){
-            sf=1;
-        } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtToyMC)){
-            sf = fSys->getToySystematics(sf, sfErr);
-        }
-*/      
-//        std::cout << sf << std::endl;
+        /*
+           if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtUp))     {
+           sf += sfErr;
+           } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtDown)) {
+           sf -= sfErr;
+           } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtOff)){
+           sf=1;
+           } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtToyMC)){
+           sf = fSys->getToySystematics(sf, sfErr);
+           }
+           */      
+        //        std::cout << sf << std::endl;
         W->SetWeight(sf);
 
 

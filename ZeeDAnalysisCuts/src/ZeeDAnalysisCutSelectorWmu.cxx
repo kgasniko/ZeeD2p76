@@ -97,8 +97,8 @@ void ZeeDAnalysisCutSelectorWmu::BookCuts()
     this->AddCut(new ZeeDCutCrackLepTrackEtaW("etaCrack", etaCrackMin, etaCrackMax));
     
    // Cut on minimal EtMiss in event
-    this->AddCut(new ZeeDCutEventMinMissEt ("WmuEtMiss", etMissCut));
-	this->AddCut(new ZeeDCutCorRecoilEtMissW ("WmuEtMissOld", etMissCut));
+    //this->AddCut(new ZeeDCutEventMinMissEt ("WmuEtMiss", etMissCut));
+	this->AddCut(new ZeeDCutCorRecoilEtMissW ("WmuEtMiss", etMissCut));
     this->AddCut(new ZeeDCutGenWPlus("WGenPlus", true));
     this->AddCut(new ZeeDCutGenWPlus("WGenMinus", false));
 

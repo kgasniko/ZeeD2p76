@@ -575,14 +575,15 @@ void ZeeDPlotter::RunCutFlow()
     }
 
     ofstream cutFlow;
-
+/*
     if (bCutFlowReco){
             cutFlow.open("CutFlow/CutFlow_"+m_nameBos+"_RECO__.tex");}
     else{
             cutFlow.open("CutFlow/CutFlow_"+m_nameBos+"_GEN__.tex");}
-    
+  */  
     //-------------------------------
-    m_filenames=["out.root", "out_"+m_nameBos+".root"]
+    /*
+    m_filenames=["out.root", "out_"+m_nameBos+".root"];
     
     TString sCut = "";
     cutFlow << "\\begin{tabular}{|c|c c c|c c c|}" << endl;
@@ -644,7 +645,7 @@ void ZeeDPlotter::RunCutFlow()
         cutFlow << " \\\\" << endl;
     }
     cutFlow << "\hline " << endl << " \\end{tabular} " << endl;
-
+*/
 }
 
 void ZeeDPlotter::GetASyst()

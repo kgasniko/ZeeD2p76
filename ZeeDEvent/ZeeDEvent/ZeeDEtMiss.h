@@ -245,7 +245,8 @@ private:
     vectorF fMETCompositionMuon_wpy;
     vectorI fMETCompositionMuon_statusWord;
     vectorI fMETCompositionMuon_index;
-
+    
+    friend class ZeeDCalcW;
 	friend class ZeeDCalcEtMiss;
     friend class ZeeDReadEtMissAOD;
     friend class ZeeDROOTEtMiss;

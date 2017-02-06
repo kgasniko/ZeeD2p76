@@ -60,10 +60,13 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
 	this->AddCut(new ZeeDCutEtCone20overEtCorW("EtCone20", 0.1));
     this->AddCut(new ZeeDCutLepTrackEtaWSim("EtaSim"));
 
-    //this->AddCut(new ZeeDCutTriggersW("TriggersW"));
+    //trigger cuts 
+    this->AddCut(new ZeeDCutTrigger ("qcdTrig", ZeeDEnum::Trigger::EF_e7_loose1));
    	this->AddCut(new ZeeDCutTrigLepW("LepTrig", ZeeDEnum::Trigger::EF_e15_loose1)); 
+    
     // Minium missing et requirement
-    this->AddCut(new ZeeDCutEventMinMissEt("EtMissMinW", etMissCut));
+    //this->AddCut(new ZeeDCutEventMinMissEt("EtMissMinW", etMissCut));
+    this->AddCut(new ZeeDCutCorRecoilEtMissW ("EtMissMinW", etMissCut));
 
     // Cut away transition EMEC-EMB
     this->AddCut(new ZeeDCutEtaCrackElecW("EtaCrackElecW", etaCrackMin, etaCrackMax));
@@ -98,9 +101,6 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
     // Electron in the good region of the calorimeter
     this->AddCut(new ZeeDCutOQMapsW("OQMaps"));
     
-    // Cuts on trigger for QCD bkg analysis 
-    this->AddCut(new ZeeDCutTrigger ("qcdTrig", ZeeDEnum::Trigger::EF_e7_loose1));
-//    this->AddCut(new ZeeDCutTrigger ("Wtrig", ZeeDEnum::Trigger::EF_e24vhi_medium1));    
 
     // Cuts for generator level information
     if (ZeeDAnaOptions->IsMC() && ZeeDAnaOptions->FillGenInfo()) {

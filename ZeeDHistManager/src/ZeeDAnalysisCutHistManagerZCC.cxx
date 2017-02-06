@@ -30,7 +30,7 @@
 #include "ZeeDHistManager/ZeeDHistManagerZplusJet.h"
 #include "ZeeDHistManager/ZeeDHistManagerZplusJetUnfolding.h"
 #include "ZeeDHistManager/ZeeDHistManagerJetCharge.h"
-
+#include "ZeeDHistManager/ZeeDHistManagerCut.h"
 #include "ZeeDHistManager/ZeeDHistManagerValidation.h"
 
 #include "ZeeDHist/ZeeDObservable.h"
