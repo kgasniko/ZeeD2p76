@@ -658,7 +658,8 @@ void ZeeDLauncher::DoAnalysis(ZeeDEvent* event, ZeeDSystematics::ZeeDSingleSyste
 
     // Loop over all reconstructed and selected Z boson candidates
     unsigned int nIdentifications = cutCache->fnIdentifications;
-
+    //std::cout << nIdentifications << std::endl;
+    //std::cout << event->GetCurrentBosonW() == NULL << std::endl;
     if (nIdentifications == 0) {
       // It could be, that there are no reconstructed bosons in the event.
       // For such cases all the HM still should be called in order to
@@ -673,7 +674,8 @@ void ZeeDLauncher::DoAnalysis(ZeeDEvent* event, ZeeDSystematics::ZeeDSingleSyste
       }
     } else {
       // Normal case: run the HM's on the reconstructed bosons
-      for(UInt_t idnumber = 0; idnumber != cutCache->fnIdentifications; ++idnumber) {
+        //std::cout << "HERE!" << std::endl;
+        for(UInt_t idnumber = 0; idnumber != cutCache->fnIdentifications; ++idnumber) {
 		cutCache->fIdentifier->SetEventIdentification(event, idnumber);
 		cutHistManager->UseEvent(event, cutCache->fCutMasks.at(idnumber));
       }

@@ -45,14 +45,16 @@ public:
 
     virtual TObjArray SelectBosons(ZeeDEvent* event) = 0;
 
+    unsigned int all_bits_1_lookup(unsigned int ncuts);
+
+    virtual TObjArray	SelectAllGoodBosons(ZeeDEvent* event, const TObjArray* Bosons);
+
 protected :
     std::vector<CutWeight*> CutWeights;
 
     const ZeeDBosonZ* SelectBestBoson(ZeeDEvent* Event, const TObjArray* Bosons);
     ZeeDJet*    SelectBestJet(ZeeDEvent* event, TObjArray* Jets);
-    virtual TObjArray	SelectAllGoodBosons(ZeeDEvent* event, const TObjArray* Bosons);
 
-inline unsigned int all_bits_1_lookup(unsigned int ncuts);
 
 };
 

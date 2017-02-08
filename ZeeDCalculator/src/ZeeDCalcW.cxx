@@ -142,7 +142,7 @@ ZeeDBosonW* ZeeDCalcW::CreateW (const ZeeDLepton* elec){
         newLv.SetPxPyPzE(fEtMiss->GetCorRecoilEtX(), fEtMiss->GetCorRecoilEtY(), 0, fEtMiss->GetCorRecoilEt());
         double corEtX=fEtMiss->GetCorRecoilEtX();
         double corEtY=fEtMiss->GetCorRecoilEtY();
-        cout << "EtMiss = " << TMath::Sqrt(corEtX*corEtX+corEtY*corEtY) << newLv.Et()<< endl;
+        //cout << "EtMiss = " << TMath::Sqrt(corEtX*corEtX+corEtY*corEtY) << newLv.Et()<< endl;
 
         newLv+=p_el;
 

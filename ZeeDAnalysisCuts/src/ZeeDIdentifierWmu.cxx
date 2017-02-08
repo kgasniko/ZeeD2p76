@@ -22,6 +22,7 @@ void ZeeDIdentifierWmu::IdentifyRecBosons(ZeeDEvent* event)
     //TObjArray selectedBosons = *event->GetWmuBosons();
     //TODO make a flag for 3 different options: all of good bosons, best boson and all bosons in event
     //std::cout << "N Wmu = " << selectedBosons.GetEntriesFast() << std::endl; 
+    event->SetNGoodWmu(selectedBosons.GetEntriesFast());
     for(Int_t sb = 0; sb != selectedBosons.GetEntriesFast(); ++sb) {
         const ZeeDBosonW* selectedBoson = static_cast<const ZeeDBosonW*>(selectedBosons[sb]);
         fBosonsAndWeights.push_back(std::make_pair((const ZeeDBoson*) selectedBoson, 0));

@@ -53,7 +53,7 @@ Bool_t ZeeDCutMuonHasIDTrack::evaluate(const ZeeDEvent* event){
     }
     const ZeeDMuon* mu = (ZeeDMuon*)w->GetLep();
     if (!mu->Properties().IsSet())
-       return kFALSE;
+        return kFALSE;
     const ZeeDMuonBags::Properties prop = mu->Properties().Get();
     return prop.fisCombinedMuon || prop.fisStandAloneMuon || prop.fisSegmentTaggedMuon;
 }
@@ -86,6 +86,7 @@ Bool_t ZeeDCutLepTrackEtaW::evaluate(const ZeeDEvent* event){
     if (w == NULL) {
         return kFALSE;
     }
+
     const ZeeDLepton* mu = w->GetLep();
     if (mu->GetFourVector().Pt() == 0)
         return kFALSE;
@@ -341,6 +342,9 @@ Bool_t ZeeDCutEtaCrackElecW::evaluate(const ZeeDEvent* event)
     if( electron->Cluster().IsSet() == kFALSE ) {
         return kFALSE;
     }
+    if (electron->Cluster().Get().fourVector.Pt()==0) {
+        return kFALSE;
+    }
 
     const Double_t eta = TMath::Abs( electron->Cluster().Get().fourVector.Eta() );
 
@@ -373,6 +377,10 @@ Bool_t ZeeDCutElecClustEtaMaxW::evaluate(const ZeeDEvent* event)
     }
 
     if( electron->Cluster().IsSet() ) {
+    
+        if (electron->Cluster().Get().fourVector.Pt()==0) {
+            return kFALSE;
+        }
 
         const Double_t eta = TMath::Abs( electron->Cluster().Get().fourVector.Eta() );
 

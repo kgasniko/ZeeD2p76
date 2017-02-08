@@ -82,6 +82,10 @@ Bool_t ZeeDCutEtaMaxBothElecZ::evaluate(const ZeeDEvent* event)
             e2->Cluster().IsSet() == kFALSE ) {
         return kFALSE;
     }
+    if (e1->Cluster().Get().fourVector.Pt()==0 ||
+            e2->Cluster().Get().fourVector.Pt()==0) {
+        return kFALSE;
+    }
 
     const Double_t eta1 = TMath::Abs(e1->Cluster().Get().fourVector.Eta());
     const Double_t eta2 = TMath::Abs(e2->Cluster().Get().fourVector.Eta());
@@ -109,6 +113,10 @@ Bool_t ZeeDCutEtaCFBothElecZ::evaluate(const ZeeDEvent* event)
     // Return "fail" if no cluster:
     if ( e1->Cluster().IsSet() == kFALSE ||
             e2->Cluster().IsSet() == kFALSE ) {
+        return kFALSE;
+    }
+    if (e1->Cluster().Get().fourVector.Pt()==0 ||
+            e2->Cluster().Get().fourVector.Pt()==0) {
         return kFALSE;
     }
 
@@ -140,6 +148,10 @@ Bool_t ZeeDCutEtaFFBothElecZ::evaluate(const ZeeDEvent* event)
     // Return "fail" if no cluster:
     if ( e1->Cluster().IsSet() == kFALSE ||
             e2->Cluster().IsSet() == kFALSE ) {
+        return kFALSE;
+    }
+    if (e1->Cluster().Get().fourVector.Pt()==0 ||
+            e2->Cluster().Get().fourVector.Pt()==0) {
         return kFALSE;
     }
 
@@ -575,6 +587,10 @@ Bool_t ZeeDCutEtaCrackBothElecZ::evaluate(const ZeeDEvent* event)
             e2->Cluster().IsSet() == kFALSE ) {
         return kFALSE;
     }
+    if (e1->Cluster().Get().fourVector.Pt()==0 ||
+            e2->Cluster().Get().fourVector.Pt()==0) {
+        return kFALSE;
+    }
 
     const Double_t eta1 = TMath::Abs(e1->Cluster().Get().fourVector.Eta());
     const Double_t eta2 = TMath::Abs(e2->Cluster().Get().fourVector.Eta());
@@ -738,6 +754,11 @@ Bool_t ZeeDCutIsEMCentralForwardLepZ::evaluate(const ZeeDEvent* event)
         return kFALSE;
     }
 
+    if (e1->Cluster().Get().fourVector.Pt()==0 ||
+            e2->Cluster().Get().fourVector.Pt()==0) {
+        return kFALSE;
+    }
+
     const Double_t eta1 = TMath::Abs(e1->Cluster().Get().fourVector.Eta());
     const Double_t eta2 = TMath::Abs(e2->Cluster().Get().fourVector.Eta());
 
@@ -852,6 +873,10 @@ Bool_t ZeeDCutAuthorCFElecZ::evaluate(const ZeeDEvent* event)
 
     if ( e1->Cluster().IsSet() == kFALSE ||
             e2->Cluster().IsSet() == kFALSE ) {
+        return kFALSE;
+    }
+    if (e1->Cluster().Get().fourVector.Pt()==0 ||
+            e2->Cluster().Get().fourVector.Pt()==0) {
         return kFALSE;
     }
 

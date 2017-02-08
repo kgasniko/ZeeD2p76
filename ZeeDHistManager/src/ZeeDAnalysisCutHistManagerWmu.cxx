@@ -39,7 +39,8 @@ ZeeDAnalysisCutHistManagerWmu::~ZeeDAnalysisCutHistManagerWmu()
 void ZeeDAnalysisCutHistManagerWmu::BookCutHistManager()
 {
     TString selectionEvent = "NTracksAtPrimVtx+PriVtxZ+LAr";
-    TString selectionMuon = "eta+EFmu10+ptMu+MuonMedium+comb+trIso";
+    //TString selectionMuon = "eta+EFmu10+ptMu+MuonMedium+comb+trIso";
+    TString selectionMuon = "ptMu+eta+MuonMedium+MuonTrig+comb+trIso";
     TString selectionBoson = "WmuEtMiss+MtWmu+WmuEtMiss";
     TString selection = selectionEvent+"+"+selectionMuon+"+"+selectionBoson; 
     TString pos       = selection+"+pos";
@@ -107,7 +108,10 @@ void ZeeDAnalysisCutHistManagerWmu::BookCutHistManager()
         ZeeDHistManagerCut* leptonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Lepton");
         ZeeDHistManagerCut* bosonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
         this->AddMaskLoose(selectionEvent, eventCut, doWeightNone);
+        //this->AddMaskLoose("", eventCut, doWeightNone);
         this->AddMaskLoose(selectionEvent+"+"+selectionMuon, leptonCut, doWeightNone);
+        //this->AddMaskLoose(selectionMuon, leptonCut, doWeightNone);
+ 
         this->AddMaskLoose(selection, bosonCut, doWeightNone);
         ZeeDHistManagerCut* bosonCutPlus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
         ZeeDHistManagerCut* bosonCutMinus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");

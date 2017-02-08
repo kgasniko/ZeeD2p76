@@ -19,7 +19,7 @@ public:
     ZeeDFinderW(TString Name = "W Boson Finder");
     void BookCuts();  // Dummy book cuts
 
-    virtual TObjArray SelectBosons(ZeeDEvent* event) {
+    TObjArray SelectBosons(ZeeDEvent* event) {
 
         const TObjArray bosonArray = ZeeDFinderW::SelectAllGoodBosons(event, event->GetWBosons());
 
@@ -29,7 +29,7 @@ public:
         return bosonArray;
     }
     
-    virtual TObjArray SelectAllGoodBosons (ZeeDEvent*, const TObjArray*);
+    TObjArray SelectAllGoodBosons (ZeeDEvent*, const TObjArray*);
 
 };
 

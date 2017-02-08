@@ -149,7 +149,7 @@ ZeeDJet* ZeeDFinder::SelectBestJet(ZeeDEvent* Event,
 }
 
 //------------------------------------------------------
-inline unsigned int ZeeDFinder::all_bits_1_lookup(unsigned int ncuts) {
+unsigned int ZeeDFinder::all_bits_1_lookup(unsigned int ncuts) {
 
   // FIXME: for the bit masks types with fixed number of bits
   // (like "int32_t", not just an "unsigned int") _should_be_ used

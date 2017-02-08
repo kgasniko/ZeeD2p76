@@ -34,16 +34,16 @@ TObjArray ZeeDFinderW::SelectAllGoodBosons( ZeeDEvent* event, const TObjArray* b
   const ZeeDBosonW* currentBosonSafe = event->GetCurrentBosonW();
     
   // bit mask for the case all the cuts passed, like: (ncuts == 3) ==> all_bits_1 = 0...0111
-  //unsigned int all_bits_1 = all_bits_1_lookup(CutWeights.size());
+  unsigned int all_bits_1 = all_bits_1_lookup(CutWeights.size());
 
   for (Int_t i = 0; i < bosons->GetEntriesFast(); i++) {
     ZeeDBosonW* boson = static_cast<ZeeDBosonW*>(bosons->At(i));
     if (boson != NULL) {
    		 event->SetCurrentBosonW(boson);
          this->evaluate(event, &Mask);  // Get bit mask
-         //if (all_bits_1 == Mask.GetMask()) {
+         if (all_bits_1 == Mask.GetMask()) {
             bosonArray.Add((TObject*)boson);
-         //   }
+         }
          }
 
     }

@@ -49,7 +49,7 @@ struct ZeeDCutCache : public TNamed {
     {}
 
     void evaluate(ZeeDEvent* event) {
-
+    //    std::cout << "Evaluating cut cache " << std::endl;
         fCutMasks.clear();
 
         fIdentifier->IdentifyRecBosons(event);
@@ -66,7 +66,7 @@ struct ZeeDCutCache : public TNamed {
             fCutMasks.push_back(fCutSelector->getCutMask());
 
         }
-
+     //   std::cout << fnIdentifications << std::endl;
     }
 
     ZeeDIdentifier* fIdentifier;

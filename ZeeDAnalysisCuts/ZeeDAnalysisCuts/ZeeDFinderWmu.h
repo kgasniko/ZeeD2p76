@@ -19,14 +19,14 @@ public:
     ZeeDFinderWmu(TString Name = "Wmu Boson Finder");
     void BookCuts();  // Dummy book cuts
 
-    virtual TObjArray SelectBosons(ZeeDEvent* event) {
+    TObjArray SelectBosons(ZeeDEvent* event) {
 
         const TObjArray bosonArray = ZeeDFinderWmu::SelectAllGoodBosons(event, event->GetWmuBosons());
 
         return bosonArray;
     }
     
-    virtual TObjArray SelectAllGoodBosons (ZeeDEvent*, const TObjArray*);
+    TObjArray SelectAllGoodBosons (ZeeDEvent*, const TObjArray*);
 
 };
 

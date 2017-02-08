@@ -59,6 +59,8 @@ ZeeDEvent::ZeeDEvent() : fElecArray(NULL),
     fIsData(kFALSE),
     fRawEvent(NULL),
     fSvcHelper("ZeeDEvent"),
+    numWGood(-1),
+    numWmuGood(-1),
     fAnaOptions(fSvcHelper.GetAnaSvc())
 {
     // Constructor

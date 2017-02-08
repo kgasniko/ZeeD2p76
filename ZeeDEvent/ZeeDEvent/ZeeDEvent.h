@@ -468,17 +468,25 @@ public:
     
     Bool_t HasPassedTriggerChain(ZeeDEnum::Trigger::Value chain) const;
     
-    void SetNGoodW (Int_t num) const{
+     void SetNGoodW (Int_t num) const{
          numWGood=num;
          }
 
     Int_t GetNGoodW () const{
          return numWGood;
          }
+    void SetNGoodWmu (Int_t num) const{
+         numWmuGood=num;
+         }
+
+    Int_t GetNGoodWmu () const{
+         return numWmuGood;
+         }
     
 private:
    
-    mutable Int_t numWGood;    
+    mutable Int_t numWGood;  
+    mutable Int_t numWmuGood;  
    
     ZeeDQuantity<ZeeDEventGenBags::PDF>&        PDF()        {
         return fPDF;

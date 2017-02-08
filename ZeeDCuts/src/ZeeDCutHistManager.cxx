@@ -266,8 +266,10 @@ void ZeeDCutHistManager::UseEvent(const ZeeDEvent* event, ZeeDCutBit cutMask){
 
         const ZeeDCutBit::maskDataType hmMask  = maskPair.hmMask.GetMask();
         const ZeeDCutBit::maskDataType refMask = maskPair.refMask.GetMask();
-        //std::cout << histManager->GetHMName() <<std::endl;
-        //std::cout << hmMask << "    " << refMask << std::endl;
+        /*if (histManager->GetHMName() == "/ZEED/All/NoShift/Wmu//CutFlow/Lepton/") {
+        std::cout << histManager->GetHMName() <<std::endl;
+        std::cout << hmMask << "    " << refMask << std::endl;
+        }*/
         //std::cout << ( hmMask & refMask ) <<std::endl;
 
         if ( ( cutMask.GetMask() & refMask ) == ( hmMask & refMask )) {
