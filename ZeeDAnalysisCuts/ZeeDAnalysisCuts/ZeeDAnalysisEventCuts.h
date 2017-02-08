@@ -30,6 +30,25 @@
 
 #include "ZeeDEvent/ZeeDEvent.h"
 
+class ZeeDCutNumberGoodW: public ZeeDCut{
+    public:
+        ZeeDCutNumberGoodW(TString CutName, UInt_t numbW): ZeeDCut(CutName), m_numbW(numbW) 
+    {}
+       Bool_t evaluate(const ZeeDEvent* event);
+    private:
+        UInt_t m_numbW;
+};
+
+class ZeeDCutNumberGoodWmu: public ZeeDCut{
+    public:
+        ZeeDCutNumberGoodWmu(TString CutName, UInt_t numbW): ZeeDCut(CutName), m_numbW(numbW) 
+    {}
+       Bool_t evaluate(const ZeeDEvent* event);
+    private:
+        UInt_t m_numbW;
+};
+
+
 //-----------------------------------------------
 /**  at least 1 loose Z */
 

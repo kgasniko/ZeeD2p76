@@ -80,6 +80,10 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
     // Cut on primary vertex Z position
     this->AddCut(new ZeeDCutPriVtxZ("PriVtxZ", vertexZCut));
     
+    
+    this->AddCut(new ZeeDCutNumberGoodW("oneGoodW", 1));
+    this->AddCut(new ZeeDCutNumberGoodWmu("noGoodWmu", 0)); 
+
     // Cuts on electrons identification
     this->AddCut(new ZeeDCutLepIdentW("ElMediumPP", &ZeeDLeptonBags::IsEM::isMediumPP));
     this->AddCut(new ZeeDCutLepIdentW("ElLoosePP", &ZeeDLeptonBags::IsEM::isLoosePP));

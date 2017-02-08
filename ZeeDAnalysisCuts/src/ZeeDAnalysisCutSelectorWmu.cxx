@@ -94,8 +94,9 @@ void ZeeDAnalysisCutSelectorWmu::BookCuts()
 
    // Cut on muon eta
     this->AddCut(new ZeeDCutLepTrackEtaW  ("eta", muEtaMax));
-    this->AddCut(new ZeeDCutCrackLepTrackEtaW("etaCrack", etaCrackMin, etaCrackMax));
-    
+    //this->AddCut(new ZeeDCutCrackLepTrackEtaW("etaCrack", etaCrackMin, etaCrackMax));
+    this->AddCut(new ZeeDCutNumberGoodW("noGoodW", 0));
+    this->AddCut(new ZeeDCutNumberGoodWmu("oneGoodWmu", 1)); 
    // Cut on minimal EtMiss in event
     //this->AddCut(new ZeeDCutEventMinMissEt ("WmuEtMiss", etMissCut));
 	this->AddCut(new ZeeDCutCorRecoilEtMissW ("WmuEtMiss", etMissCut));

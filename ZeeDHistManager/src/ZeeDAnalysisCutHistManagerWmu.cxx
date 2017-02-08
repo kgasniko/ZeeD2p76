@@ -40,7 +40,7 @@ void ZeeDAnalysisCutHistManagerWmu::BookCutHistManager()
 {
     TString selectionEvent = "NTracksAtPrimVtx+PriVtxZ+LAr";
     //TString selectionMuon = "eta+EFmu10+ptMu+MuonMedium+comb+trIso";
-    TString selectionMuon = "ptMu+eta+MuonMedium+MuonTrig+comb+trIso";
+    TString selectionMuon = "ptMu+eta+MuonMedium+MuonTrig+comb+trIso+noGoodW+oneGoodWmu";
     TString selectionBoson = "WmuEtMiss+MtWmu+WmuEtMiss";
     TString selection = selectionEvent+"+"+selectionMuon+"+"+selectionBoson; 
     TString pos       = selection+"+pos";
@@ -178,7 +178,7 @@ void ZeeDAnalysisCutHistManagerWmu::BookCutHistManager()
             this->AddMaskLoose(QCDNeg, QCDNegPlot);
 
             //Check of Fit
-            TString QCDCheckFit = "NTracksAtPrimVtx+PriVtxZ+LAr+eta+EFmu10+MtWmu+ptMu+trIso+etaCrack";
+            TString QCDCheckFit = "NTracksAtPrimVtx+PriVtxZ+LAr+eta+EFmu10+MtWmu+ptMu+trIso";
             ZeeDHistManagerQCDBkgW* QCDPlotsCh1 = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/etMiss/QCDVar/"+"Plus/Tight");
             this->AddMaskLoose(QCDCheckFit+"+notTight+pos", QCDPlotsCh1, doWeight);
 

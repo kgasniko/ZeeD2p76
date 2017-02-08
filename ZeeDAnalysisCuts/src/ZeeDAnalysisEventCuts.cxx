@@ -22,6 +22,19 @@
 // -----------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
+
+Bool_t ZeeDCutNumberGoodW::evaluate(const ZeeDEvent* event)
+{
+    return (event->GetNGoodW() == m_numbW);
+}
+
+Bool_t ZeeDCutNumberGoodWmu::evaluate(const ZeeDEvent* event)
+{
+    return (event->GetNGoodWmu() == m_numbW);
+}
+
+
+
 Bool_t ZeeDCutExistZ::evaluate(const ZeeDEvent* event)
 {
 

@@ -38,7 +38,7 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
     //basic event selection 
     TString selectionEvent = "PriVtxZ+LAr+NTracksAtPrimVtx+LepTrig";
     //electron selection
-    TString selectionElectron = "ElecClustEtaMaxW+EtaCrackElecW+ElecClustEtMinW+ElMediumPP+EtCone20+OQMaps";
+    TString selectionElectron = "ElecClustEtaMaxW+EtaCrackElecW+ElecClustEtMinW+ElMediumPP+EtCone20+OQMaps+oneGoodW+noGoodWmu";
     //boson selection
     TString selectionBoson = "EtMissMinW+MassTransvW";
 
