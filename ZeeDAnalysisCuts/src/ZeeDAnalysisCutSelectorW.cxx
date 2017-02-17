@@ -62,7 +62,8 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
 
     //trigger cuts 
     this->AddCut(new ZeeDCutTrigger ("qcdTrig", ZeeDEnum::Trigger::EF_e7_loose1));
-   	this->AddCut(new ZeeDCutTrigLepW("LepTrig", ZeeDEnum::Trigger::EF_e15_loose1)); 
+    this->AddCut(new ZeeDCutTrigger ("LepTrig", ZeeDEnum::Trigger::EF_e15_loose1));
+   	this->AddCut(new ZeeDCutTrigLepW("EF_e15_loose1", ZeeDEnum::Trigger::EF_e15_loose1)); 
     
     // Minium missing et requirement
     //this->AddCut(new ZeeDCutEventMinMissEt("EtMissMinW", etMissCut));
@@ -108,10 +109,10 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
 
     // Cuts for generator level information
     if (ZeeDAnaOptions->IsMC() && ZeeDAnaOptions->FillGenInfo()) {
-        this->AddCut(new ZeeDCutEtaMaxBornElecW("GenEta", elecEtaMax));
+        this->AddCut(new ZeeDCutEtaMaxBornElecW("GenEta", 2.5));
         this->AddCut(new ZeeDCutPtBornElectronW("GenPt", elecEtCut));
         this->AddCut(new ZeeDCutMassTransvBornW("GenMt", massTransvCut));
-        this->AddCut(new ZeeDCutCrackBornElecW("GenCrack"));
+        //this->AddCut(new ZeeDCutCrackBornElecW("GenCrack"));
         this->AddCut(new ZeeDCutEtMissBornW("GenEt", etMissCut));
 /*      this->AddCut(new ZeeDCutEtaMaxBornElecW("GenEtaNEW", 2.5));
         this->AddCut(new ZeeDCutPtBornElectronW("GenPtNEW", 25));

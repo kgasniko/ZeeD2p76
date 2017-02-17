@@ -28,15 +28,12 @@ public:
 
     virtual TObjArray SelectBosons(ZeeDEvent* event) {
 
-        const ZeeDBosonZ* bestZBoson = ZeeDFinder::SelectBestBoson(event, event->GetZBosons());
+        TObjArray bestZBoson = ZeeDFinder::SelectAllGoodBosons(event, event->GetZBosons());
 
-        TObjArray bosonArray;
-
-        if (bestZBoson != NULL) bosonArray.Add(const_cast<ZeeDBosonZ*>(bestZBoson));
-
-        return bosonArray;
+        return bestZBoson;
 
     }
+    virtual TObjArray SelectAllGoodBosons (ZeeDEvent*, const TObjArray*);
 
 };
 

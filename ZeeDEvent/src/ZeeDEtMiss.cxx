@@ -16,7 +16,9 @@ ZeeDEtMiss::ZeeDEtMiss():
 	fCorRecoilSumet(0),
     fMET_SoftTermETX(0),
     fMET_SoftTermETY(0),
-    fMET_SoftTermETSUM(0)
+    fMET_SoftTermETSUM(0),
+    fnMETElec(0),
+    fnMETMuon(0)
 {
     // Constructor
  

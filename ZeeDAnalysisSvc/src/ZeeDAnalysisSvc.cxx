@@ -204,8 +204,9 @@ ZeeDAnalysisSvc::ZeeDAnalysisSvc(const std::string& name, ISvcLocator* sl)
 
 
     declareProperty("ApplyTriggerCorrection", fApplyTriggerCorrection = true, "Apply trigger correction");
-
-
+    
+    declareProperty("MuonOneBinTriggerSF", fMuonOneBinTriggerSF=false, "make one bin muon trigger scale factors");
+    declareProperty("MuonChargedTriggerSF", fMuonChargedTriggerSF=true, "make charge dependent muon trigger scale factors");
     declareProperty("TriggerEfficiencyElectronFileName", fTriggerEfficiencyElectronFileName = "efficiencySF.e24vhi_medium1_e60_medium1.Tight.2012.8TeV.rel17p2.v01.root", "File name for the electron trigger efficiency (package ElectronEfficiencyCorrection)");
 
 
@@ -723,8 +724,9 @@ const std::string ZeeDAnalysisSvc::print() const
 
 
     s << " Apply trigger correction: " << ApplyTriggerCorrection() << std::endl;
-
-
+    
+    s << " Make unbinned scale factors for muon trigger" << MuonOneBinTriggerSF() << std::endl;
+    s << " Make charge dependent scale factors for muon trigger " <<  MuonChargedTriggerSF() << std::endl;
     s << " File name for the electron trigger efficiency (package ElectronEfficiencyCorrection): " << TriggerEfficiencyElectronFileName() << std::endl;
 
 

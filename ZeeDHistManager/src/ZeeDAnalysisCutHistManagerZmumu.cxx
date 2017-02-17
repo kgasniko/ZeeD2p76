@@ -39,7 +39,7 @@ void ZeeDAnalysisCutHistManagerZmumu::BookCutHistManager()
     TString selection = "IsEMMediumPPBothMuonZ+PtMinBothMuonZ+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+ZMassZ+NTracksAtPrimVtx+EventEtMiss+ZeeDCutLArEventVeto+EF_mu10+MuonTrig";
 	TString genSel        = "GenEta+GenPt+GenMt";
 //	TString genSel        = "GenMt";
-	TString genSelNEW     = "GenEtaNEW+GenPtNEW+GenMt";
+	TString genSelNEW     = "GenEta+GenPtNEW+GenMt";
    	TString jpsiSelection =  "PtMinBothMuonJpsi+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+Jpsi+NTracksAtPrimVtx+EventEtMiss+ZeeDCutLArEventVeto";
 
  

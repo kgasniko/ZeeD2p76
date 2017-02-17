@@ -7,6 +7,13 @@
 
 #include "ZeeDEvent/ZeeDEvent.h"
 #include "ZeeDAnalysisCuts/ZeeDFinder.h"
+#include "ZeeDEvent/ZeeDElectron.h"
+#include "ZeeDTools/ZeeDBags.h"
+
+#include "ZeeDAnalysisCuts/ZeeDAnalysisBosonCuts.h"
+#include "ZeeDAnalysisCuts/ZeeDAnalysisZBosonCuts.h"
+#include "ZeeDAnalysisCuts/ZeeDAnalysisEventCuts.h"
+
 
 /** Zmumu selector for central electrons
 

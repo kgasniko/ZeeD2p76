@@ -53,7 +53,7 @@ void ZeeDAnalysisCutHistManagerWmu::BookCutHistManager()
     //TString genSel = "GenMt"; 
     TString selUnfNEW     = "MassTransvWNEW+WmuEtMiss+ptMuNEW+etaNEW";
     //selection based on generator level cuts
-    TString genSelNEW        = "GenEtaNEW+GenPtNEW+GenMtNEW+GenEtNEW";
+    TString genSelNEW        = "GenEta+GenPtNEW+GenMtNEW+GenEtNEW";
 
     ZeeDCalcWeightCutDepW* cw = new ZeeDCalcWeightCutDepW();
     this->AddCalcWeighter(cw);
@@ -113,8 +113,8 @@ void ZeeDAnalysisCutHistManagerWmu::BookCutHistManager()
         //this->AddMaskLoose(selectionMuon, leptonCut, doWeightNone);
  
         this->AddMaskLoose(selection, bosonCut, doWeightNone);
-        ZeeDHistManagerCut* bosonCutPlus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
-        ZeeDHistManagerCut* bosonCutMinus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
+        ZeeDHistManagerCut* bosonCutPlus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/BosonPlus");
+        ZeeDHistManagerCut* bosonCutMinus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/BosonMinus");
         this->AddMaskLoose(pos, bosonCutPlus, doWeightNone);
         this->AddMaskLoose(neg, bosonCutMinus, doWeightNone);
 

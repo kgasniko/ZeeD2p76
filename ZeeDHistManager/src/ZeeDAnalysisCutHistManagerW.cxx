@@ -38,7 +38,7 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
     //basic event selection 
     TString selectionEvent = "PriVtxZ+LAr+NTracksAtPrimVtx+LepTrig";
     //electron selection
-    TString selectionElectron = "ElecClustEtaMaxW+EtaCrackElecW+ElecClustEtMinW+ElMediumPP+EtCone20+OQMaps+oneGoodW+noGoodWmu";
+    TString selectionElectron = "ElecClustEtaMaxW+EtaCrackElecW+ElecClustEtMinW+ElMediumPP+EtCone20+OQMaps";
     //boson selection
     TString selectionBoson = "EtMissMinW+MassTransvW";
 
@@ -107,12 +107,12 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         ZeeDHistManagerCut* leptonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Lepton");
         ZeeDHistManagerCut* bosonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
         this->AddMaskLoose(selectionEvent, eventCut, doWeightNone);
-        this->AddMaskLoose(selectionEvent+"+"+selectionElectron, leptonCut, doWeightNone);
-        this->AddMaskLoose(selection, bosonCut, doWeightNone);
-        ZeeDHistManagerCut* bosonCutPlus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
-        ZeeDHistManagerCut* bosonCutMinus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
-        this->AddMaskLoose(selectionPlus, bosonCutPlus, doWeightNone);
-        this->AddMaskLoose(selectionMinus, bosonCutMinus, doWeightNone);
+        this->AddMaskLoose(selectionEvent+"+"+selectionElectron, leptonCut);
+        this->AddMaskLoose(selection, bosonCut);
+        ZeeDHistManagerCut* bosonCutPlus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Plus");
+        ZeeDHistManagerCut* bosonCutMinus = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Minus");
+        this->AddMaskLoose(selectionPlus, bosonCutPlus);
+        this->AddMaskLoose(selectionMinus, bosonCutMinus);
 
 
 

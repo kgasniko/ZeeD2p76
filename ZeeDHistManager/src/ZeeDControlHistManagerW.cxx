@@ -32,29 +32,24 @@ ZeeDControlHistManagerW::~ZeeDControlHistManagerW()
 void ZeeDControlHistManagerW::BookHistos()
 {
     // Books histogram
-    AddTH1D("lepEt",    ZeeDMisc::FindFile("Binning/LepPt.txt"), "E_{T}^{}  [GeV]",  "");
+    AddTH1D("lepEt",    ZeeDMisc::FindFile("Binning/LepPt.txt"), "E_{T}^{lep}  [GeV]",  "");
     AddTH1D("weight" ,        50,    0.0,   2.0, "Weight of event",        "", ZeeDHistLevel::Systematics);
-    AddTH1D("lepEta",   ZeeDMisc::FindFile("Binning/LepEta.txt"), "#eta^{}",          "", ZeeDHistLevel::Systematics);
+    AddTH1D("lepEta",   ZeeDMisc::FindFile("Binning/LepEta.txt"), "#eta^{lep}",          "", ZeeDHistLevel::Systematics);
     AddTH1D("lepPhi",   20,   -4.0,   4.0, "#varphi^{} [rad]", "", ZeeDHistLevel::Systematics);
     AddTH1D("dPhi" ,    20,   -4.0,   4.0, "d#varphi^{} [rad]", "");
-    AddTH1D("lepPt",      ZeeDMisc::FindFile("Binning/LepPt.txt"), "P_{t} for leptron [GeV]","", ZeeDHistLevel::Systematics);
+    AddTH1D("lepPt",      ZeeDMisc::FindFile("Binning/LepPt.txt"), "P_{T}^{lep} [GeV]","", ZeeDHistLevel::Systematics);
     AddTH1D("eNEvent",        20,    0.0,  20.0, "Number of electrons in event", "");
-    AddTH1D("wGood",          20,    0.0,  20.0, "Number of good W-bosons in event", "");
     AddTH1D("mu",             60,    0.0,   1.0, "Average number of interactions per bunch crossing", "Mu");
     AddTH1D("wCharge",         5,   -2.5,   2.5, "W boson charge",         "" );
-    AddTH1D("nMETElec", 5, 0, 5, "N Electrons in METComposition");
-    AddTH1D("nMETMuon", 5, 0, 5, "N Muons in METComposition");
 
     //    AddTH1D("ElecEt",         20,    0.0, 100.0, "E_{T}^{elec}  [GeV]", "" );
     //    AddTH1D("ElecEta",        50,   -2.5,   2.5, "#eta^{elec}",         "" );
     //    AddTH1D("ElecPhi",        20, -180.0, 180.0, "#varphi^{elec} [deg]","" );
 
     AddTH1D("etMiss",  ZeeDMisc::FindFile("Binning/etMiss.txt"), "E_{T}^{miss} [GeV]",     "", ZeeDHistLevel::Systematics);
-    AddTH1D("EtMissGreat40",         50,    0.0, 100.0, "E_{T}^{miss} [GeV]",     "");
-    AddTH1D("EtMissLess40",         50,    0.0, 100.0, "E_{T}^{miss} [GeV]",     "");
-    AddTH1D("mtW",     ZeeDMisc::FindFile("Binning/BosMassTransv.txt"), "M_{T, W} [GeV]",         "", ZeeDHistLevel::Systematics);
-    AddTH1D("ptW",            60,    0.0, 60.0, "P_{T, W} [GeV]",         "" , ZeeDHistLevel::Systematics);
-    AddTH1D("BosY",		250,	-5.,   5.,	"y (Z->ee)",		"", ZeeDHistLevel::ToyMC);
+    AddTH1D("mtW",     ZeeDMisc::FindFile("Binning/BosMassTransv.txt"), "M_{T} [GeV]",         "", ZeeDHistLevel::Systematics);
+    AddTH1D("ptW",            60,    0.0, 60.0, "P_{T}^{W} [GeV]",         "" , ZeeDHistLevel::Systematics);
+    AddTH1D("BosY",		250,	-5.,   5.,	"y^{W}",		"", ZeeDHistLevel::ToyMC);
     AddTH2D("etMiss_ElecClustEt",  20, 0.0, 100.0, 19, 20.0, 100.0, "E_{T}^{miss} [GeV]", "E_{T}^{Cluster}  [GeV]");
     AddTH2D("etMiss_MtW",          20, 0.0, 100.0, 24,  0.0, 120.0, "E_{T}^{miss} [GeV]", "M_{T, W} [GeV]");
     AddTH2D("clustEt_MtW",         20, 0.0, 100.0, 24,  0.0, 120.0, "E_{T}^{cluster} [GeV]", "M_{T, W} [GeV]");
@@ -81,7 +76,6 @@ void ZeeDControlHistManagerW::BookHistos()
     AddTH1D("vtxX",           50,   -0.2,   0.2, "X_{vtx} [cm]",           "" );
     AddTH1D("vtxY",           50,   -0.2,   0.2, "Y_{vtx} [cm]",           "" );
     AddTH1D("vtxZ",           30,  -30.0,  30.0, "Z_{vtx} [cm]",           "" );
-    AddTH1D("CutFlow",        12,    0.0,   12.0, "CutFlow", "" );
 
 }
 

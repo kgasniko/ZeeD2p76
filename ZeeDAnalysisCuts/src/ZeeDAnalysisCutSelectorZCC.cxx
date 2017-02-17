@@ -81,7 +81,8 @@ void ZeeDAnalysisCutSelectorZCC::BookCuts()
     this->AddCut(new ZeeDCutZMassZ("ZMassZ", 66, 116));
 
     // Cut on number of Tracks at Primary Vertex
-    this->AddCut(new ZeeDCutPriVtxNtrack("NTracksAtPrimVtx", minNumTrkCut));
+    this->AddCut(new ZeeDCutPriVtxNtrack("NTracksAtPrimVtx", 3));
+    this->AddCut(new ZeeDCutPriVtxZ("PriVtxZ", 300.0));
 
     // Veto on two medium electrons
     //this->AddCut(new ZeeDCutTwoGoodElec("MaxTwoGoodElec"));
@@ -90,13 +91,11 @@ void ZeeDAnalysisCutSelectorZCC::BookCuts()
     this->AddCut(new ZeeDCutEventMaxMissEt("EventEtMiss", 25));
 
     // LAr hole veto:
-    this->AddCut(new ZeeDCutLArEventVeto("ZeeDCutLArEventVeto"));
+    this->AddCut(new ZeeDCutLArEventVeto("LAr"));
     if (ZeeDAnaOptions->IsMC() && ZeeDAnaOptions->FillGenInfo()) {
-        this->AddCut(new ZeeDCutEtaMaxBothBornElecZ("GenEta", 2.47));
+        this->AddCut(new ZeeDCutEtaMaxBothBornElecZ("GenEta", 2.5));
         this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPt", 20.));
         this->AddCut(new ZeeDCutMassBornBoson("GenMt", 66, 116));
-        this->AddCut(new ZeeDCutEtaCrackBothBornElecZ("GenCrack", 1.37, 1.52));
-        this->AddCut(new ZeeDCutEtaMaxBothBornElecZ("GenEtaNEW", 2.5));
         this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPtNEW", 25.));
          
         }

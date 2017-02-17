@@ -83,13 +83,11 @@ void ZeeDFinderWmu::BookCuts()
     this->AddCut(new ZeeDCutLepTrackEtaW  ("eta", 2.5));
     this->AddCut(new ZeeDCutLepPtMinW("ptMu", 20));
     //this->AddCut(new ZeeDCutCombinedMuon("comb"));
-    this->AddCut(new ZeeDCutLepIdentW("Medium", &ZeeDLeptonBags::IsEM::isMedium));
     this->AddCut(new ZeeDCutTrigLepW("MuonTrig", ZeeDEnum::Trigger::EF_mu10));
 
     CutWeights.push_back(new CutWeight("eta", 100. , getBitMask("eta")));
     //CutWeights.push_back(new CutWeight("comb", 100., getBitMask("comb")));
     CutWeights.push_back(new CutWeight("ptMu", 100., getBitMask("ptMu")));
-    CutWeights.push_back(new CutWeight("Medium", 100., getBitMask("Medium")));
     CutWeights.push_back(new CutWeight("MuonTrig", 100., getBitMask("MuonTrig")));
     // Declare cuts
     /*

@@ -29,16 +29,16 @@ void ZeeDHistManagerBoson::BookHistos()
     bIsMC = (*fAnaOptions)->IsMC();
 
     // basic distributions
-    AddTH1D("BosPt",		50,	 0., 100.,	"P_{T} (Z->ee) / GeV",	"");
-    AddTH1D("BosY",		    20,	-3.,   3.,	"y (Z->ee)",		"", ZeeDHistLevel::ToyMC);
-    AddTH1D("BosAbsY",		20,	 0.,   3.,	"|y| (Z->ee)",		"");
-    AddTH1D("BosMass",		50,	 50., 120.,	"M_{Z->ee} / GeV",	"", ZeeDHistLevel::Systematics);
+    AddTH1D("BosPt",		50,	 0., 100.,	"P_{T}^{bos} [GeV]",	"");
+    AddTH1D("BosY",		    20,	-3.,   3.,	"y",		"", ZeeDHistLevel::ToyMC);
+    AddTH1D("BosAbsY",		20,	 0.,   3.,	"|y|",		"");
+    AddTH1D("BosMass",		50,	 50., 120.,	"M^{Z} [GeV]",	"", ZeeDHistLevel::Systematics);
     AddTH1D("BosCosThStar",	50,	-1.,   1.,	"cos(#Theta *)",	"");
-    AddTH1D("BosXVtx",		30,	-0.1,   0.1,	"Xvtx",			"");
-    AddTH1D("BosYVtx",		30,	-0.1,   0.1,	"Yvtx",			"");
-    AddTH1D("BosZVtx",		100,    -20., 20.,	"Zvtx",			"");
+    AddTH1D("BosXVtx",		30,	-0.1,   0.1,	"X_{vtx}^{bos}",			"");
+    AddTH1D("BosYVtx",		30,	-0.1,   0.1,	"Y_{vtx}^{bos}",			"");
+    AddTH1D("BosZVtx",		100,    -20., 20.,	"Z_{vtx}^{bos}",			"");
     AddTH1D("BosCharge",	5,     -2.5,  2.5,	"BosCharge",		"");
-    AddTH1D("mtW",     ZeeDMisc::FindFile("Binning/BosMassTransv.txt"), "M_{T, W} [GeV]",         "");
+    AddTH1D("mtW",     ZeeDMisc::FindFile("Binning/BosMassTransv.txt"), "M_{T}^{W} [GeV]",         "");
     AddTH1D("Elec12_deltaPhi",	100, -TMath::Pi(), TMath::Pi(), "#Delta #Phi_{elec12}", "");
 
     // cosTheta*

@@ -27,12 +27,12 @@ void ZeeDHistManagerQCDBkgW::BookHistos()
 	AddTH1D("etMissSmallRange",    ZeeDMisc::FindFile("Binning/etMissSmallRange.txt")   , "E_{T}^{miss} [GeV]",     "", ZeeDHistLevel::Systematics);
 
 
-    AddTH1D("lepEta",   ZeeDMisc::FindFile("Binning/LepEta.txt"), "#eta^{}",          "");
-    AddTH1D("lepPhi",   20,   -4.0,   4.0, "#varphi^{} [rad]", "");
-    AddTH1D("dPhi" ,    20,   -4.0,   4.0, "d#varphi^{} [rad]", "");
-    AddTH1D("lepPt",    ZeeDMisc::FindFile("Binning/LepPt.txt"), "P_{t} for lepton [GeV]","",  ZeeDHistLevel::Systematics);
-	AddTH1D("mtW",       ZeeDMisc::FindFile("Binning/BosMassTransv.txt"), "M_{T, W} [GeV]",         "" );
-    AddTH1D("ptW",            50,    0.0, 120.0, "P_{T, W} [GeV]",         "" );
+    AddTH1D("lepEta",   ZeeDMisc::FindFile("Binning/LepEta.txt"), "#eta^{lep}",          "");
+    AddTH1D("lepPhi",   20,   -4.0,   4.0, "#varphi^{lep} [rad]", "");
+    AddTH1D("dPhi" ,    20,   -4.0,   4.0, "d#varphi^{lep} [rad]", "");
+    AddTH1D("lepPt",    ZeeDMisc::FindFile("Binning/LepPt.txt"), "P_{T}^{lep} [GeV]","",  ZeeDHistLevel::Systematics);
+	AddTH1D("mtW",       ZeeDMisc::FindFile("Binning/BosMassTransv.txt"), "M_{T}^{W} [GeV]",         "" );
+    AddTH1D("ptW",            50,    0.0, 120.0, "P_{T}^{W} [GeV]",         "" );
 
     AddTH1D("ElecEtCone20overEt", 250,-1.,3.,"Et cone 20/ Et cluster","");
     AddTH1D("ElecEtCone30overEt", 250,-1.,3.,"Et cone 30/ Et cluster","");

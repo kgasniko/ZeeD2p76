@@ -132,12 +132,12 @@ StatusCode ZeeDPlotter::execute()
     // Create directory Plots if it does not exist
     TString mkDirCommand = TString("if [ ! -d Plots ]; then mkdir Plots; fi");
     gSystem->Exec(mkDirCommand);
-/*
-    if(m_filenames.size() == 0 || m_dirnames.size() == 0) {
-        Error("ZeeDPlotter::execute", "No files or directories were given!");
-        return StatusCode::FAILURE;
-    }
-*/
+    /*
+       if(m_filenames.size() == 0 || m_dirnames.size() == 0) {
+       Error("ZeeDPlotter::execute", "No files or directories were given!");
+       return StatusCode::FAILURE;
+       }
+       */
     if (m_makeQCDFit){
         RooMsgService::instance().setStreamStatus(1,false);
         RooMsgService::instance().setGlobalKillBelow(RooFit::FATAL);
@@ -575,43 +575,48 @@ void ZeeDPlotter::RunCutFlow()
     }
 
     ofstream cutFlow;
-/*
-    if (bCutFlowReco){
-            cutFlow.open("CutFlow/CutFlow_"+m_nameBos+"_RECO__.tex");}
+
+    string nameReco="CutFlow/CutFlow_"+m_nameBos+"_RECO__.tex";
+    string nameGen ="CutFlow/CutFlow_"+m_nameBos+"_GEN__.tex";
+    /*if (bCutFlowReco){
+        cutFlow.open(nameReco.c_str());
+    }
     else{
-            cutFlow.open("CutFlow/CutFlow_"+m_nameBos+"_GEN__.tex");}
-  */  
+        cutFlow.open(nameGen.c_str());
+    }*/
+
     //-------------------------------
-    /*
-    m_filenames=["out.root", "out_"+m_nameBos+".root"];
-    
-    TString sCut = "";
-    cutFlow << "\\begin{tabular}{|c|c c c|c c c|}" << endl;
-    cutFlow << "\\hline" << endl;
-    cutFlow << "Analysis cut &";
-    cutFlow << " $N^{data}_{events}$ & $\\epsilon^{data}_{abs}$ & $\\epsilon^{data}_{rel}$ & " ;
-    cutFlow << " $N^{MC}_{events}$ & $\\epsilon^{MC}_{abs}$ & $\\epsilon^{MC}_{rel}$  \\" ;
-    cutFlow<< std::endl << " \\hline" << endl;
 
+    //vector<string> m_filenames={"out.root", "out_"+m_nameBos+".root"};
 
+    //TString sCut = "";
+    /*cutFlow << "\\begin{tabular}{|c|c c c|c c c|}" << endl;
+      cutFlow << "\\hline" << endl;
+      cutFlow << "Analysis cut &";
+      cutFlow << " $N^{data}_{events}$ & $\\epsilon^{data}_{abs}$ & $\\epsilon^{data}_{rel}$ & " ;
+      cutFlow << " $N^{MC}_{events}$ & $\\epsilon^{MC}_{abs}$ & $\\epsilon^{MC}_{rel}$  \\" ;
+      cutFlow<< std::endl << " \\hline" << endl;
+      */
+/*
+    vector<string>::const_iterator litr = m_filenames.begin();
     vector<string>::const_iterator itcut = m_cutflow.begin();
-    for( ; itcut != m_cutflow.end(); ++itcut) {
-        if (sCut == "") {
-            sCut = *itcut;
-        } else {
-            sCut.Append("+").Append(*itcut);
+    for( ; litr != m_filenames.end(); ++litr) {
+
+        string type="MC";
+        if (*litr=="out.root"){
+            type="DATA";
         }
 
-        cout << "Cut flow for " << sCut << endl;
+        TFile* myFile = new TFile((*litr).c_str());
+        TH1D*  
+        
+        for( ; itcut != m_cutflow.end(); ++itcut) {
 
-        vector<string>::const_iterator litr = m_filenames.begin();
-        cutFlow << setw(30);
-        cutFlow << "\\" << *itcut;
-        for( ; litr != m_filenames.end(); ++litr) {
-            cout << *litr << endl;
-            ZeeDCutHistManager* CutHM = new ZeeDCutHistManager(*litr, m_cutselector);
+            cout << "Cut flow for " << sCut << endl;
+
+
+            //ZeeDCutHistManager* CutHM = new ZeeDCutHistManager(*litr, m_cutselector);
             double apass = CutHM->GetCutFlow(sCut);
-            TFile* myFile = new TFile((*litr).c_str());
             TH1D*  myHist = (TH1D*)myFile -> Get("Control/EventWeight");
             double Evt = 0;
 
@@ -645,7 +650,7 @@ void ZeeDPlotter::RunCutFlow()
         cutFlow << " \\\\" << endl;
     }
     cutFlow << "\hline " << endl << " \\end{tabular} " << endl;
-*/
+    */
 }
 
 void ZeeDPlotter::GetASyst()
@@ -1085,28 +1090,28 @@ void ZeeDPlotter::GetCZSyst()
             double cZ = sumRec/sumGen;
             //std::cout <<  " cZ = " << cZ << std::endl;
             //if (cZ > cZcent){
-                if (czUp.find(subname) == czUp.end()){
-                    //std::cout << 1 << std::endl;
-                    czUp[subname]=cZ*cZ;
-                    czDown[subname]=cZ;
-                    //czUp[subname]=(cZ-cZcent)*(cZ-cZcent);
-                    nToyUp[subname]=1;
-                }else {
-                    //std::cout << 2 << std::endl;
-                    czUp[subname]+=cZ*cZ;
-                    czDown[subname]+=cZ;
-                    nToyUp[subname]+=1;
-                }
-           /* } else {
-                //std::cout << subname << " 22 " << std::endl;
-                if (czDown.find(subname) != czDown.end()){
-                    czDown[subname]=(cZ-cZcent)*(cZ-cZcent);
-                    nToyDown[subname]=1;
-                }else {                    
-                    czDown[subname]+=(cZ-cZcent)*(cZ-cZcent);
-                    nToyDown[subname]+=1;
-                }*/
-           // }
+            if (czUp.find(subname) == czUp.end()){
+                //std::cout << 1 << std::endl;
+                czUp[subname]=cZ*cZ;
+                czDown[subname]=cZ;
+                //czUp[subname]=(cZ-cZcent)*(cZ-cZcent);
+                nToyUp[subname]=1;
+            }else {
+                //std::cout << 2 << std::endl;
+                czUp[subname]+=cZ*cZ;
+                czDown[subname]+=cZ;
+                nToyUp[subname]+=1;
+            }
+            /* } else {
+            //std::cout << subname << " 22 " << std::endl;
+            if (czDown.find(subname) != czDown.end()){
+            czDown[subname]=(cZ-cZcent)*(cZ-cZcent);
+            nToyDown[subname]=1;
+            }else {                    
+            czDown[subname]+=(cZ-cZcent)*(cZ-cZcent);
+            nToyDown[subname]+=1;
+            }*/
+            // }
 
         }else { //Normal systematics
 
@@ -1119,7 +1124,7 @@ void ZeeDPlotter::GetCZSyst()
                 subname = Up ? (*syst).substr(0,(*syst).rfind("Up")) : (*syst).substr(0,(*syst).rfind("Down"));
             }
 
-                   //std::cout << "Subname: " << subname << std::endl; 
+            //std::cout << "Subname: " << subname << std::endl; 
             TH1* hrec = (TH1*)mcFile->Get(fullNameRec.c_str());
             TH1* hgen = (TH1*)mcFile->Get(fullNameGen.c_str());
             if (hrec == NULL) {
@@ -1148,7 +1153,7 @@ void ZeeDPlotter::GetCZSyst()
                 genDown[subname] = sumGen;
                 czDown[subname] = cZ;
             }      
-            
+
 
         }        
     }
@@ -1203,37 +1208,37 @@ void ZeeDPlotter::GetCZSyst()
             u=rms/centr*100.;
             d=-rms/centr*100.;
             /*
-            u = sqrt(czUp[name]/nToyUp[name]);
-            d = sqrt(czDown[name]/nToyDown[name]);
-            std::cout << u << "   " << d << std::endl*/;
+               u = sqrt(czUp[name]/nToyUp[name]);
+               d = sqrt(czDown[name]/nToyDown[name]);
+               std::cout << u << "   " << d << std::endl*/;
         }
 
         if (u !=0 && d!=0){
-        printf("%55s %10.5f %10.5f \n",name.c_str(),
-                u,
-                d
-              );
-        
-        if ( (d < 0) && (u<0) ) {
-            dE +=  u<d ?  u*u : d*d;
-        }
+            printf("%55s %10.5f %10.5f \n",name.c_str(),
+                    u,
+                    d
+                  );
 
-        else if ( (d<0) && ( u>0 ) ) {
-            dE += d*d;
-            uE += u*u;
-        }
-        else if ( (d>0) && ( u<0 ) ) {
-            dE += u*u;
-            uE += d*d;
-        }
-        else {
-            uE +=  u>d ?  u*u : d*d;
-        }
-        SystTableOut<< name <<"  &  "<<fixed<<setprecision(2)<<u<<"  &  "<<d<<"  \\\\"<<endl;
+            if ( (d < 0) && (u<0) ) {
+                dE +=  u<d ?  u*u : d*d;
+            }
 
-        SystForDatOut<<name<<"    "<<fixed<<setprecision(2)<<u<<"    "<<d<<endl;
-        SystUncertOut<<"\\newcommand{\\"<<name + "U"<<"}{"<<fixed<<setprecision(2)<<u<<"}"<<endl;
-        SystUncertOut<<"\\newcommand{\\"<<name + "D"<<"}{"<<fixed<<setprecision(2)<<d<<"}"<<endl;
+            else if ( (d<0) && ( u>0 ) ) {
+                dE += d*d;
+                uE += u*u;
+            }
+            else if ( (d>0) && ( u<0 ) ) {
+                dE += u*u;
+                uE += d*d;
+            }
+            else {
+                uE +=  u>d ?  u*u : d*d;
+            }
+            SystTableOut<< name <<"  &  "<<fixed<<setprecision(2)<<u<<"  &  "<<d<<"  \\\\"<<endl;
+
+            SystForDatOut<<name<<"    "<<fixed<<setprecision(2)<<u<<"    "<<d<<endl;
+            SystUncertOut<<"\\newcommand{\\"<<name + "U"<<"}{"<<fixed<<setprecision(2)<<u<<"}"<<endl;
+            SystUncertOut<<"\\newcommand{\\"<<name + "D"<<"}{"<<fixed<<setprecision(2)<<d<<"}"<<endl;
         }
 
 

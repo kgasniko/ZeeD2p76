@@ -142,6 +142,21 @@ public:
     Float_t& GetMET_SoftTermETY  () {return fMET_SoftTermETY  ;};
     Float_t& GetMET_SoftTermETSUM() {return fMET_SoftTermETSUM;};
 
+    int GetnMETElec(){
+        return fnMETElec;
+    }
+    
+    void SetnMETElec(int n){
+        fnMETElec=n;
+    }
+
+    int GetnMETMuon(){
+        return fnMETMuon;
+    }
+
+    void SetnMETMuon(int n){
+        fnMETMuon=n;
+    }
 
     /** Blue print */
     void Print(Option_t* option = "") const;
@@ -211,6 +226,9 @@ private:
 
 	/** SumEt of corRecoil missing Et*/
 	Double_t fCorRecoilSumet;
+    
+    Int_t fnMETElec;
+    Int_t fnMETMuon;
 
     Float_t fMET_SoftTermETX;
     Float_t fMET_SoftTermETY;

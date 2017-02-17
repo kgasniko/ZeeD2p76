@@ -28,23 +28,23 @@ void ZeeDHistManagerMuon::BookHistos()
   // Books histograms
 
  	AddTH1D("EventWeight",          	      1010,  -2000.,   2000.,	"Event weight", "");
-	AddTH1D("NMuons",	  	                    50,     -0.5,    49.5,	"N_{Muons}",    "");
-	AddTH1D("Pt",		  	 ZeeDMisc::FindFile("Binning/LepPt.txt"),	"p_{T}^{Muon} / GeV", "", ZeeDHistLevel::Systematics );
-	AddTH1D("PtPlus",		  	 ZeeDMisc::FindFile("Binning/LepPt.txt"),	"p_{T}^{Muon} / GeV", "");
-	AddTH1D("PtMinus",		  	 ZeeDMisc::FindFile("Binning/LepPt.txt"),	"p_{T}^{Muon} / GeV", "");
-	AddTH1D("Eta",	    	 ZeeDMisc::FindFile("Binning/LepEta.txt"),	"#eta^{Muon}",	"", ZeeDHistLevel::Systematics);
+	AddTH1D("NMuons",	  	                    50,     -0.5,    49.5,	"N_{#mu}",    "");
+	AddTH1D("Pt",		  	 ZeeDMisc::FindFile("Binning/LepPt.txt"),	"P_{T}^{#mu} [GeV]", "", ZeeDHistLevel::Systematics );
+	AddTH1D("PtPlus",		  	 ZeeDMisc::FindFile("Binning/LepPt.txt"),	"P_{T}^{#mu^{+}} [GeV]", "");
+	AddTH1D("PtMinus",		  	 ZeeDMisc::FindFile("Binning/LepPt.txt"),	"P_{T}^{#mu^{-}} [GeV]", "");
+	AddTH1D("Eta",	    	 ZeeDMisc::FindFile("Binning/LepEta.txt"),	"#eta^{#mu}",	"", ZeeDHistLevel::Systematics);
 	AddTH1D("Charge", 						     7,  	 -2,       2,   "charge" , "");
 	//MuonProperties	
-	AddTH1D("MuAuthor",	             	        20,     -0.5,    19.5,	"Author_{Muon}","");
+	AddTH1D("MuAuthor",	             	        20,     -0.5,    19.5,	"Author_{#mu}","");
 //	AddTH1D("ZmumuMass",            	100, 	50.,   150.,	"M_{Zmumu}",	"");
-	AddTH1D("CaloMuonID",	                	50,     0.,   5., 	    "CaloID_{Muon}","");
-	AddTH1D("IsCombinedMuon",       	         2,     0.,   10.,	    "IsCombined_{Muon}","");
+	AddTH1D("CaloMuonID",	                	50,     0.,   5., 	    "CaloID_{#mu}","");
+	AddTH1D("IsCombinedMuon",       	         2,     0.,   10.,	    "IsCombined_{#mu}","");
 	AddTH1D("Loose",	                         2,     0.,   2.,	    "Loose","");
 	AddTH1D("Medium",	                         2,     0.,   2.,	    "Medium","");
 	AddTH1D("Tight",	            	         2,     0.,   2.,	    "Tight","");
-	AddTH1D("IsStandAloneMuon",	                 2,     0.,   2.,	    "IsStandAlone_{Muon}","");
-	AddTH1D("IsSegmentTaggedMuon",               2,     0.,   2.,	    "IsSegmentTagged_{Muon}","");
-	AddTH1D("IsSiliconAssociatedForwardMuon",    2,     0.,   2.,	    "IsSiliconAssociatedForward_{Muon}","");
+	AddTH1D("IsStandAloneMuon",	                 2,     0.,   2.,	    "IsStandAlone_{#mu}","");
+	AddTH1D("IsSegmentTaggedMuon",               2,     0.,   2.,	    "IsSegmentTagged_{#mu}","");
+	AddTH1D("IsSiliconAssociatedForwardMuon",    2,     0.,   2.,	    "IsSiliconAssociatedForward_{#mu}","");
    	AddTH1D("IsTrack",       	     	         2,     0.,   2.,	    "IsTrack","");
 //CombineTrack
 	AddTH1D("NprecisionLayers",	                 2,     0.,   2.,	    "NprecisionLayers","");
@@ -52,9 +52,9 @@ void ZeeDHistManagerMuon::BookHistos()
 	AddTH1D("D0_exPV",	  	                    50,    -0.2,   0.2,	    "D0_exPV","");
 	AddTH1D("Z0_exPV",	            	        50,    -1.,   1.,	    "Z0_exPV","");
 //IsolationBag
-	AddTH1D("Ptcone20",	            	        50,     0.,   3.,	    "p_{T}^{cone20}","");
-	AddTH1D("Ptcone30",	    	                50,     0.,   3.,	    "p_{T}^{cone30}","");
-	AddTH1D("Ptcone40",	            	        50,     0.,   3.,	    "p_{T}^{cone40}","");
+	AddTH1D("Ptcone20",	            	        50,     0.,   3.,	    "P_{T}^{cone20}","");
+	AddTH1D("Ptcone30",	    	                50,     0.,   3.,	    "P_{T}^{cone30}","");
+	AddTH1D("Ptcone40",	            	        50,     0.,   3.,	    "P_{T}^{cone40}","");
 // histograms for the MuonSpectrometerTrackParticle
 	AddTH1D("MStrackPt",	   ZeeDMisc::FindFile("Binning/LepPt.txt"),	    "MStrack_Pt","");
 	AddTH1D("MStrackPtexPV",	   ZeeDMisc::FindFile("Binning/LepPt.txt"),	    "MStrack_Pt","");
@@ -81,7 +81,7 @@ AddTH1D("IDtrackEta",	     ZeeDMisc::FindFile("Binning/LepEta.txt"), 	"IDtrack_E
 	AddTH1D("fIDsigz0_exPV",	               20,   -10.,   10.,	    "fIDsigz0_exPV","");
     AddTH1D("fIDd0_exPV_withcharge",	       20,   -0.5,  0.5,	    "fIDd0_exPV_withQ","");
 	
-	AddTH1D("MuonPtMax",      ZeeDMisc::FindFile("Binning/LepPt.txt"),  "p_{T}^{Muon} / GeV", "");
+	AddTH1D("MuonPtMax",      ZeeDMisc::FindFile("Binning/LepPt.txt"),  "p_{T}^{Muon} [GeV]", "");
 
     // Some extra histograms to see results of selection tool
     AddTH1D("MuonQuality",     5, 0., 5.,"Muon Quality","");

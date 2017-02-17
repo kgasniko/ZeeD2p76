@@ -7,7 +7,8 @@ ZeeDTruthJets=False
 ZeeDUseTrigger=True
 ZeeDDoTriggerMatching=True
 ZeeDreadType=2
-
+ZeeDOneBinMuonSF = True
+ZeeDChargedMuonSD= False
 
 class readType:
     AOD = 1
@@ -29,6 +30,19 @@ for i in ServiceMgr: i.OutputLevel = ZeeDOutputLevel
 from ZeeDAnalysisSvc.ZeeDAnalysisSvcInit import ZeeDAnalysisSvcInit
 ZeeDAnalysisSvcInit()
 from ZeeDAnalysisSvc.ZeeDAnalysisSvcConfig import ZeeDAnalysisSvc
+
+#Muon trigger SF
+try:
+    checkVariable("ZeeDOneBinMuonSF", ZeeDOneBinMuonSF)
+except NameError:
+    ZeeDOneBinMuonSF=defaultVariable("ZeeDOneBinMuonSF", True)
+ZeeDAnalysisSvc.MuonOneBinTriggerSF=ZeeDOneBinMuonSF
+
+try:
+    checkVariable("ZeeDChargedMuonSD",ZeeDChargedMuonSD)
+except NameError:
+    ZeeDChargedMuonSD=defaultVariable("ZeeDChargedMuonSD", False)
+ZeeDAnalysisSvc.MuonChargedTriggerSF=ZeeDChargedMuonSD
 
 # Read in the files ------------------------------------------------------------
 try:

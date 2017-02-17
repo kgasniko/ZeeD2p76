@@ -56,10 +56,10 @@ void ZeeDAnalysisCutSelectorZmumu::BookCuts()
     // Pt of both electrons is bigger than elecPtCut
      this->AddCut(new ZeeDCutAsymmetricalLepPt("PtMinBothMuonZ", 20., 20.));
      this->AddCut(new ZeeDCutIsEMBothLepZ("IsEMMediumPPBothMuonZ", &ZeeDLeptonBags::IsEM::isMedium));
-     this->AddCut(new ZeeDCutEtaMaxBothLepZ("EtaMaxBothMuonZ", 2.47));
+     this->AddCut(new ZeeDCutEtaMaxBothLepZ("EtaMaxBothMuonZ", 2.5));
   	 this->AddCut(new ZeeDCutTrigger("EF_mu10", ZeeDEnum::Trigger::EF_mu10));
      this->AddCut(new ZeeDCutTriggerWithMatching("MuonTrig", ZeeDEnum::Trigger::EF_mu10));	
-     this->AddCut(new ZeeDCutOQMaps("OQMaps"));
+     //this->AddCut(new ZeeDCutOQMaps("OQMaps"));
 
     // Electrons have opposite charge
     this->AddCut(new ZeeDCutChargeBothLepZ("ChargeBothLepOppositeZ"));
@@ -78,10 +78,9 @@ void ZeeDAnalysisCutSelectorZmumu::BookCuts()
     // LAr hole veto:
     this->AddCut(new ZeeDCutLArEventVeto("ZeeDCutLArEventVeto"));
     if (ZeeDAnaOptions->IsMC() && ZeeDAnaOptions->FillGenInfo()) {
-        this->AddCut(new ZeeDCutEtaMaxBothBornElecZ("GenEta", 2.47));
+        this->AddCut(new ZeeDCutEtaMaxBothBornElecZ("GenEta", 2.5));
         this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPt", 20.));
         this->AddCut(new ZeeDCutMassBornBoson("GenMt", 66, 116));
-        this->AddCut(new ZeeDCutEtaMaxBothBornElecZ("GenEtaNEW", 2.5));
         this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPtNEW", 25.));
          
         }

@@ -667,6 +667,7 @@ void ZeeDCalcEtMiss::Calculate(ZeeDEvent* event)
         Int_t nObjMET(etMiss->GetMETCompositionElectron_index().size());
 
         TLorentzVector lepPt;
+        int i_elec = 0;
         const TObjArray* electrons = event->GetElectrons();
         double sumElecPx=0, sumElecPy=0, sumElecPt=0;
         for ( Int_t iMET = 0; iMET < nObjMET; iMET++ )
@@ -689,12 +690,14 @@ void ZeeDCalcEtMiss::Calculate(ZeeDEvent* event)
             if ( zeedIndex != -1 )
             {
                 lepPt+=electron->GetFourVector();
+                i_elec+=1;
             }
         }
+        etMiss->SetnMETElec(i_elec);
 
         nObjMET = (etMiss->GetMETCompositionMuon_index().size());
         const TObjArray* Muons = event->GetMuons();
-
+        int i_muon = 0;
         for ( Int_t iMET = 0; iMET < nObjMET; iMET++ )
         {
             Int_t zeedIndex(-1);
@@ -717,7 +720,9 @@ void ZeeDCalcEtMiss::Calculate(ZeeDEvent* event)
             if ( zeedIndex != -1 )
             {
                 lepPt+=Muon->GetFourVector();
+                i_muon+=1;
             }
+            etMiss->SetnMETMuon(i_muon);
         }
 
         TLorentzVector newLv;

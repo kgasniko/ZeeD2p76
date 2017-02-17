@@ -21,7 +21,6 @@ public:
     // @param idnumber - identification number
     void SetEventIdentification(ZeeDEvent* event, UInt_t idnumber) const {
       event->SetCurrentBosonW((ZeeDBosonW*)fBosonsAndWeights.at(idnumber).first);
-      ZeeDBosonW* bos = (ZeeDBosonW*)fBosonsAndWeights.at(idnumber).first;
     }
     
     void IdentifyRecBosons (ZeeDEvent*);

@@ -108,12 +108,6 @@ void ZeeDCalcEvent::Calculate(ZeeDEvent* event)
         fCalcZ->Calculate(event);
     }
 
-    // Create W boson candidates
-    if ( (*fAnaOptions)->CalcW() == true ) {
-        fCalcW->Calculate(event);
-    }
-    
-
     // Calculate jets (recalibration)
     if ( (*fAnaOptions)->CalcJets() && ((*fAnaOptions)->RecalibrateJets() == true)) 
       {
@@ -125,5 +119,11 @@ void ZeeDCalcEvent::Calculate(ZeeDEvent* event)
       {
 	fCalcEtMiss->Calculate(event);
       }
+
+    // Create W boson candidates
+    if ( (*fAnaOptions)->CalcW() == true ) {
+        fCalcW->Calculate(event);
+    }
+    
 
 }

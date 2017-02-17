@@ -533,7 +533,14 @@ public:
     bool ApplyTriggerCorrection() const {
         return fApplyTriggerCorrection;
     }
+    
+    bool MuonOneBinTriggerSF() const {
+        return fMuonOneBinTriggerSF;
+    }
 
+    bool MuonChargedTriggerSF() const{
+        return fMuonChargedTriggerSF;
+    }
 
     std::string TriggerEfficiencyElectronFileName() const {
         return fTriggerEfficiencyElectronFileName;
@@ -1163,8 +1170,8 @@ private:
 
 
     bool fApplyTriggerCorrection;
-
-
+    bool fMuonOneBinTriggerSF;
+    bool fMuonChargedTriggerSF;
     std::string fTriggerEfficiencyElectronFileName;
 
 

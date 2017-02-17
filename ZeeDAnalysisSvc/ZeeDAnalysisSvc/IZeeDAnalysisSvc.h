@@ -239,8 +239,8 @@ public:
 
 
     virtual bool ApplyTriggerCorrection() const = 0;
-
-
+    virtual bool MuonOneBinTriggerSF() const=0;
+    virtual bool MuonChargedTriggerSF() const=0;
     virtual std::string TriggerEfficiencyElectronFileName() const = 0;
 
 

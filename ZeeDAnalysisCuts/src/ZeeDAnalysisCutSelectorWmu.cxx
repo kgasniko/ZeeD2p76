@@ -46,7 +46,7 @@ void ZeeDAnalysisCutSelectorWmu::BookCuts()
     const Double_t etMissCut    = 25.0;  // GeV
     const Double_t etaCrackMin  = 1.37;
     const Double_t etaCrackMax  = 1.52;
-    const Double_t muEtaMax   = 2.47;
+    const Double_t muEtaMax   = 2.5;
     const Double_t vertexZCut   = 300.0; // mm
     const Int_t    minNumTrkCut = 3;    //
     const Double_t massTransvCut= 40;

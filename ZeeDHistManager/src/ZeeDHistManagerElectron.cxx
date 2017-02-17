@@ -34,15 +34,15 @@ void ZeeDHistManagerElectron::BookHistos()
 
 
     // kinematics
-    AddTH1D("ElecPt",  ZeeDMisc::FindFile("Binning/LepPt.txt") , "P_{T}^{elec} / GeV", "", ZeeDHistLevel::Systematics);
+    AddTH1D("ElecPt",  ZeeDMisc::FindFile("Binning/LepPt.txt") , "P_{T}^{elec} [GeV]", "", ZeeDHistLevel::Systematics);
     AddTH1D("ElecEta", ZeeDMisc::FindFile("Binning/LepEta.txt"), "#eta^{elec}",           "", ZeeDHistLevel::Systematics);
     AddTH1D("ElecCharge",      5,  -2.5,  2.5, "Electron charge",       "" );
 
-    AddTH1D("ElecPhi",        50, -200., 200., "#varphi_{elec} / deg",  "" );
-    AddTH1D("ElecTheta",      50,    0., 200., "#theta_{elec} / deg",   "" );
+    AddTH1D("ElecPhi",        50, -200., 200., "#varphi_{elec} [deg]",  "" );
+    AddTH1D("ElecTheta",      50,    0., 200., "#theta_{elec} [deg]",   "" );
     AddTH1D("ElecEOverP",     50,   0.0,  2.0, "E_{clust} / P_{track}", "" );
 
-    AddTH1D("ElecDeltaPhi",   50,  -0.1,  0.1, "#varphi_{track} - #varphi_{clust} / rad", "");
+    AddTH1D("ElecDeltaPhi",   50,  -0.1,  0.1, "#varphi_{track} - #varphi_{clust} rad", "");
     AddTH1D("ElecDeltaR",     50,  -0.1,  0.1, "#Delta R_{track, cluster}", "");
     AddTH1D("ElecDeltaEta",   50,  -0.1,  0.1, "#eta_{track} - #eta_{clust}", "");
 
@@ -57,32 +57,32 @@ void ZeeDHistManagerElectron::BookHistos()
 
 
     // track
-    AddTH1D("TrackPt",        50,  0.0, 100.0, "P_{T}^{track} / GeV", "");
+    AddTH1D("TrackPt",        50,  0.0, 100.0, "P_{T}^{track} [GeV]", "");
     AddTH1D("TrackEta",       50,  -5.0,  5.0, "#eta^{track}",           "" );
-    AddTH1D("TrackPhi",       50, -200., 200., "#varphi_{track} / deg",  "" );
+    AddTH1D("TrackPhi",       50, -200., 200., "#varphi_{track} [deg]",  "" );
 
     // cluster
-    AddTH1D("ClustPt",        50,  0.0, 100.0, "P_{T}^{clust} / GeV", "");
+    AddTH1D("ClustPt",        50,  0.0, 100.0, "P_{T}^{clust} [GeV]", "");
     AddTH1D("ClustEta",       50,  -5.0,  5.0, "#eta^{clust}",           "" );
-    AddTH1D("ClustPhi",       50, -200., 200., "#varphi_{clust} / deg",  "" );
+    AddTH1D("ClustPhi",       50, -200., 200., "#varphi_{clust} [deg]",  "" );
 
     // MC
     if (bIsMC) {
-        AddTH1D("ElecPtGen",   50,  0.0, 100.0, "P_{T}^{elec}_{gen} / GeV", "" );
+        AddTH1D("ElecPtGen",   50,  0.0, 100.0, "P_{T}^{elec}_{gen} [GeV]", "" );
         AddTH1D("ElecEtaGen",  50, -5.0,   5.0, "#eta^{elec}_{gen}"       , "" );
         AddTH2D("EoverEgenVsEta",    100, -5., 5., 80, -0.2, 0.2, "#eta_{elec}", "E / E_{gen} - 1");
         AddTH2D("EoverEgenBornVsEta", 100, -5., 5., 80, -0.2, 0.2, "#eta_{elec}", "E / E_{gen} - 1");
     }
 
     // Extra histos for low/high pt electrons:
-    AddTH1D("ElecPtMin",       50,  0.0, 100.0, "P_{T}^{elec} / GeV", "");
-    AddTH1D("ElecPtMax",       50,  0.0, 100.0, "P_{T}^{elec} / GeV", "");
+    AddTH1D("ElecPtMin",       50,  0.0, 100.0, "P_{T}^{elec} [GeV]", "");
+    AddTH1D("ElecPtMax",       50,  0.0, 100.0, "P_{T}^{elec} [GeV]", "");
     AddTH1D("ElecEtaMinPt",   100, -5.0,   5.0, "#eta^{elec}",        "");
     AddTH1D("ElecEtaMaxPt",   100, -5.0,   5.0, "#eta^{elec}",        "");
 
     // Extra histos for positive/negative charge electrons:
-    AddTH1D("ElecPtPos",   50,  0.0, 100.0, "P_{T}^{elec} / GeV", "" );
-    AddTH1D("ElecPtNeg",   50,  0.0, 100.0, "P_{T}^{elec} / GeV", "" );
+    AddTH1D("ElecPtPos",   50,  0.0, 100.0, "P_{T}^{elec} [GeV]", "" );
+    AddTH1D("ElecPtNeg",   50,  0.0, 100.0, "P_{T}^{elec} [GeV]", "" );
     AddTH1D("ElecEtaPos", 100, -5.0,   5.0, "#eta^{elec}",        "" );
     AddTH1D("ElecEtaNeg", 100, -5.0,   5.0, "#eta^{elec}",        "" );
 
@@ -93,11 +93,11 @@ void ZeeDHistManagerElectron::BookHistos()
 
     AddTH1D("Trigger",        nChains,    0.0,   nChains, "Chain", "Matched");
 
-    AddTH2D("ElecEtaPhi", 50, -3, 3, 50, -200, 200, "#eta^{elec}", "#varphi^{elec} / deg");
+    AddTH2D("ElecEtaPhi", 50, -3, 3, 50, -200, 200, "#eta^{elec}", "#varphi^{elec} [deg]");
 
-    AddTH2D("ElecEtaPhiBadOQAOD", 50, -3, 3, 50, -200, 200, "#eta^{elec}", "#varphi^{elec} / deg");
+    AddTH2D("ElecEtaPhiBadOQAOD", 50, -3, 3, 50, -200, 200, "#eta^{elec}", "#varphi^{elec} [deg]");
 
-    AddTH2D("ElecEtaPhiGoodOQAOD", 50, -3, 3, 50, -200, 200, "#eta^{elec}", "#varphi^{elec} / deg");
+    AddTH2D("ElecEtaPhiGoodOQAOD", 50, -3, 3, 50, -200, 200, "#eta^{elec}", "#varphi^{elec} [deg]");
 
 }
 

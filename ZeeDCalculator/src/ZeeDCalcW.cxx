@@ -168,11 +168,24 @@ ZeeDBosonW* ZeeDCalcW::CreateW (const ZeeDLepton* elec){
 
     TLorentzVector p_W = p_nu + p_el;
 
-    double bias=0;
-    if ((*fAnaOptions)->IsMC() && (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEt))){
-        const ZeeDGenParticle* Boson = fEventInProcess->GetGenBoson(ZeeDEnum::MCFSRLevel::Born);
-        double ptTruth = Boson->GetMCFourVector().Pt();
+    // Calculate W's transverse mass
+    // MT = sqrt ( 2 p_T^e p_T^nu ( 1 - cos delta phi))
+    Double_t Mt = 2 * elecPt * (neutrinoPt);
+    Mt *= 1 - TMath::Cos(elecPhi - neutrinoPhi);
+    Mt = TMath::Sqrt(Mt);
 
+    W->SetMt(Mt);
+
+    // Reconstruct (transverse) W 4-momentum
+
+    W->SetEtMiss(neutrinoPt);
+    W->SetFourVector(p_W); 
+
+
+    //double bias=0;
+    //if ((*fAnaOptions)->IsMC() && (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEt))){
+    if ((*fAnaOptions)->IsMC()){
+    //double ptW=p_W.Pt();
         //Calculate HadronRecoilCorrections
         int binYn = pCor->GetYaxis()->FindBin(p_W.Pt());
         int binXn = pCor->GetXaxis()->FindBin(fEtMiss->GetCorRecoilSumet());
@@ -195,20 +208,6 @@ ZeeDBosonW* ZeeDCalcW::CreateW (const ZeeDLepton* elec){
 
 
     }
-
-
-    // Calculate W's transverse mass
-    // MT = sqrt ( 2 p_T^e p_T^nu ( 1 - cos delta phi))
-    Double_t Mt = 2 * elecPt * (neutrinoPt+bias);
-    Mt *= 1 - TMath::Cos(elecPhi - neutrinoPhi);
-    Mt = TMath::Sqrt(Mt);
-
-    W->SetMt(Mt);
-
-    // Reconstruct (transverse) W 4-momentum
-
-    W->SetEtMiss(neutrinoPt);
-    W->SetFourVector(p_W); 
 
     return W;
 }

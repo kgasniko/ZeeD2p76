@@ -35,17 +35,17 @@ void ZeeDHistManagerEtmiss::BookHistos()
     // book histograms
     AddTH1D("EventWeight",  1010,    -2.,   200.0,  "Event weight",    "");
     AddTH1D("EtMiss"    ,         50,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" );    
-    AddTH1D("EtMiss0Jet"    ,         100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" );    
+/*    AddTH1D("EtMiss0Jet"    ,         100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" );    
     AddTH1D("EtMiss1Jet"    ,         100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" );    
-    AddTH1D("EtMiss2Jet"    ,         100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" );    
+    AddTH1D("EtMiss2Jet"    ,         100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" );   */ 
     AddTH1D("EtPhi",  50, -200., 200., "#varphi^{elec} / deg", "");
-    AddTH1D("MET_Electron",    100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" );  
-    AddTH1D("MET_Muon",   100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" ); 
+/*    AddTH1D("MET_Electron",    100,     0.0,  100.0, "len(elec) in MET composition",     "" );  
+    AddTH1D("MET_Muon",   100,     0.0,  100.0, "len(muon) in MET composition",     "" ); 
     AddTH1D("MET_Tau",   10,     1.0,  500.0, "E_{T}^{miss} [GeV]",     "" ); 
     AddTH1D("MET_Jet",   50,     2.0,  60.0, "E_{T}^{miss} [GeV]",     "" ); 
     AddTH1D("MET_Soft",   100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" ); 
     AddTH1D("MET_Photon",   10,     1.0,  50.0, "E_{T}^{miss} [GeV]",     "" ); 
-    AddTH1D("MET_Truth",    100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" ); 
+    AddTH1D("MET_Truth",    100,     0.0,  100.0, "E_{T}^{miss} [GeV]",     "" );
     AddTH1D("SoftElecGreat35", 100, 0., 100., "E_{T}^{miss} [GeV]", "");
     AddTH1D("SoftElecLess35", 100, 0., 100., "E_{T}^{miss} [GeV]", "");
     AddTH1D("SoftMuonGreat35", 100, 0., 100., "E_{T}^{miss} [GeV]", "");
@@ -60,18 +60,18 @@ void ZeeDHistManagerEtmiss::BookHistos()
     AddTH1D("EtMissMuonLess35", 100, 0., 100., "E_{T}^{miss} [GeV]", "");
     AddTH1D("Elecwpx", 100, 0., 2., "E_{T}^{miss} wpx" , "");
     AddTH1D("Elecwpy", 100, 0., 2., "E_{T}^{miss} wpy", "");
-    AddTH1D("Muonwpx", 100, 0., 2., "wpx muon", "");
-    AddTH1D("CorRecoilEt", 50, 0., 100., "cor recoil et", "");
-    AddTH1D("CorRecoilSumet", 50, 0., 150., "cor recoil sumet", "");
-    AddTH1D("CorRecoilPhi", 50, -4., 4., "cor recoil phi", "");
-    AddTH1D("Muonwpy", 100, 0., 2., "wpy muon", "");
-    AddTH1D("CorRecoilEtMiss", 50, 0., 100., "EtMiss calculated from hadron recoil");
+    AddTH1D("Muonwpx", 100, 0., 2., "wpx muon", "");*/
+    AddTH1D("CorRecoilEt", 50, 0., 100., "E_{T}^{Hadron Recoil} [GeV]", "");
+    AddTH1D("CorRecoilSumet", 50, 0., 150., "Sum E_{T}^{Hadron Recoil} [GeV]", "");
+    AddTH1D("CorRecoilPhi", 50, -4., 4., "#phi^{Hadron Recoil} [GeV]", "");
+//    AddTH1D("Muonwpy", 100, 0., 2., "wpy muon", "");
+    AddTH1D("CorRecoilEtMiss", 50, 0., 100., "EtMiss^{Hadron Recoil} [GeV]");
     AddTH1D("nMETElec", 5, 0, 5, "N Electrons in METComposition");
     AddTH1D("nMETMuon", 5, 0, 5, "N Muons in METComposition");
     //    AddTH2D("EtmissEtaPhi", 50, -5., 5., 50, -200., 200, "Eta", "Phi"); // fill me!
     AddTH2D("EtmissXY", 40, -100., 100., 40, -100., 100, "EtX", "EtY");
-    AddTH2D("SoftVsMuon" , 100, 0.0, 100., 100, 0.0, 100., "Soft Term", "Muon EtMiss");
-    AddTH2D("SoftVsElectron", 100, 0.0, 100., 100, 0.0, 100., "Soft Term", "Electron EtMiss");
+/*    AddTH2D("SoftVsMuon" , 100, 0.0, 100., 100, 0.0, 100., "Soft Term", "Muon EtMiss");
+    AddTH2D("SoftVsElectron", 100, 0.0, 100., 100, 0.0, 100., "Soft Term", "Electron EtMiss");*/
     AddTH2D("HadrRecoilvsEtMiss", 50, 0.0, 100., 50, 0.0, 100., "HadronRecoil EtMiss", "Standart EtMiss");
 
 
@@ -113,6 +113,8 @@ void ZeeDHistManagerEtmiss::Fill()
         FillTH1(etmiss->GetCorRecoilPhi(), Weight, "CorRecoilPhi");
         FillTH1(etmiss->GetCorRecoilSumet(), Weight, "CorRecoilSumet");
         FillTH2(etmissLV.Et(), etmiss->GetEt(), Weight, "HadrRecoilvsEtMiss");
+        FillTH1(etmiss->GetnMETElec(), Weight, "nMETElec");
+        FillTH1(etmiss->GetnMETMuon(), Weight, "nMETMuon");
 
         /*      FillTH1(etmiss->GetElecEt(), Weight, "MET_Electron");
                 FillTH1(etmiss->GetMuonEt(), Weight, "MET_Muon");

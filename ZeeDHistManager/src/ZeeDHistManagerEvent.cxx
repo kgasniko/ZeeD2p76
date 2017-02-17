@@ -30,26 +30,26 @@ void ZeeDHistManagerEvent::BookHistos()
     if ( (*ZeeDAnaOptions)->IsMC() ) {
         bIsMC = kTRUE;
     }
-
+    AddTH1D("nevents",       2, 0, 2, "nevents", "");
     //vertex histograms
-    AddTH1D("VtxXPos",       50,    -1.,    1., "X_{vtx} / mm",     "");
-    AddTH1D("VtxYPos",       50,     0.,    2., "Y_{vtx} / mm",     "");
-    AddTH1D("VtxZPos",       50,  -200.,  200., "Z_{vtx} / mm",     "");
+    AddTH1D("VtxXPos",       50,    -1.,    1., "X_{vtx} [mm]",     "");
+    AddTH1D("VtxYPos",       50,     0.,    2., "Y_{vtx} [mm]",     "");
+    AddTH1D("VtxZPos",       50,  -200.,  200., "Z_{vtx} [mm]",     "");
 
     AddTH1D("Nvtx"      ,         6,     0.0,   6.0, "N_{vtx}",      "");
     AddTH1D("Mu"        ,        30,    -0.0,   1.0, "Mu"        , "Average Interactions Per Crossing");
     AddTH1D("ActualMu"  ,       100 ,    -0.0,   1.0, "Mu(actual)", "Actual  Interactions Per Crossing");
     
-    AddTH1D("EtDensity_3EM",  200,      0.,    1., "#rho(3EM)/GeV",         "Et density #rho 3EM");
-    AddTH1D("EtDensity_3LC",  200,      0.,    1., "#rho(3LC)/GeV",         "Et density #rho 3LC");
-    AddTH1D("EtDensity_4EM",  200,      0.,    1., "#rho(4EM)/GeV",         "Et density #rho 4EM");
-    AddTH1D("EtDensity_4LC",  200,      0.,    1., "#rho(4LC)/GeV",         "Et density #rho 4LC");
+    AddTH1D("EtDensity_3EM",  200,      0.,    1., "#rho(3EM) [GeV]",         "Et density #rho 3EM");
+    AddTH1D("EtDensity_3LC",  200,      0.,    1., "#rho(3LC) [GeV]",         "Et density #rho 3LC");
+    AddTH1D("EtDensity_4EM",  200,      0.,    1., "#rho(4EM) [GeV]",         "Et density #rho 4EM");
+    AddTH1D("EtDensity_4LC",  200,      0.,    1., "#rho(4LC) [GeV]",         "Et density #rho 4LC");
     
     AddTH1D("WMassTransv", 200, 0., 100., "M_{transv}", " M_{transverce} for W candidate");
     AddTH1D("WPTransv", 200, 0., 100., "P_{transv}", "P_{transverce} for W candidate");
 
     AddTH1D("VertexTracks",  50,     0.,  150., "# vertex tracks", "");
-    AddTH1D("ZvDiff",       200,  -100.,  100., "Z_{vtx} - Z_{vtx}^{boson} / mm", "");
+    AddTH1D("ZvDiff",       200,  -100.,  100., "Z_{vtx} - Z_{vtx}^{boson} [mm]", "");
     AddTH1D("EtMiss",      50,    0.0, 100.0, "E_{T}^{miss} [GeV]",     "" );
     UInt_t nChains = (*ZeeDAnaOptions)->TriggerEvent().size();
 
@@ -60,7 +60,7 @@ void ZeeDHistManagerEvent::BookHistos()
     AddTH1D("LAr",                  4,    -0.5,   3.5,  "LAr event flag",  "");
 
     AddTH1D("Period",      1,    0.0,  1, "Period", "");
-    AddTH2D("mu_nVtx",    10,    0.0,  1.0,  6, 0.0,  6.0, "Mu", "nVtx");
+    AddTH2D("mu_nVtx",    50,    0.0,  1.0,  6, 0.0,  6.0, "Mu", "nVtx");
 
     if(bIsMC) {
 
@@ -148,6 +148,7 @@ void ZeeDHistManagerEvent::Fill()
     Double_t Weight = event->GetWeight();
     FillTH1(Weight, 1., "EventWeight");
     FillTH1(Weight, 1., "EventWeightHuge");
+    FillTH1(Weight, 1., "nevents");
     
 
     // Get array of vertices

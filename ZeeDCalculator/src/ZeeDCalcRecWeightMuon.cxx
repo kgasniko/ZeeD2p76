@@ -31,15 +31,32 @@ ZeeDCalcRecWeightMuon::ZeeDCalcRecWeightMuon() :
         }
         m_MCPsf->Initialise();
 
-        TFile* fileSF = new TFile("/afs/desy.de/user/k/kgasniko/ZeeD/share/SF2.root");
-        hPlus  = (TH1D*)fileSF->Get("SF2Plus");
-        hMinus = (TH1D*)fileSF->Get("SF2Minus");
+        TFile* fileSF = new TFile("/afs/desy.de/user/k/kgasniko/ZeeD/share/SF.root");
 
+        if ((*fAnaOptions)->MuonChargedTriggerSF()){
+            if ((*fAnaOptions)->MuonOneBinTriggerSF()){
+                hPlus  = (TH1D*)fileSF->Get("SF2Plus");
+                hMinus = (TH1D*)fileSF->Get("SF2Minus");
+            }else {
+                hPlus  = (TH1D*)fileSF->Get("SFPlus");
+                hMinus = (TH1D*)fileSF->Get("SFMinus");
+            }
+
+        } else {
+            if ((*fAnaOptions)->MuonOneBinTriggerSF()){
+
+                hPlus = (TH1D*)fileSF->Get("SF2");
+                hMinus = (TH1D*) fileSF->Get("SF2");
+            } else {
+                hPlus = (TH1D*)fileSF->Get("SF");
+                hMinus = (TH1D*) fileSF->Get("SF");
+            }
+        }
 
     }
 
 void ZeeDCalcRecWeightMuon::bookToyMC(){
-    
+
     for (int i=0; i<(*fAnaOptions)->MCSystNumbers(); i++){
         std::cout << " Booking scale factor " << i << std::endl;
         ostringstream convert;
@@ -54,7 +71,7 @@ void ZeeDCalcRecWeightMuon::bookToyMC(){
 }
 
 void ZeeDCalcRecWeightMuon::bookToyMCTrig() {
-    
+
     for (int i=0; i<(*fAnaOptions)->MCSystNumbers(); i++){
         TrigPlus.push_back(fSys->getToySystematics(0.97, 0.02));
         TrigMinus.push_back(fSys->getToySystematics(0.93, 0.03));
@@ -69,7 +86,7 @@ double ZeeDCalcRecWeightMuon::getToySFTrig(int toyN, int charge){
 }
 
 double ZeeDCalcRecWeightMuon::getToySF(int toyN, int charge, TLorentzVector lv){
- 
+
     Analysis::AnalysisMuonConfigurableScaleFactors *sfToy = m_MCPsfVec[toyN];
     return sfToy->scaleFactor(charge, lv);
 
@@ -119,12 +136,12 @@ void ZeeDCalcRecWeightMuon::CalcTriggerSF(ZeeDMuon* muon) {
         double weight = hist->GetBinContent(binN);
         double weight_unc = hist->GetBinError(binN);
         /*if (charge>0){
-            weight = 0.97;
-            weight_unc=0.02;
-        } else {
-            weight = 0.97;
-            weight_unc=0.03;
-        }*/
+          weight = 0.97;
+          weight_unc=0.02;
+          } else {
+          weight = 0.97;
+          weight_unc=0.03;
+          }*/
         /*	 if (charge>0 && pt < 27){
              weight = 0.84;
              weight_unc = 0.3;
@@ -165,11 +182,11 @@ void ZeeDCalcRecWeightMuon::CalcTriggerSF(ZeeDMuon* muon) {
             triggerSFbag.TrigSF[default_trigger]     = 1.; 
             // FIXME: something about ToyMC
         } else if (fSys->isShiftInUse(ZeeDSystematics::muOffTrigToyMC)) {
-           ZeeDSystematics::ZeeDSingleSystematics* toyMCsyst = fSys->isShiftInUse(ZeeDSystematics::muOffTrigToyMC);
-           int idxToy = toyMCsyst->toyMCIndex;
-           double sf = getToySFTrig(idxToy, charge); 
-           //const UInt_t css = fSys->CurrentSystShift(ZeeDSystematics::eOffTrigToyMC);
- //           double sf = fSys->getToySystematics(weight, weight_unc);
+            ZeeDSystematics::ZeeDSingleSystematics* toyMCsyst = fSys->isShiftInUse(ZeeDSystematics::muOffTrigToyMC);
+            int idxToy = toyMCsyst->toyMCIndex;
+            double sf = getToySFTrig(idxToy, charge); 
+            //const UInt_t css = fSys->CurrentSystShift(ZeeDSystematics::eOffTrigToyMC);
+            //           double sf = fSys->getToySystematics(weight, weight_unc);
             //std::cout << weight << "  " << weight_unc << "   " << sf << std::endl;
             triggerSFbag.TrigSF[default_trigger]    = sf;
             triggerSFbag.SFTrig = sf;
@@ -206,10 +223,10 @@ void ZeeDCalcRecWeightMuon::CalcIDRecSF(ZeeDMuon* muon,	int charge,
             } else if (fSys->isShiftInUse(ZeeDSystematics::muOffIDEffDown)) {
                 reconstructionSF.MediumPP -= weight_unc; 
             } else if (fSys->isShiftInUse(ZeeDSystematics::muOffIDEffToyMC)) {
-                     ZeeDSystematics::ZeeDSingleSystematics* toyMCsyst = fSys->isShiftInUse(ZeeDSystematics::muOffIDEffToyMC);
-           int idxToy = toyMCsyst->toyMCIndex;
-            double sf = getToySF(idxToy, charge, lv); 
-           //double sf = fSys->getToySystematics(weight, weight_unc);
+                ZeeDSystematics::ZeeDSingleSystematics* toyMCsyst = fSys->isShiftInUse(ZeeDSystematics::muOffIDEffToyMC);
+                int idxToy = toyMCsyst->toyMCIndex;
+                double sf = getToySF(idxToy, charge, lv); 
+                //double sf = fSys->getToySystematics(weight, weight_unc);
                 reconstructionSF.MediumPP = sf;
             }
 
