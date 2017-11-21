@@ -1,0 +1,94 @@
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+
+
+my $a;
+my $n_file=$ARGV[0];
+my $fname=$ARGV[1];
+my $jobname=$ARGV[2];
+my $i;
+my $k;
+my $home="/afs/desy.de/user/k/kgasniko/xxl/official_ZeeD/17.2.7.5.20/ZeeD/ZeeDAnalysis/run";
+my $file="$home/$fname";
+my $jobDir="$home/$jobname";
+my $out="/nfs/dust/atlas/user/kgasniko/analysis";
+my $publicDir="/afs/desy.de/user/k/kgasniko/public";
+my $logDir="$publicDir/$jobname";
+my $in;
+my $ii;
+my $str;
+my $fileline;
+my $outDir="$out/$jobname";
+my $type=0;
+my $process;
+my $count=0;
+my $process_count;
+
+my $num_args= $#ARGV+1;
+if ($num_args != 3) {
+    print "Wrong number of arguments";
+    exit;
+    }
+
+my $additionalLine="";
+system ("mkdir -p $outDir");
+#system ("rm $outDir/*");
+system ("mkdir -p $jobDir");
+system ("rm -rf $jobDir/*");
+
+system ("echo Opening of file $file");
+open MYFILE, $file;
+$k=0;
+$i=0;
+$str=<MYFILE>;
+chomp($str);
+print ($str);
+    
+if ($str =~ /.*data\d*_.*/ || $str=~ /.*TTree_\d+.*/) {
+    $type=2;
+    system ("echo This is DATA");
+    }
+#$type=2;
+
+
+if ($str =~ /.*mc\d*.*/) {
+    $type=1;
+    system ("echo This is MC data");
+    }
+if ($type == 1) {
+   system ("mkdir $jobDir/log ");
+   
+   while ($str) {
+     chomp($str);
+     system ("touch jobOptions.py");
+     open PYFILE, '> jobOptions.py';
+     if ($str =~ /.*\.\w*_\w*_([A-Za-z]+[_\w]*)\.merge.*/) {
+         print "Making job for process $1\n";
+         $process=$1;
+         $fileline="ZeeDInputFiles=['$str'";
+         print (PYFILE $fileline);
+         $str=<MYFILE>;
+         $count=1;
+         chomp($str);
+         while ($str && $str =~ /.*_$process\.merge.*/)
+                {
+                $count=$count+1;
+                chomp($str);
+		        $fileline=",'$str'";
+                print (PYFILE $fileline);
+                $str=<MYFILE>;
+                }
+          $fileline="]\n";
+          print (PYFILE $fileline);
+          close (PYFILE);
+          system ("echo $additionalLine >> jobOptions.py");
+          system ("cat $home/ZeeDAnalysis_jobOptionMtW.py >> jobOptions.py"); 
+          system ("cp jobOptions.py $jobDir/jobOptions_$process.py ");
+          system ("chmod 777 $jobDir/jobOptions_$process.py ");
+          system ("echo subprocess $process $i");
+          system ("qsub -N $process\_$jobname -t 1-100 -o $jobDir/log mcjobMtW.sh  $jobDir/jobOptions_$process.py $outDir/out_$process");
+          $i=$i+1;
+          }
+       }
+   } 

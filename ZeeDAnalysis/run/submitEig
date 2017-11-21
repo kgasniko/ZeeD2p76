@@ -1,0 +1,124 @@
+#!/usr/bin/perl -w
+use strict;
+use warnings;
+
+
+my $a;
+my $n_file=$ARGV[0];
+my $fname=$ARGV[1];
+my $jobname=$ARGV[2];
+my $i;
+my $k;
+my $home="/afs/desy.de/user/k/kgasniko/xxl/official_ZeeD/17.2.7.5.20/ZeeD/ZeeDAnalysis/run";
+my $file="$home/$fname";
+my $jobDir="$home/$jobname";
+my $out="/nfs/dust/atlas/user/kgasniko/analysis";
+my $publicDir="/afs/desy.de/user/k/kgasniko/public";
+my $logDir="$publicDir/$jobname";
+my $in;
+my $ii;
+my $str;
+my $fileline;
+my $outDir="$out/$jobname";
+my $type=0;
+my $process;
+
+my $num_args= $#ARGV+1;
+if ($num_args != 3) {
+    print "Wrong number of arguments";
+    exit;
+    }
+
+
+system ("mkdir -p $outDir");
+system ("rm $outDir/*.root");
+system ("mkdir -p $jobDir");
+system ("rm $jobDir/*");
+system ("mkdir -p $jobDir/log");
+
+system ("echo Opening of file $file");
+open MYFILE, $file;
+$k=0;
+$i=0;
+$str=<MYFILE>;
+chomp($str);
+
+
+if ($str =~ /.*mc\d*.*/) {
+    $type=1;
+    system ("echo This is MC data");
+    }
+    
+if ($type == 2) {
+  while ($str) {
+     chomp($str);
+     system ("touch jobOptions.py");
+     open PYFILE, '> jobOptions.py';
+     $fileline="ZeeDInputFiles=['$str'";
+     print (PYFILE $fileline);
+     
+     for ($k=0; ($k<$n_file-1) &&  ($str=<MYFILE>); $k=$k+1 ) {
+          chomp($str);
+          $fileline=",'$str'";
+          print (PYFILE $fileline);
+          }
+     $fileline="]\n";
+     print (PYFILE $fileline);
+     close (PYFILE);
+     system ("cat $home/../share/ZeeDAnalysis_jobOptions.py >> jobOptions.py"); 
+     system ("cp jobOptions.py $jobDir/jobOptions_$i.py ");
+     system ("chmod 777 $jobDir/jobOptions_$i.py ");
+     $i=$i+1;
+     $str=<MYFILE>;
+  }
+system ("echo qsub -t 1-$i jobarr.sh $jobDir $outDir");
+system ("qsub -N $jobname -t 1-$i jobarr.sh $jobDir $outDir");
+
+}
+my $file2;
+my $PDFfile;
+my $iPDF;
+$file2="pdfNames";
+if ($type == 1) {
+ for ($k=0; ($k<=52); $k=$k+1){
+   while ($str) {
+     chomp($str);
+     system ("touch jobOptions.py");
+     open PYFILE, '> jobOptions.py';
+	 if ($str =~ /.*\.\w*_\w*_([A-Za-z]+[_\w]*)\.merge.*/) {
+         print "Making job for process $1\n";
+         $process=$1;
+         $fileline="ZeeDInputFiles=['$str'";
+         print (PYFILE $fileline);
+         $str=<MYFILE>;
+         chomp($str);
+         while ($str && $str =~ /.*_$process\.merge.*/)
+                {
+                chomp($str);
+		$fileline=",'$str'";
+                print (PYFILE $fileline);
+                $str=<MYFILE>;
+                }
+          $fileline="]\n";
+          print (PYFILE $fileline);
+		  print (PYFILE "ZeeDPDFName=\"PDF/CT10.LHgrid\"\n");
+		  print (PYFILE "ZeeDPDFSet=$k\n");	
+		  close (PYFILE);
+          system ("cat $home/../share/ZeeDAnalysis_jobOptionsPDF.py >> jobOptions.py"); 
+		  system ("cp jobOptions.py $jobDir/jobOptions_$process\_$k.py ");
+		  system ("chmod 777 $jobDir/jobOptions_$process\_$k.py ");
+		  system ("echo subprocess $process  $k");
+		  system ("qsub -N $process$k\_$jobname -o $jobDir/log mcjob.sh $jobDir/jobOptions_$process\_$k.py $outDir/out_$process\_$k.root");
+
+		  $i=$i+1;
+          }
+       }
+   close(MYFILE);
+   open MYFILE, $file;
+   $str=<MYFILE>;
+   chomp($str);
+#   $iPDF=<PDFfile>;
+#   chomp($iPDF);
+   }
+   }
+   
