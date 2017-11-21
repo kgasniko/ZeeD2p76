@@ -35,6 +35,7 @@ void ZeeDControlHistManagerW::BookHistos()
     AddTH1D("lepEt",    ZeeDMisc::FindFile("Binning/LepPt.txt"), "E_{T}^{lep}  [GeV]",  "");
     AddTH1D("weight" ,        50,    0.0,   2.0, "Weight of event",        "", ZeeDHistLevel::Systematics);
     AddTH1D("lepEta",   ZeeDMisc::FindFile("Binning/LepEta.txt"), "#eta^{lep}",          "", ZeeDHistLevel::Systematics);
+    AddTH1D("lepEtaFine", ZeeDMisc::FindFile("Binning/ElecEta.txt"), "#eta^{lep}", "", ZeeDHistLevel::Systematics);
     AddTH1D("lepPhi",   20,   -4.0,   4.0, "#varphi^{} [rad]", "", ZeeDHistLevel::Systematics);
     AddTH1D("dPhi" ,    20,   -4.0,   4.0, "d#varphi^{} [rad]", "");
     AddTH1D("lepPt",      ZeeDMisc::FindFile("Binning/LepPt.txt"), "P_{T}^{lep} [GeV]","", ZeeDHistLevel::Systematics);
@@ -60,8 +61,10 @@ void ZeeDControlHistManagerW::BookHistos()
     AddTH2D("Pt_EtMiss", 		   20, 0.0, 100.0, 100,  0.0,  100.0, "P_{T}{lep} [GeV]", "E_{T}^{miss} [GeV]");
     AddTH2D("SumEt_ptWTruth",           60, 0.0, 230.0,  60,  0.0,  120.0, "SumEt [GeV]", "P_{T,W} [GeV]");
     AddTH2D("ptW_ptWTruth",        60, 0.0, 120.0,  60,  0.0,  120.0, "P_{T,W} [GeV]", "P_{T,W} [GeV]");
+    AddTH1D("ptWTruth",            60, 0.0, 120.0, "P_{T,W} [GeV]", "");
     AddTH2D("SumEt_ptW",           60, 0.0, 230.0,  60,  0.0,  120.0, "SumEt [GeV]", "P_{T,W} [GeV]");
-  
+    AddTH2D("SumEtCor_ptW",        60, -50.0, 230.0,  60,  0.0,  120.0, "SumEt-Et [GeV]", "P_{T,W} [GeV]");
+
     AddTH1D("jetPt",          50,    0.0, 100.0, "Jet P_{T} / GeV",        "" );
     AddTH1D("jetEta",         50,   -5.0,   5.0, "Jet #eta",               "" );
     AddTH1D("jetPhi",         60, -180.0, 180.0, "Jet #varphi / deg",      "" );
@@ -95,12 +98,12 @@ void ZeeDControlHistManagerW::Fill()
     // Get event
     const ZeeDEvent* event = GetEvent();
     CHECK_NULL_PTR(event);
-        const Double_t Weight = event->GetWeight();
+    const Double_t Weight = event->GetWeight();
     FillTH1(Weight, 1, "weight");    
-/*    if (fSys->isShiftInUse(ZeeDSystematics::eOffTrigToyMC)){
-        std::cout << Weight << std::endl;
-    }
-*/
+    /*    if (fSys->isShiftInUse(ZeeDSystematics::eOffTrigToyMC)){
+          std::cout << Weight << std::endl;
+          }
+          */
     if ( event->AverageInteractionsPerCrossing().IsSet() ) {
         const Double_t Mu = event->AverageInteractionsPerCrossing().Get();
         FillTH1(Mu, Weight, "mu");
@@ -124,6 +127,7 @@ void ZeeDControlHistManagerW::Fill()
     FillTH1(lepPt,       Weight, "lepPt");
     FillTH1(lepEt,  Weight, "lepEt");
     FillTH1(lepEta, Weight, "lepEta");
+    FillTH1(lepEta, Weight, "lepEtaFine");
     FillTH1(lepPhi, Weight, "lepPhi");
 
 
@@ -161,8 +165,9 @@ void ZeeDControlHistManagerW::Fill()
     FillTH1(dPhi, Weight, "dPhi");
     Double_t mtW     = boson->GetMt();
     TLorentzVector bosVec = boson->GetFourVector();
-    Double_t pTrBos  = bosVec.P();
+    Double_t pTrBos  = bosVec.Pt();
     Double_t sumEt= etMiss->GetCorRecoilSumet();
+    Double_t corRecoilEt=etMiss->GetCorRecoilEt();
 
     FillTH1(pTrBos, Weight, "ptW");
 
@@ -174,14 +179,17 @@ void ZeeDControlHistManagerW::Fill()
     FillTH2(etMiss->GetEt(), dPhi, Weight, "etMiss_Phi");
     FillTH2(mtW,    dPhi, Weight, "MtW_Phi");
     FillTH2(sumEt, pTrBos, Weight, "SumEt_ptW");
+    FillTH2(sumEt-1.75*corRecoilEt, pTrBos, Weight, "SumEtCor_ptW");
+
     if ((*fAnaOptions)->IsMC()){ 
         const ZeeDGenParticle* Boson = event->GetGenBoson(ZeeDEnum::MCFSRLevel::Born);
         if (Boson != NULL){
-        Double_t pTTruth = Boson->GetMCFourVector().Pt();
-        FillTH2(sumEt, pTTruth, Weight, "SumEt_ptWTruth");
-        FillTH2(pTrBos, pTTruth, Weight, "ptW_ptWTruth"); 
-   }
-   }
+            Double_t pTTruth = Boson->GetMCFourVector().Pt();
+            FillTH2(sumEt, pTTruth, Weight, "SumEt_ptWTruth");
+            FillTH2(pTrBos, pTTruth, Weight, "ptW_ptWTruth"); 
+            FillTH1(pTTruth, Weight, "ptWTruth");
+        }
+    }
     FillTH2(lepPt,  dPhi, Weight, "Pt_Phi");
     FillTH2(lepPt, etMiss->GetEt(), Weight, "Pt_EtMiss");
     if (lepPt>32) {

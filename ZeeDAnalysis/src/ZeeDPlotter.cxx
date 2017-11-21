@@ -70,17 +70,17 @@ ZeeDPlotter::ZeeDPlotter(const std::string& name,
     declareProperty( "CutFlow", m_cutflow);
     declareProperty( "DataName",m_dataname = "out.root");
 
-    declareProperty( "Luminosity", m_lumi = 3854.97);
-    declareProperty( "LuminosityError", m_lumi_err = 0);
+    declareProperty( "Luminosity", m_lumi = 3948.03);
+    declareProperty( "LuminosityError", m_lumi_err = 0.031);
 
     declareProperty( "SignalMCName",m_mcname = "");
     declareProperty( "SystematicsList",m_systlist);
     declareProperty( "BosonSelector",m_selectonCZ);    
     declareProperty( "RefHistogramRec", m_refHistogramRec = "Boson/BosY");
     declareProperty( "RefHistogramRecToy", m_refHistogramRecToy = "BosY");
-    declareProperty( "RefHistogramGen", m_refHistogramGen = "GenInfo/BosY");    
-    declareProperty( "RefHistogramGenToy", m_refHistogramGenToy = "GenInfo/BosMt");    
-    declareProperty( "GeneratorHistogram", m_GenHist = "GenInfo/BosY" );
+    declareProperty( "RefHistogramGen", m_refHistogramGen = "BosY");    
+    declareProperty( "RefHistogramGenToy", m_refHistogramGenToy = "BosMt");    
+    declareProperty( "GeneratorHistogram", m_GenHist = "BosY" );
 
     declareProperty( "SetLogPlots", m_logscale   = false );
     declareProperty( "SetNormalize", m_normalize = false );
@@ -191,7 +191,6 @@ StatusCode ZeeDPlotter::execute()
             m_path = "Plus";
         else if ((found=(*bosonIt).find("min")) != std::string::npos)
             m_path = "Minus";
-
         m_cutselector="All/NoShift/"+m_boson;
 
 
@@ -579,11 +578,11 @@ void ZeeDPlotter::RunCutFlow()
     string nameReco="CutFlow/CutFlow_"+m_nameBos+"_RECO__.tex";
     string nameGen ="CutFlow/CutFlow_"+m_nameBos+"_GEN__.tex";
     /*if (bCutFlowReco){
-        cutFlow.open(nameReco.c_str());
-    }
-    else{
-        cutFlow.open(nameGen.c_str());
-    }*/
+      cutFlow.open(nameReco.c_str());
+      }
+      else{
+      cutFlow.open(nameGen.c_str());
+      }*/
 
     //-------------------------------
 
@@ -597,57 +596,57 @@ void ZeeDPlotter::RunCutFlow()
       cutFlow << " $N^{MC}_{events}$ & $\\epsilon^{MC}_{abs}$ & $\\epsilon^{MC}_{rel}$  \\" ;
       cutFlow<< std::endl << " \\hline" << endl;
       */
-/*
-    vector<string>::const_iterator litr = m_filenames.begin();
-    vector<string>::const_iterator itcut = m_cutflow.begin();
-    for( ; litr != m_filenames.end(); ++litr) {
+    /*
+       vector<string>::const_iterator litr = m_filenames.begin();
+       vector<string>::const_iterator itcut = m_cutflow.begin();
+       for( ; litr != m_filenames.end(); ++litr) {
 
-        string type="MC";
-        if (*litr=="out.root"){
-            type="DATA";
-        }
+       string type="MC";
+       if (*litr=="out.root"){
+       type="DATA";
+       }
 
-        TFile* myFile = new TFile((*litr).c_str());
-        TH1D*  
-        
-        for( ; itcut != m_cutflow.end(); ++itcut) {
+       TFile* myFile = new TFile((*litr).c_str());
+       TH1D*  
 
-            cout << "Cut flow for " << sCut << endl;
+       for( ; itcut != m_cutflow.end(); ++itcut) {
 
-
-            //ZeeDCutHistManager* CutHM = new ZeeDCutHistManager(*litr, m_cutselector);
-            double apass = CutHM->GetCutFlow(sCut);
-            TH1D*  myHist = (TH1D*)myFile -> Get("Control/EventWeight");
-            double Evt = 0;
-
-            if ( myHist != NULL) {
-                Evt = myHist->GetEntries();
-            }
-            cutFlow << setw(10) << " & " << apass << " & ";
-
-            cout << " File " << *litr << " pass ===> " << apass ;
-            if (TMath::Abs(nevt_old_cut) > 1.) {
-                cout.precision(3);
-                cout << "\t( " << apass/nevt_old_cut*100. << " %)";
-                cout.precision(4);
-
-                cutFlow << apass/nevt_old_cut*100. << " & ";
-            }
-            nevt_old_cut = apass;
+       cout << "Cut flow for " << sCut << endl;
 
 
-            if ( Evt != 0 ) {
-                cout << " / " << Evt;
-                cout.precision(4);
-                cout << " = " << (apass / Evt) * 100 << "%" ;
-                cutFlow << apass/Evt*100.;
-            }
+    //ZeeDCutHistManager* CutHM = new ZeeDCutHistManager(*litr, m_cutselector);
+    double apass = CutHM->GetCutFlow(sCut);
+    TH1D*  myHist = (TH1D*)myFile -> Get("Control/EventWeight");
+    double Evt = 0;
 
-            cout << "\n";
+    if ( myHist != NULL) {
+    Evt = myHist->GetEntries();
+    }
+    cutFlow << setw(10) << " & " << apass << " & ";
 
-            delete CutHM;
-        }
-        cutFlow << " \\\\" << endl;
+    cout << " File " << *litr << " pass ===> " << apass ;
+    if (TMath::Abs(nevt_old_cut) > 1.) {
+    cout.precision(3);
+    cout << "\t( " << apass/nevt_old_cut*100. << " %)";
+    cout.precision(4);
+
+    cutFlow << apass/nevt_old_cut*100. << " & ";
+    }
+    nevt_old_cut = apass;
+
+
+    if ( Evt != 0 ) {
+    cout << " / " << Evt;
+    cout.precision(4);
+    cout << " = " << (apass / Evt) * 100 << "%" ;
+    cutFlow << apass/Evt*100.;
+    }
+
+    cout << "\n";
+
+    delete CutHM;
+    }
+    cutFlow << " \\\\" << endl;
     }
     cutFlow << "\hline " << endl << " \\end{tabular} " << endl;
     */
@@ -660,19 +659,28 @@ void ZeeDPlotter::GetASyst()
     string pathPDFs = "/afs/desy.de/user/k/kgasniko/dust/analysis/mcPDF/";
     string pathPDFEig = "/afs/desy.de/user/k/kgasniko/dust/analysis/mcEig/";
     string fullNameRec = "All/NoShift/" + m_boson +"/" + m_path +"/" + m_refHistogramRec ;
-    string fullNameGen = "All/NoShift/" + m_boson +"/"+ m_refHistogramGen ;
-    string fullNameGenHist = "All/NoShift/NoCuts/"+m_GenHist ;
+    string fullNameGen = "All/NoShift/" + m_boson +"/GenInfo/"+ m_refHistogramGen ;
+    string fullNameGen13 = "All/NoShift/" + m_boson +"/GenInfo13/"+ m_refHistogramGen ;
+    if (m_boson.find("ZCC") != std::string::npos){
+        fullNameGen   = "All/NoShift/Zmumu/GenInfo/"+m_refHistogramGen;
+        fullNameGen13 = "All/NoShift/Zmumu/GenInfo13/"+m_refHistogramGen;
+
+    }
+    std::cout << fullNameGen13 << std::endl;
+    string fullNameGenHist = "All/NoShift/NoCuts/GenInfo/"+m_GenHist ;
 
     double Az = 1;
-    std::map<std::string,double>  Apdf, Cpdf, ApdfErr, CpdfErr;
+    std::map<std::string,double>  Apdf, Cpdf, ApdfErr, CpdfErr, Epdf, EpdfErr;
 
     std::vector<double> Cpdfvar;
     std::vector<double> Apdfvar;
+    std::vector<double> Epdfvar;
     std::vector<double> CpdfvarErr;
     std::vector<double> ApdfvarErr;
+    std::vector<double> EpdfvarErr;
     double Integral=0;
-    int nEig=51;
-    for (int i=0; i<nEig; i++){
+    int nEig=52;
+    for (int i=0; i<nEig+1; i++){
         //ugly, but something
         ostringstream convert;
         convert << i;
@@ -682,6 +690,7 @@ void ZeeDPlotter::GetASyst()
 
         TH1* genH = (TH1*)mcFile->Get(fullNameGenHist.c_str()); 
         TH1* hgen = (TH1*)mcFile->Get(fullNameGen.c_str());
+        TH1* hgen13 = (TH1*)mcFile->Get(fullNameGen13.c_str());
         TH1* hrec = (TH1*)mcFile->Get(fullNameRec.c_str());
 
 
@@ -693,46 +702,58 @@ void ZeeDPlotter::GetASyst()
             Error("ZeeDPlotter::GetASyst","Can not find central gen histogram, exit");
             return;                
         }
+        if (hgen13 == NULL) {
+            Error("ZeeDPlotter::GetASyst","Can not find central gen13 histogram, exit");
+            return;                
+        }
 
+        double sumGen13 = hgen13->GetSumOfWeights();
         double sumGen = hgen->GetSumOfWeights();
         double sumGenHist = genH->Integral(0, genH->GetNbinsX()+1);
         double sumRec= hrec->GetSumOfWeights();
         if (i==0) Integral = genH->GetEntries();
         double A = sumGen/sumGenHist;
-        double C = sumRec/sumGen;		
+        double C = sumRec/sumGen;
+        double E = sumGen/sumGen13;        
         Apdfvar.push_back(A);
         Cpdfvar.push_back(C);
+        Epdfvar.push_back(E);
         ApdfvarErr.push_back(sqrt(A*(1-A)/Integral));
         CpdfvarErr.push_back(sqrt(C*(1-C)/Integral));
+        EpdfvarErr.push_back(sqrt(E*(1-E)/Integral));
         mcFile->Close();
 
 
     }
     //AvarUp/=50;
     //AvarUp=TMath::Sqrt(AvarUp);
-    const double SfForPDFUncert = 1;
+    const double SfForPDFUncert = 1/1.62;
 
 
     string filenameSyst = "SystematicsTexFormat/"+(m_nameBos)+"/PDFSystematicsEIG.tex";
     FILE* sysOut=fopen(filenameSyst.c_str(),"w");
     int nVect=(nEig-1)/2;
-    double CCent=0, ACent=0, CCentStatErr, ACentStatErr;
-    double dECz=0, uECz=0, dEAz=0, uEAz=0;
+    double CCent=0, ACent=0, ECent=0, CCentStatErr, ACentStatErr, ECentStatErr;
+    double dECz=0, uECz=0, dEAz=0, uEAz=0, dEEz=0, uEEz=0;
     for (int i=0; i<nVect; i++){
         if (i==0) {
             CCent =Cpdfvar[i];
             ACent = Apdfvar[i];
+            ECent = Epdfvar[i];
+
             CCentStatErr =CpdfvarErr[i];
             ACentStatErr =ApdfvarErr[i];
+            ECentStatErr =EpdfvarErr[i];
 
             cout << "\n\n\n" ;
             cout << "Central C factor for PDF = " <<CCent<<" +- "<<CCentStatErr<<" (stat.)"<<endl;
             cout << "Central A factor for PDF = " <<ACent<<" +- "<<ACentStatErr<<" (stat.)"<<endl;
+            cout << "Central E factor for PDF = " <<ECent<<" +- "<<ECentStatErr<<" (stat.)"<<endl;
 
-            printf("%20s %10.2s %10.2s %10.2s %10.2s \n", "Source", "Cz Up %", "Cz Down %", "Az Up %","Az Down %"); 
+            printf("%20s %10.2s %10.2s %10.2s %10.2s %10.2s %10.2s \n", "Source", "Cz Up %", "Cz Down %", "Az Up %","Az Down %", "E Up %", "E Down %"); 
             cout << "------------------------------------------------------------------------------------" << endl;
 
-            fprintf( sysOut,"%10s & %10s & %10s & %10s & %10s \\\\ \n","Eigenvector","$C_Z$ Up(\\%)","$C_Z$ Down(\\%)","$A_Z$ Up(\\%)","$A_Z$ Down(\\%)");
+            fprintf( sysOut,"%10s & %10s & %10s & %10s & %10s & %10s & %10s \\\\ \n","Eigenvector","$C_Z$ Up(\\%)","$C_Z$ Down(\\%)","$A_Z$ Up(\\%)","$A_Z$ Down(\\%)", "$E_Z$ Up (\\%)", "$E_Z$ Down (\\%)");
             fprintf( sysOut, "\\hline \n");
         }
         else {
@@ -742,26 +763,35 @@ void ZeeDPlotter::GetASyst()
             double CMinus = Cpdfvar[iNeg];
             double APlus = Apdfvar[iPos];
             double AMinus = Apdfvar[iNeg];
+            double EPlus = Epdfvar[iPos];
+            double EMinus = Epdfvar[iNeg];
 
             double uCz = (CPlus-CCent)/CCent*100.;
             double dCz = (CMinus-CCent)/CCent*100.; 
             double uAz = (APlus-ACent)/ACent*100.;
             double dAz = (AMinus-ACent)/ACent*100.;
+            double uEz = (EPlus-ECent)/ECent*100.;
+            double dEz = (EMinus-ECent)/ECent*100.;
 
             // multiply by 1/1.62
             uCz = uCz * SfForPDFUncert;
             dCz = dCz * SfForPDFUncert; 
             uAz = uAz * SfForPDFUncert;
             dAz = dAz * SfForPDFUncert;
+            uEz = uEz * SfForPDFUncert;
+            dEz = dEz * SfForPDFUncert;
 
 
-            fprintf( sysOut,"%5d &%14.3f &%14.3f &%14.3f &%14.3f \\\\ \n",i,uCz,dCz,uAz,dAz);
 
-            printf("%5d %15s %10.2f %10.2f %10.2f %10.2f \n",i, "CT14nnlo",
+            fprintf( sysOut,"%5d &%14.3f &%14.3f &%14.3f &%14.3f &%14.3f &%14.3f\\\\ \n",i,uCz,dCz,uAz,dAz,uEz,dEz);
+
+            printf("%5d %15s %10.2f %10.2f %10.2f %10.2f %10.2f %10.2f \n",i, "CT10nlo",
                     uCz,
                     dCz,
                     uAz,
-                    dAz
+                    dAz,
+                    uEz,
+                    dEz
                   );
 
             if ( (dCz < 0) && (uCz<0) ) {
@@ -793,30 +823,47 @@ void ZeeDPlotter::GetASyst()
             else {
                 uEAz +=  uAz>dAz ?  uAz*uAz : dAz*dAz;
             }
+
+            if ( (dEz < 0) && (uEz<0) ) {
+                dEEz +=  uEz<dEz ?  uEz*uEz : dEz*dEz;
+            }
+            else if ( (dEz<0) && ( uEz>0 ) ) {
+                dEEz += dEz*dEz;
+                uEEz += uEz*uEz;
+            }
+            else if ( (dEz>0) && ( uEz<0 ) ) {
+                dEEz += uEz*uEz;
+                uEEz += dEz*dEz;
+            }
+            else {
+                uEEz +=  uEz>dEz ?  uEz*uEz : dEz*dEz;
+            }
         }
     }
 
     cout << "------------------------------------------------------------------------------------" <<endl;
-    printf("%20s %10.3f %10.3f %10.3f %10.3f \n","Total",
+    printf("%20s %10.3f %10.3f %10.3f %10.3f %10.3f %10.3f \n","Total",
             sqrt(uECz),
             -sqrt(dECz),
             sqrt(uEAz),
-            -sqrt(dEAz)
+            -sqrt(dEAz),
+            sqrt(uEEz),
+            -sqrt(dEEz)
           );
     cout << "------------------------------------------------------------------------------------" <<endl;
     cout << "\n\n\n";
 
     fprintf( sysOut, "\\hline \n");
     fprintf( sysOut, "\\hline \n");
-    fprintf( sysOut,"%10s & %10.3f & %10.3f & %10.3f & %10.3f  \\\\ \n","Total uncertainty",sqrt(uECz),-sqrt(dECz),sqrt(uEAz),-sqrt(dEAz));
+    fprintf( sysOut,"%10s & %10.3f & %10.3f & %10.3f & %10.3f  & %10.3f & %10.3f \\\\ \n","Total uncertainty",sqrt(uECz),-sqrt(dECz),sqrt(uEAz),-sqrt(dEAz), sqrt(uEEz),-sqrt(dEEz));
     fprintf( sysOut, "\\hline \n");
     fprintf( sysOut, "\\hline \n");
     fclose(sysOut);
 
-
+    std::cout << "111" << std::endl;
     //double dTotUp   =  sqrt( pow(m_czsyst.first,  2) + uECz);
     //double dTotDown = -sqrt( pow(m_czsyst.second, 2) + dECz);
-
+    double aTot=0, cTot=0, eTot=0;
     for (std::vector<string>::iterator pdfName = m_selectonPDF.begin(); pdfName!=m_selectonPDF.end(); ++pdfName) { 
         string filename= "out_"+(m_nameBos)+"_"+*pdfName+".root";
         filename=pathPDFs+filename;
@@ -829,6 +876,7 @@ void ZeeDPlotter::GetASyst()
 
         TH1* genH = (TH1*)mcFile->Get(fullNameGenHist.c_str()); 
         TH1* hgen = (TH1*)mcFile->Get(fullNameGen.c_str());
+        TH1* hgen13 = (TH1*)mcFile->Get(fullNameGen13.c_str());
         TH1* hrec = (TH1*)mcFile->Get(fullNameRec.c_str());
 
         if (genH == NULL) {
@@ -839,103 +887,229 @@ void ZeeDPlotter::GetASyst()
             Error("ZeeDPlotter::GetASyst","Can not find central gen histogram, exit");
             return;                
         }
+        if (hgen13 == NULL) {
+            Error("ZeeDPlotter::GetASyst","Can not find central gen13 histogram, exit");
+            return;                
+        }
         if (hrec == NULL) {
             Error("ZeeDPlotter::GetASyst", "Can not find rec historgram, exit");
             return;
         }			
 
         double sumGen = hgen->GetSumOfWeights();
+        double sumGen13 = hgen13->GetSumOfWeights();
         double sumGenHist = genH->Integral(0, genH->GetNbinsX()+1);
+        std::cout << sumGen << "  " << sumGen13<<std::endl;
         double sumRec= hrec->GetSumOfWeights();
         double A = sumGen/sumGenHist;
-        double C = sumRec/sumGen;		
+        double C = sumRec/sumGen;
+        double E = sumGen/sumGen13;       
+        std::cout << E << std::endl; 
         mcFile->Close();
         refGen = sumGen ;
         Apdf[*pdfName]=A;
         Cpdf[*pdfName]=C;
+        Epdf[*pdfName]=E;
         ApdfErr[*pdfName]=sqrt(A*(1-A)/Integral);
         CpdfErr[*pdfName]=sqrt(C*(1-C)/Integral);
-
+        EpdfErr[*pdfName]=sqrt(E*(1-E)/Integral);
+        aTot+=A;
+        cTot+=C;
+        eTot+=E;
 
     }
+    int nPDFSets = Apdf.size();
+    aTot=ACent;
+    cTot=CCent;
+    eTot=ECent;
 
-    std::cout << "Acceptance = " << Az << std::endl << std::endl;
-
+    std::cout << "Acceptance = " << aTot << std::endl << std::endl;
+    std::cout << "C  =  " << cTot<< std::endl << std::endl;
+    std::cout << "E  =  " << eTot<< std::endl << std::endl;
     //printf("%55s %10s %10s \n", "Source", "%", "Total"); 
     std::cout << "-------------------------------------------------------------------------------------------" << std::endl;
+
+    double dEE = 0;
+    double uEE = 0;
 
     double dE = 0;
     double uE = 0;
     double dEC = 0;
     double uEC = 0;	
-    int nUpA=0, nUpC=0;
-    string fileSyst2 = "SystematicsTexFormat/"+(m_nameBos)+"/"+m_nameBos+"PDFSystematicsEIG.tex";
+    int nUpA=0, nUpC=0, nUpE=0;
+    string fileSyst2 = "SystematicsTexFormat/"+(m_nameBos)+"/PDFSystematicsSets.tex";
     FILE* sysOut2=fopen(fileSyst2.c_str(), "w");
-    fprintf( sysOut2,"%10s & %10s & %10s & %10s & %10s \\\\ \n","PDF set","$C_Z$(\\%)","d$C_Z$(\\%)","$A_Z$(\\%)","d$A_Z$(\\%)");
-    fprintf( sysOut, "\\hline \n");
+    fprintf( sysOut2,"%10s & %10s & %10s & %10s & %10s \\\\ \n","PDF set","$C_Z$(\\%)","d$C_Z$(\\%)","$A_Z$(\\%)","d$A_Z$(\\%)", "$E_Z$(\\%)","d$E_Z$(\\%)");
+    fprintf( sysOut2, "\\hline \n");
 
-    printf("%55s %10.5s %10.5s %10.5s %10.5s", "PDFSet", "A", "dA", "C", "dC");
+    string fileSyst3="SystematicsDatFormat/"+(m_nameBos)+"/PDFSystematics.txt";
+    FILE* sysOut3=fopen(fileSyst3.c_str(), "w");
+
+    fprintf (sysOut3, "A %0.3f \n", aTot);
+    fprintf (sysOut3, "E %0.3f \n", eTot);
+
+    printf("%55s %10.5s %10.5s %10.5s %10.5s", "PDFSet", "A", "dA", "C", "dC", "E", "dE");
     cout << endl;
     for (std::map<std::string,double>::iterator pairA = Apdf.begin(); pairA != Apdf.end(); ++ pairA){ 
         std::string name = (*pairA).first;
-
-        double u = (Apdf[name]-ACent)/ACent*100.;
+        cout << Apdf[name] << "  " << aTot << endl;
+        double u = (Apdf[name]-aTot)/aTot*100.;
         double d = Apdf[name];
-        double uC = (Cpdf[name]-CCent)/CCent*100;
+        double uC = (Cpdf[name]-cTot)/cTot*100.;
         double dC = Cpdf[name];
+        double uEf = (Epdf[name]-eTot)/eTot*100.;
+        double dEf = Epdf[name];
+
         //std::cout << " A = " << std::endl;	
-        fprintf( sysOut2,"%10s & %14.3f & %14.3f & %14.3f & %14.3f \\\\ \n",name.c_str(),dC,uC,u,d);
+        fprintf( sysOut2,"%10s & %14.3f & %14.3f & %14.3f & %14.3f & %14.3f & %14.3f \\\\ \n",name.c_str(),dC,uC,u,d, uEf, dEf);
 
 
-        printf("%55s %10.5f %10.5f %10.5f %10.5f \\\\ \n",name.c_str(),
+        printf("%55s %10.5f %10.5f %10.5f %10.5f %10.5f %10.5f\\\\ \n",name.c_str(),
                 d,
                 u,
                 dC,
-                uC
+                uC,
+                dEf,
+                uEf
               );
-        if (u>0) {
-            dE += u*u;
-            nUpA++;
-        }
-        else {
-            uE += u*u;
-        }
-        if (uC > 0){
-            dEC += uC*uC;
-            nUpC++;
-        } else 
-            uEC += uC*uC;
 
+        /*if (u>0) {
+          dE += u*u;
+          nUpA++;
+          }
+          else {
+          uE += u*u;
+          }
+          if (uC > 0){
+          dEC += uC*uC;
+          nUpC++;
+          } else 
+          uEC += uC*uC;
+
+          if (uEf > 0){
+          dEE += uEf*uEf;
+          nUpE++;
+          } else 
+          uEE += uEf*uEf;
+          */
+        if (u*u > dE){
+            dE=u*u;
+        }
+        if (uC*uC > dEC){
+            dEC=uC*uC;
+        }
+        if (uEf*uEf > dEE){
+            dEE=uEf*uEf;
+        }
     }
+
+    //PS uncertainties
+    string fileName="";
+    if (m_nameBos.find("enu") != std::string::npos ){
+        fileName="out_Wenu.root";
+    }
+    else if (m_nameBos.find("munu") != std::string::npos ){
+        fileName="out_Wmunu.root";
+    }
+    double dAPS=0.9, dEPS=0, dCPS=0;
+    if (m_nameBos.find("nu") != std::string::npos){
+        fullNameGen = "All/NoShift/" + m_boson +"/GenInfo/"+ m_nameBos ;
+        fullNameGen13 = "All/NoShift/" + m_boson +"/GenInfo13/"+ m_nameBos;
+        fullNameGenHist = "All/NoShift/NoCuts/GenInfo/"+m_nameBos ;
+
+        TFile* mcFile = new TFile(fileName.c_str());
+        TH1* genH = (TH1*)mcFile->Get(fullNameGenHist.c_str()); 
+        TH1* hgen = (TH1*)mcFile->Get(fullNameGen.c_str());
+        TH1* hgen13 = (TH1*)mcFile->Get(fullNameGen13.c_str());
+        TH1* hrec = (TH1*)mcFile->Get(fullNameRec.c_str());
+
+        if (genH == NULL) {
+            Error("ZeeDPlotter::GetASyst", "Can not find generator level historgam, exit");
+            return;
+        }
+        if (hgen == NULL) {
+            Error("ZeeDPlotter::GetASyst","Can not find central gen histogram, exit");
+            return;                
+        }
+        if (hgen13 == NULL) {
+            Error("ZeeDPlotter::GetASyst","Can not find central gen13 histogram, exit");
+            return;                
+        }
+        if (hrec == NULL) {
+            Error("ZeeDPlotter::GetASyst", "Can not find rec historgram, exit");
+            return;
+        }			
+
+        double sumGen = hgen->Integral(0, -1);
+        double sumGen13 = hgen13->Integral(0, -1);
+        double sumGenHist = genH->Integral(0, -1);
+        double sumRec= hrec->GetSumOfWeights();
+        double A = sumGen/sumGenHist;
+        double C = sumRec/sumGen;
+        double E = sumGen/sumGen13;        
+        dAPS=(A-aTot)/aTot*100.;
+        dEPS=(E-eTot)/eTot*100.;
+        dCPS=(C-cTot)/cTot*100.;
+        mcFile->Close();
+        //End of PS uncertainty calculation
+    }
+    cout << "------------------------------------------------------------------------------------" << endl;
+    printf ("%55s %10.5f \n"," A PS",
+            dAPS);
+    printf ("%55s %10.5f \n"," E PS",
+            dEPS);
+    printf ("%55s %10.5f \n"," C PS",
+            dCPS);
+    /*
+       dE=dE/nUpA;
+       uE=uE/(nPDFSets-nUpA);
+       dEC = dEC/nUpC;
+       uEC = uEC/(nPDFSets-nUpC);
+       dEE = dEE/nUpE;
+       uEE = uEE/(nPDFSets-nUpE);
+       */
+    cout << "------------------------------------------------------------------------------------" << endl;
+
+    printf("%55s %10.5f %10.5f\n","Total A",
+            sqrt(dE), -sqrt(dE)
+          );
+    printf("%55s %10.5f %10.5f\n","Total C",
+            sqrt(dEC), -sqrt(dEC)
+          );
+
+    printf("%55s %10.5f %10.5f\n","Total E",
+            sqrt(dEE), -sqrt(dEE)
+          );
+    std::cout << "-------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << "\n\n\n";
+
     fprintf( sysOut2, "\\hline \n");
     fprintf( sysOut2, "\\hline \n");
-    fprintf( sysOut2,"%10s & %10.3f & %10.3f & %10.3f & %10.3f  \\\\ \n","Total uncertainty",sqrt(uEC),-sqrt(uEC),sqrt(dE),-sqrt(uE));
+    fprintf( sysOut2,"%10s & %10.3f & %10.3f & %10.3f & %10.3f  & %10.3f & %10.3f \\\\ \n","Total uncertainty",sqrt(dEC),-sqrt(dEC),sqrt(dE),-sqrt(uE), sqrt(dEE), -sqrt(uEE));
     fprintf( sysOut2, "\\hline \n");
     fprintf( sysOut2, "\\hline \n");
     fclose(sysOut2);
 
-    int nPDFSets = Apdf.size();
-    dE=dE/nUpA;
-    uE=uE/(nPDFSets-nUpA);
-    dEC = dEC/nUpC;
-    dEC = uEC/(nPDFSets-nUpC);
-    cout << "------------------------------------------------------------------------------------" << endl;
+    fprintf(sysOut3, "A PDFset %0.3f \n", dE);
+    fprintf(sysOut3, "E PDFset %0.3f \n", dEE);
+    fprintf(sysOut3, "A PS %0.3f \n", dAPS);
+    fprintf(sysOut3, "E PS %0.3f \n", dEPS); 
+    fclose(sysOut3);
 
-    printf("%55s %10.5f %10.5f\n","Total A",
-            sqrt(dE), -sqrt(uE)
-          );
-    printf("%55s %10.5f %10.5f\n","Total C",
-            sqrt(dEC), -sqrt(uEC)
-          );
-    std::cout << "-------------------------------------------------------------------------------------------" << std::endl;
+    dE=sqrt(dE*dE+uEAz*uEAz+dAPS*dAPS);
+    uE=sqrt(dE*dE+dEAz*dEAz+dAPS*dAPS);
+    uEC=sqrt(uEC*uEC+dECz*dECz);
+    dEC=sqrt(uECz*uECz+dEC*dEC);
+    uEE=sqrt(uEEz*uEEz+dEE*dEE+dEPS*dEPS);
+    dEE=sqrt(dEEz*dEEz+dEE*dEE+dEPS*dEPS);
 
-    std::cout << "\n\n\n";
+
     ofstream SystTableOut;
     ofstream SystForDatOut;
     ofstream SystUncertOut;
-    string SystTableName = "SystematicsTexFormat/"+m_nameBos+"/"+m_nameBos+"SystTable.tex";
-    string SystForDataName = "SystematicsDatFormat/"+m_nameBos+"/C_"+m_nameBos+"_syst.dat";
-    string SystIncertName = "SystematicsTexFormat/"+m_nameBos+"/"+m_nameBos+"SystValues.tex";	
+    string SystTableName = "SystematicsTexFormat/"+m_nameBos+"/SystTable.tex";
+    string SystForDataName = "SystematicsDatFormat/"+m_nameBos+"/C_syst.dat";
+    string SystIncertName = "SystematicsTexFormat/"+m_nameBos+"/SystValues.tex";	
 
     SystTableOut.open(SystTableName.c_str(), std::ios::app);
     SystForDatOut.open(SystForDataName.c_str(), std::ios::app);
@@ -949,12 +1123,26 @@ void ZeeDPlotter::GetASyst()
     SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "PDFEigDown"<<"}{"<<fixed<<setprecision(2)<<-sqrt(dECz)<<"}"<<endl;
     SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "PDFSetUp"<<"}{"<<fixed<<setprecision(2)<<sqrt(dEC)<<"}"<<endl;
     SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "PDFSetDown"<<"}{"<<fixed<<setprecision(2)<<-sqrt(uEC)<<"}"<<endl;
-    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "TOTEigUp"<<"}{"<<fixed<<setprecision(2)<<dTotUp<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "TOTUp"<<"}{"<<fixed<<setprecision(2)<<dTotUp<<"}"<<endl;
     SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "TOTDown"<<"}{"<<fixed<<setprecision(2)<<dTotDown<<"}"<<endl;
     SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "AEigUp"<<"}{"<<fixed<<setprecision(2)<<sqrt(uEAz)<<"}"<<endl;
     SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "AEigDown" <<"}{"<<fixed<<setprecision(2)<<-sqrt(dEAz)<<"}"<<endl; 
     SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "APDFUp"<<"}{"<<fixed<<setprecision(2)<<sqrt(dE)<<"}"<<endl;
     SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "APDFDown" <<"}{"<<fixed<<setprecision(2)<<-sqrt(uE)<<"}"<<endl; 
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "EEigUp"<<"}{"<<fixed<<setprecision(2)<<sqrt(uEEz)<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "EEigDown" <<"}{"<<fixed<<setprecision(2)<<-sqrt(dEEz)<<"}"<<endl; 
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "EPDFUp"<<"}{"<<fixed<<setprecision(2)<<sqrt(dEE)<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "EPDFDown" <<"}{"<<fixed<<setprecision(2)<<-sqrt(uEE)<<"}"<<endl; 
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "AEig"<<"}{"<<fixed<<setprecision(2)<<(sqrt(uEAz)+sqrt(dEAz))/2<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "APDF"<<"}{"<<fixed<<setprecision(2)<<(sqrt(dE)+sqrt(uE))/2<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "EEig"<<"}{"<<fixed<<setprecision(2)<<(sqrt(uEEz)+sqrt(dEEz))/2<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "EPDF"<<"}{"<<fixed<<setprecision(2)<<(sqrt(dEE)+sqrt(uEE))/2<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "A"<<"}{"<<fixed<<setprecision(2)<<aTot<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "E"<<"}{"<<fixed<<setprecision(2)<<eTot<<"}"<<endl;
+
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "APS"<<"}{"<<fixed<<setprecision(2)<<dAPS<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "EPS"<<"}{"<<fixed<<setprecision(2)<<dEPS<<"}"<<endl;
+    SystUncertOut<<"\\newcommand{\\"<<m_nameBos << "CPS"<<"}{"<<fixed<<setprecision(2)<<dCPS<<"}"<<endl;
 
     //        SystTableOut<<"Pileup  &  "<<fixed<<setprecision(2)<<m_pileup_u<<"  &  "<<m_pileup_d<<"  \\\\"<<endl;
     //      SystTableOut<<"Opposite charge requirement  &  "<<fixed<<setprecision(2)<<-charge_miss_id<<"  &  "<<charge_miss_id<<"  \\\\"<<endl;
@@ -974,8 +1162,9 @@ void ZeeDPlotter::GetASyst()
     SystTableOut.close(); 
 
     m_Az=ACent;
-
-
+    m_AzErr=(uE+dE)/2;
+    m_Ez=ECent;
+    m_EzErr=(uEE+dEE)/2;
 
 
 }
@@ -1012,13 +1201,16 @@ void ZeeDPlotter::GetCZSyst()
 
 
     for (std::vector<string>::iterator syst=m_systlist.begin(); syst!=m_systlist.end();++syst){
-
         string fullNameRec = "All/" + *syst + "/" + m_boson +"/" + m_path +"/" + m_refHistogramRec ;
-        string fullNameGen = "All/" + *syst + "/" + m_boson +"/"+ m_refHistogramGen ;
+        string fullNameGen = "All/" + *syst + "/" + m_boson +"/GenInfo/"+ m_refHistogramGen ;
+        if (m_boson.find("ZCC") != std::string::npos){
+            fullNameGen = "All/NoShift/Zmumu/GenInfo/"+m_refHistogramGen;
+        }
+
         //std::cout << "fullNameRec = " << fullNameRec << " fullNameGen = " << fullNameGen << std::endl;
         if ( *syst == "NoShift")  {
             // Reference
-            string fullNameGenHist = "All/NoShift/NoCuts/"+m_GenHist ;
+            string fullNameGenHist = "All/NoShift/NoCuts/GenInfo/"+m_GenHist ;
             TH1* genH = (TH1*)mcFile->Get(fullNameGenHist.c_str()); 
             TH1* hrec = (TH1*)mcFile->Get(fullNameRec.c_str());
             TH1* hgen = (TH1*)mcFile->Get(fullNameGen.c_str());
@@ -1065,7 +1257,11 @@ void ZeeDPlotter::GetCZSyst()
         } else if ((*syst).rfind("ToyMC") != std::string::npos) { // Toy systematics
 
             string fullNameRec = "All/" + *syst + "/" + m_boson +"/" + m_path +"/" + m_refHistogramRecToy;
-            string fullNameGen = "All/" + *syst + "/" + m_boson +"/"+ m_refHistogramGenToy ;
+            string fullNameGen = "All/" + *syst + "/" + m_boson +"/GenInfo/"+ m_refHistogramGenToy ;
+            if (m_boson.find("ZCC") != std::string::npos){
+                fullNameGen = "All/NoShift/Zmumu/GenInfo/"+m_refHistogramGenToy;
+            }
+
             //cout  << fullNameRec << "  " << fullNameGen << endl;
             string subname = (*syst).substr(0, (*syst).rfind("MC"));
             //cout << subname << endl;
@@ -1157,6 +1353,7 @@ void ZeeDPlotter::GetCZSyst()
 
         }        
     }
+
     mcFile->Close();
     std::cout << "\n\n\n" ;
 
@@ -1166,9 +1363,9 @@ void ZeeDPlotter::GetCZSyst()
     ofstream  SystUncertOut;
     ofstream  SystForDatOut;
 
-    string systTableOutName = "SystematicsTexFormat/"+m_nameBos+"SystTable.tex";
-    string systUncertOutName = "SystematicsTexFormat/"+m_nameBos+"SystValues.tex";
-    string systForDatOutName = "SystematicsDatFormat/"+m_nameBos+"_C_syst.dat";
+    string systTableOutName = "SystematicsTexFormat/"+m_nameBos+"/SystTable.tex";
+    string systUncertOutName = "SystematicsTexFormat/"+m_nameBos+"/SystValues.tex";
+    string systForDatOutName = "SystematicsDatFormat/"+m_nameBos+"/C_syst.dat";
     SystTableOut.open(systTableOutName.c_str());
     SystUncertOut.open(systUncertOutName.c_str());
     SystForDatOut.open(systForDatOutName.c_str());
@@ -1183,7 +1380,9 @@ void ZeeDPlotter::GetCZSyst()
     printf("%55s %10.5f %10.5f \n","Statistics", cZcentStat, -cZcentStat);    
     m_czstat=cZcentStat;
     double dE = 0;
-    double uE = 0;    
+    double uE = 0; 
+    double elecEnScaleTotal=0.0;
+    double muonResolutionTotal=0.0;   
     for (std::map<std::string,double>::iterator pairRec = czUp.begin(); pairRec != czUp.end(); ++ pairRec){ 
         string name = (*pairRec).first;
 
@@ -1213,6 +1412,17 @@ void ZeeDPlotter::GetCZSyst()
                std::cout << u << "   " << d << std::endl*/;
         }
 
+        double ddd = fabs((u-d)/2);
+
+        if (name.rfind("ElecEn")!=std::string::npos){
+            elecEnScaleTotal+=ddd*ddd;
+            if (name.rfind("R12") !=std::string::npos){
+                name="ElecEnRStat"; 
+            }  
+        }else if (name.rfind("MuSmearing")!=std::string::npos){
+            muonResolutionTotal+=ddd*ddd;
+        }
+
         if (u !=0 && d!=0){
             printf("%55s %10.5f %10.5f \n",name.c_str(),
                     u,
@@ -1234,25 +1444,65 @@ void ZeeDPlotter::GetCZSyst()
             else {
                 uE +=  u>d ?  u*u : d*d;
             }
-            SystTableOut<< name <<"  &  "<<fixed<<setprecision(2)<<u<<"  &  "<<d<<"  \\\\"<<endl;
+            int pres=2;
+            if (u<0.01 && u>0.001){
+                pres=3;
+            }
+            SystTableOut<< name <<"  &  "<<fixed<<setprecision(pres)<<u<<"  &  "<<d<<"  \\\\"<<endl;
 
-            SystForDatOut<<name<<"    "<<fixed<<setprecision(2)<<u<<"    "<<d<<endl;
-            SystUncertOut<<"\\newcommand{\\"<<name + "U"<<"}{"<<fixed<<setprecision(2)<<u<<"}"<<endl;
-            SystUncertOut<<"\\newcommand{\\"<<name + "D"<<"}{"<<fixed<<setprecision(2)<<d<<"}"<<endl;
+            SystForDatOut<<name<<"    "<<fixed<<setprecision(pres)<<u<<"    "<<d<<endl;
+            SystUncertOut<<"\\newcommand{\\"<<name + "U" + m_nameBos<<"}{"<<fixed<<setprecision(pres)<<u<<"}"<<endl;
+            SystUncertOut<<"\\newcommand{\\"<<name + "D" + m_nameBos<<"}{"<<fixed<<setprecision(pres)<<d<<"}"<<endl;
+            SystUncertOut<<"\\newcommand{\\"<<name + m_nameBos << "}{"<<fixed<<setprecision(pres)<< ddd << "}"<<endl;
         }
 
 
     }
+    double smearErr=0.0;
+    if (m_boson.find("W") != std::string::npos){
+        if (strcmp(m_path.c_str(),"Plus") == 0){
+            if (strcmp(m_boson.c_str(), "W") == 0 )
+                smearErr=0.2;
+            if (strcmp(m_boson.c_str(), "Wmu") == 0)
+                smearErr=0.16;
+        }else if (strcmp(m_path.c_str(),"Minus") ==0){
+            if (strcmp(m_boson.c_str(), "W") == 0 )
+                smearErr=0.11;
+            if (strcmp(m_boson.c_str(), "Wmu") == 0)
+                smearErr=0.12; 
+        }
+    }
+    if (smearErr>0){
+        SystTableOut<< "HadrRecoilSmear  &  "<<fixed<<setprecision(2)<<smearErr<<"  &  "<<smearErr<<"  \\\\"<<endl;
+        SystForDatOut<<"HadrRecoilSmear    "<<fixed<<setprecision(2)<<smearErr<<"    "<<smearErr<<endl;
+        SystUncertOut<<"\\newcommand{\\HadrRecoilSmear"+m_nameBos<<"}{"<<fixed<<setprecision(2)<<smearErr << "}" <<endl;
+        uE+=smearErr*smearErr;
+        dE+=smearErr*smearErr; 
+    }
+    elecEnScaleTotal=sqrt(elecEnScaleTotal);
+    muonResolutionTotal=sqrt(muonResolutionTotal);
+    if (elecEnScaleTotal>0.0){
+        SystUncertOut<<"\\newcommand{\\"<<"elecEnScaleTotal" + m_nameBos<<"}{"<<fixed<<setprecision(2)<<elecEnScaleTotal<<"}"<<endl;
+    }
+    if (muonResolutionTotal>0.0){
+        SystUncertOut<<"\\newcommand{\\"<<"muonResolutionTotal"+m_nameBos<<"}{"<<fixed<<setprecision(2)<<muonResolutionTotal<<"}"<<endl;
+    }
+
+    SystTableOut<< "MCStat  &  "<<fixed<<setprecision(2)<< m_czstat <<"  &  "<< m_czstat <<"  \\\\"<<endl;
+    SystForDatOut<<"MCStat    "<<fixed<<setprecision(2)<< m_czstat<<"    "<< m_czstat <<endl;
+    SystUncertOut<<"\\newcommand{\\MCStat"+m_nameBos<<"}{"<<fixed<<setprecision(2)<< m_czstat << "}" <<endl;
+
+
     std::cout << "-------------------------------------------------------------------------------------------" << std::endl;
     printf("%55s %10.5f %10.5f \n","Total",
-            sqrt(uE),
-            -sqrt(dE)
+            sqrt(uE+m_czstat*m_czstat),
+            -sqrt(dE+m_czstat*m_czstat)
           );
     std::cout << "-------------------------------------------------------------------------------------------" << std::endl;
 
     std::cout << "\n\n\n";
-    m_czsystUp=sqrt(uE);	
-    m_czsystDown=-sqrt(dE);
+    m_czsystUp=sqrt(uE+m_czstat*m_czstat);	
+    m_czsystDown=-sqrt(dE+m_czstat*m_czstat);
 
     SystUncertOut.close();
     SystTableOut.close();
@@ -1312,9 +1562,9 @@ void ZeeDPlotter::MakeQCDFile(string boson, string path, double eventNum, string
             string nameNew = histName.erase(bHist, sizeof(m_QCDfitHist.c_str())-2);
 
             if (bHist == 0) {
-                dataHist = hist->ProjectionY(nameNew.c_str(), m_QCDcutBin);
+                dataHist = hist->ProjectionY(nameNew.c_str(), m_QCDcutBin+1);
             }else{
-                dataHist = hist->ProjectionX(nameNew.c_str(), m_QCDcutBin);	
+                dataHist = hist->ProjectionX(nameNew.c_str(), m_QCDcutBin+1);	
             }
 
             nameHist.push_back(make_pair(new TH1D(*dataHist), pathToHistogram));
@@ -1323,7 +1573,7 @@ void ZeeDPlotter::MakeQCDFile(string boson, string path, double eventNum, string
             TH1D* hist = (TH1D*) histObj;
 
             string pathToHistogram = plotsPath+"/"+histObj->GetName();
-            EraseBins(hist, m_QCDcutBin);
+            EraseBins(hist, m_QCDcutBin+1);
 
             nameHist.push_back(make_pair(new TH1D(*hist), pathToHistogram));
         }
@@ -1358,15 +1608,15 @@ void ZeeDPlotter::MakeQCDFile(string boson, string path, double eventNum, string
                 unsigned long int bHist = histName.find(m_QCDfitHist.c_str());
                 string nameNew = histName.erase(bHist, bHist+sizeof(m_QCDfitHist.c_str())-2)+procName;
                 if (bHist == 0){
-                    newMcHist=hist->ProjectionY(nameNew.c_str(), m_QCDcutBin);
+                    newMcHist=hist->ProjectionY(nameNew.c_str(), m_QCDcutBin+1);
                 }else 
-                    newMcHist=hist->ProjectionX(nameNew.c_str(), m_QCDcutBin);
+                    newMcHist=hist->ProjectionX(nameNew.c_str(), m_QCDcutBin+1);
                 nameHist[i].first->Add(newMcHist, -1*scale);
                 hist->Delete();
                 newMcHist->Delete();
             } else {
                 TH1D* hist= (TH1D*)bkgFile->Get(pathToHistogram.c_str());
-                EraseBins(hist, m_QCDcutBin);
+                EraseBins(hist, m_QCDcutBin+1);
                 nameHist[i].first->Add(hist, -1*scale);
                 hist->Delete();
             }
@@ -1397,6 +1647,7 @@ void ZeeDPlotter::MakeQCDFile(string boson, string path, double eventNum, string
 }
 
 void ZeeDPlotter::EraseBins(TH1D*& hist, int cut, bool inv){
+
 
     for (int i=0; i<=hist->GetNbinsX()+1; i++){
         bool cleanBin = inv?(i>=cut)&&(i!=-1):i<cut;
@@ -1441,21 +1692,27 @@ void ZeeDPlotter::GetQCD()
 
     //pathsName
     string fullNameRecFitNoShift="All/NoShift/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDFit/"+m_path+"/"+m_QCDfitHist;
-    string fullNameRecTemplNoShift="All/NoShift/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDTempl/"+m_path+"/"+m_QCDfitHist;
+    string fullNameRecFitNoShiftComb="All/NoShift/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDFit/Boson/"+m_QCDfitHist;
+
+    string fullNameRecTemplNoShift="All/NoShift/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDTempl/Boson/"+m_QCDfitHist;
+    string fullNameRecTemplNoShift2="All/NoShift/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDVar/Boson/TrIso/"+m_QCDfitHist;
     if (m_boson == "Wmu"){
-        fullNameRecTemplNoShift="All/NoShift/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDTempl/Boson/"+m_QCDfitHist;
+        //fullNameRecTemplNoShift = "All/NoShift/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDVar/Boson/TrIso/"+m_QCDfitHist;
+        fullNameRecTemplNoShift2 ="All/NoShift/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDTempl/Boson/"+m_QCDfitHist;
     }
     //    string fullNameRecNoShift="All/NoShift/"+m_boson+"/"+m_path+"/"+m_QCDfitHist;i
     string fullNameGen = "All/NoShift/NoCuts/GenInfo/ZPosVtx";
 
 
-    string bkgListName=m_boson+"QCDName.txt";
+    string bkgListName="QCDName.txt";
     double templateNumCentr=0, templateStatCentr=0;
     map<string, double> templateSysUp, templateSysDown;
     map<string, double> qcdBinning; 
     TH1D* qcdTemplCentr=NULL;
-    string a1[5]={"", "BigBin", "BigRange","SmallBin", "SmallRange"};
-    vector<string> names(a1, a1+5); 
+    //string a1[5]={"", "BigBin", "BigRange","SmallBin", "SmallRange"};
+    string a1[1]={"Fit"};
+    //vector<string> names(a1, a1+5);
+    vector<string> names(a1, a1+1); 
     for (std::vector<string>::iterator syst=m_systlist.begin(); syst!=m_systlist.end();++syst){
         for (std::vector<string>::iterator name = names.begin(); name!=names.end(); ++name){
             TH1D* dataHist = (TH1D*)dataFile->Get((fullNameRecFitNoShift+*name).c_str());
@@ -1471,6 +1728,7 @@ void ZeeDPlotter::GetQCD()
 
 
             TH1D* dataTempl = (TH1D*)dataFile->Get((fullNameRecTemplNoShift+*name).c_str());
+
             double dataEv = dataHist->Integral();
             RooRealVar x("x","x", dataHist->GetXaxis()->GetXmin(), dataHist->GetXaxis()->GetXmax());   
             RooDataHist data("data", "data" , x, dataHist); 
@@ -1478,13 +1736,17 @@ void ZeeDPlotter::GetQCD()
             if (*syst != "NoShift" && *name != "")
                 continue;
             double templateNum, templateSt;
-
             string fullNameRecFit="All/"+*syst+"/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDFit/"+m_path+"/"+m_QCDfitHist+*name;
-            string fullNameRecTempl = "All/"+*syst+"/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDTempl/"+m_path+"/"+m_QCDfitHist+*name;
-
+            string fullNameRecTempl = "All/"+*syst+"/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDTempl/Boson/"+m_QCDfitHist+*name;
+            string fullNameRecTempl2="All/"+*syst+"/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDVar/Boson/TrIso/"+m_QCDfitHist+*name;
+            TH1D* dataBuf;
             if (m_boson == "Wmu") {
-                fullNameRecTempl = "All/"+*syst+"/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDTempl/Boson/"+m_QCDfitHist+*name;
+                //fullNameRecTempl = "All/"+*syst+"/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDVar/Boson/TrIso/"+m_QCDfitHist+*name;
+                //fullNameRecTempl2 = "All/"+*syst+"/"+m_boson+"/QCD/"+m_QCDfitHist+"/QCDTempl/Boson/"+m_QCDfitHist+*name;
+                //dataBuf=(TH1D*)dataFile->Get((fullNameRecTemplNoShift2+*name).c_str());
+                //dataTempl->Add(dataBuf);
             }
+            std::cout << dataTempl->Integral(0, -1) << std::endl;
 
             string fullNameRecFitNoShift2=fullNameRecFitNoShift+(*name);
 
@@ -1518,15 +1780,16 @@ void ZeeDPlotter::GetQCD()
             //Reading MC
             int i=0;
             double fracSum = 0;
-            //            cout << " Lumi = " << m_lumi << endl;
+            //           cout << " Lumi = " << m_lumi << endl;
             while (bkgList.good()){
                 bkgList >> procName >> xSec >> err;
                 string filename = "out_"+procName+".root";
                 TFile* bkgFile = TFile::Open(filename.c_str());
                 double totGen = ((TH1D*)bkgFile->Get(fullNameGen.c_str()))->GetSumOfWeights();
                 double scale = xSec*m_lumi/totGen;
-                //               cout << "x-sec  " << xSec << " " << totGen << endl;
-                //               cout << "scale = " << scale << endl;
+                //cout << "Process " << procName << endl;               
+                // cout << "x-sec  " << xSec << " " << totGen << endl;
+                //                cout << "scale = " << scale << endl;
 
                 TH1D* hist;
                 if (*syst != "NoShift" && bkgFile->Get(fullNameRecFit.c_str()) == NULL) {
@@ -1537,6 +1800,15 @@ void ZeeDPlotter::GetQCD()
                 if(*syst != "NoShift" && bkgFile->Get(fullNameRecTempl.c_str()) == NULL) {
                     templHist = (TH1D*)bkgFile->Get((fullNameRecTemplNoShift+*name).c_str());
                 } else templHist = (TH1D*)bkgFile->Get((fullNameRecTempl).c_str());
+
+                TH1D* templHist2;
+
+                if (m_boson == "Wmu") {
+                    /* if(*syst != "NoShift" && bkgFile->Get(fullNameRecTempl.c_str()) == NULL) {
+                       templHist2 = (TH1D*)bkgFile->Get((fullNameRecTemplNoShift2+*name).c_str());
+                       } else templHist2 = (TH1D*)bkgFile->Get((fullNameRecTempl2).c_str());
+                       templHist->Add(templHist2);*/
+                }
                 //cout << hist->Integral() << " " << hTot->Integral() << endl;
                 //hist->Scale(scale);
                 hTot->Add(hist, scale);
@@ -1578,21 +1850,39 @@ void ZeeDPlotter::GetQCD()
             RooHistPdf mcPdf("EwkPDF", "EwkPDF", RooArgSet(x), *histEwk, 0);
             sig->add(mcPdf);
             fracs->add(fracEwk);
-
             TH1D* qcdHist= new TH1D(*dataTempl);
             qcdHist->Add(hTotTempl, -1);
             if (m_boson == "Wmu"){
-                int t=qcdHist->FindBin(40.0);
-                EraseBins(qcdHist, t, true);
+                //int t=qcdHist->FindBin(50.0);
+                //EraseBins(qcdHist, t, true);
+                //EraseBins(qcdHist);
+
+                //int t=qcdHist->FindBin(50.0);
+                //EraseBins(qcdHist, t, true);
+                //
+                TFile* fileBB=new TFile("out_bbTomu15.root");
+                TFile* fileCC=new TFile("out_ccTomu15.root");
+                TH1D* hist1=(TH1D*)fileBB->Get((fullNameRecTemplNoShift+*name).c_str());
+                TH1D* hist2=(TH1D*)fileCC->Get((fullNameRecTemplNoShift+*name).c_str());
+
+                //TH1D* hist1=(TH1D*)fileBB->Get((fullNameRecFitNoShiftComb+*name).c_str());
+                //TH1D* hist2=(TH1D*)fileCC->Get((fullNameRecFitNoShiftComb+*name).c_str());
+                hist1->SetDirectory(0);
+                hist2->SetDirectory(0);
+                qcdHist=hist1;
+                qcdHist->Add(hist2);
+                fileBB->Close();
+                fileCC->Close();
+
             } else if (m_path == "Minus"){
                 int t=qcdHist->FindBin(30.0);
-                EraseBins(qcdHist,t, true);
+                //EraseBins(qcdHist,t, true);
             } else {
                 int t=qcdHist->FindBin(40.0);
-                EraseBins(qcdHist,t, true);
+                //EraseBins(qcdHist,t, true);
             }
 
-            //EraseBins(qcdHist);
+            EraseBins(qcdHist);
             templateNum = qcdHist->Integral(0, nBins);
             double errTempl;
             templateSt = qcdHist->IntegralAndError(qcdCutBin, nBins, errTempl); 
@@ -1644,6 +1934,7 @@ void ZeeDPlotter::GetQCD()
             frame->SetName(("frame"+*name+*syst).c_str());
             data.plotOn(frame);
             model.plotOn(frame);
+            model.plotOn(frame, Components("EwkPDF"), LineStyle(kDashed)); 
             model.plotOn(frame, Components("qcdPDF"), LineStyle(kDashed));
             frame->Write();
             topDir->cd();
@@ -1671,7 +1962,7 @@ void ZeeDPlotter::GetQCD()
             qcdNum = qcdHist->Integral(qcdCutBin, nBins);
             qcdFitErr*=qcdNum;
 
-            if (*name == ""){
+            if (*name == "Fit"){
                 m_QCDcutBin = qcdCutBin;   
             }
             if (*syst == "NoShift"){
@@ -1684,7 +1975,7 @@ void ZeeDPlotter::GetQCD()
 
             //saving everything for systematics calculation
             if (*syst  == "NoShift"){
-                if (*name == ""){
+                if (*name == "Fit"){
                     templateNumCentr = templateNum;
                     templateStatCentr = templateSt;
                     qcdNumCentr=qcdNum;
@@ -1743,7 +2034,7 @@ void ZeeDPlotter::GetQCD()
 
     fitResults->Write();
     fitResults->Close();
-
+    templateStatCentr=qcdNumCentr*templateStatCentr;
     //filling QCD estimation tables
     ofstream SystTemplTableOut, SystFitTableOut, SystTotalOut;
     string systTableOutName = "QCDSystematics/"+m_nameBos+"/"+m_nameBos+"QCDTemplateSystTable.tex";
@@ -1768,7 +2059,7 @@ void ZeeDPlotter::GetQCD()
     printf("%55s %10s %10s \n", "Source", "Up", "Down"); 
     std::cout << "-------------------------------------------------------------------------------------------" << std::endl;
 
-    //    printf("%55s %10.2f %10.2f \n","Statistics", qcdErrStat, -qcdErrStat);   
+    printf("%55s %10.2f %10.2f \n","Statistics", templateStatCentr, -templateStatCentr);   
     printf("%55s %10.2f %10.2f \n", "Fit error", qcdErrFit, qcdErrFit);	
     // printf("%55s %10.2f %10.2f \n", "Fit error", qcdErrFit2, qcdErrFit2);	
 
@@ -1851,11 +2142,11 @@ void ZeeDPlotter::GetQCD()
 
     std::cout << "-------------------------------------------------------------------------------------------" << std::endl;
     std::cout << "Number of QCD events = " << qcdNumCentr << " +" << sqrt(uE) << "(" << -sqrt(dE)<<")" << "(syst)" << " +- " << sqrt(uT) << "(stat)" << std::endl;
-    string filename = "QCDSystematics/"+m_nameBos+".out";
-    FILE* sysOut=fopen(filename.c_str(), "w");
-    fprintf(sysOut, "%10.2f %10.4f", qcdNumCentr, sqrt(uE), -sqrt(dE));
-    fclose(sysOut);
-
+    /*    string filename = "QCDSystematics/"+m_nameBos+".out";
+          FILE* sysOut=fopen(filename.c_str(), "w");
+          fprintf(sysOut, "%10.2f %10.4f", qcdNumCentr, sqrt(uE), -sqrt(dE));
+          fclose(sysOut);
+          */
     /*
        string SystTableName = "SystematicsTexFormat/"+m_nameBos+"/"+m_nameBos+"SystTable.tex";
        string SystForDataName = "SystematicsDatFormat/"+m_nameBos+"/C_"+m_nameBos+"_syst.dat";
@@ -1886,7 +2177,7 @@ void ZeeDPlotter::GetXSection()
     }
 
 
-    string fullNameTot = "All/NoShift/NoCuts/" + m_refHistoNoCuts;
+    string fullNameTot = "All/NoShift/NoCuts/GenInfo/ZPosVtx";
     string fullNameRec = "All/NoShift/"+m_boson+"/"+m_path+"/"+m_refHistogramRec;
 
     TH1* hrec = (TH1*)dataFile->Get(fullNameRec.c_str());
@@ -1907,13 +2198,15 @@ void ZeeDPlotter::GetXSection()
     double err;
 
     double totalBkgNum=0;
-    double xSec;
-    bkgList >> procName >> xSec;
+    double xSec, err2;
+    bkgList >> procName >> xSec >> err2;
     double diBosons=0, diBosonsSt=0, ttbar=0, ttbarSt=0, WBosons=0, WBosonsSt=0, QCDSyUp=0,QCDSyDown=0, QCDSt=0;
-    double ZBosons=0, ZBosonsSt=0, DY=0, DYSt=0, QCD=0;
+    double ZBosons=0, ZBosonsSt=0, DY=0, DYSt=0, QCD=0, ZBosonsSy=0, WBosonsSy=0;
+    std::cout << "fullNameRec " << fullNameRec << "  tot " << fullNameTot << endl;
     while (bkgList.good()){
         if (procName.find(m_nameBos) != std::string::npos){
-            bkgList >>procName>>xSec;
+            bkgList >>procName>>xSec>>err2;
+            std::cout << "Finding another " << procName << endl;
             continue;
         }
         string filename = "out_"+procName+".root";
@@ -1934,7 +2227,8 @@ void ZeeDPlotter::GetXSection()
 
             hrec->IntegralAndError(0,1000, err); 
             double	bkgSt = rec>0 ? err/rec * 100. : 0.;        
-            double bkgNum= tot != 0 ? (rec/tot) * xSec * m_lumi : 0;        
+            double bkgNum= tot != 0 ? (rec/tot) * xSec * m_lumi : 0;
+            double bkgSy = bkgNum*err2;        
             std::cout << procName << " background: " << bkgNum << "+-" << bkgNum * bkgSt/100. << std::endl;
             totalBkgNum+=bkgNum;
 
@@ -1943,28 +2237,31 @@ void ZeeDPlotter::GetXSection()
                 diBosonsSt+=pow(bkgSt*bkgNum/100.,2);
             } else if (procName == "ttbar"){
                 ttbar +=bkgNum; 
-                ttbarSt +=pow(bkgSt*bkgNum/100.,2); 
+                ttbarSt +=pow(bkgSt*bkgNum/100.,2);
             } else if (procName.find("W") != std::string::npos){ 
                 WBosons+=bkgNum;
                 WBosonsSt+=pow(bkgSt*bkgNum/100.,2);
+                WBosonsSy+=pow(bkgSy, 2);
             } else if (procName.find("Z") != std::string::npos){
                 ZBosons+=bkgNum;
                 ZBosonsSt+=pow(bkgSt*bkgNum/100.,2);
+                ZBosonsSy+=pow(bkgSy, 2);
             } else if (procName.find("DY") != std::string::npos){
                 DY+=bkgNum;
                 DYSt+=pow(bkgSt*bkgNum/100.,2);
             }
             delete bkgFile;
         }
-        bkgList >>procName>>xSec;
-
+        bkgList >>procName>>xSec >> err2;
+        std::cout << procName << std::endl;
     }
-    if (m_nameBos == "W" || m_nameBos == "Wmu"){
+    if (m_boson == "W" || m_boson == "Wmu"){
         string filename = "QCDSystematics/"+m_nameBos+".out";
         ifstream qcdFile;
         qcdFile.open(filename.c_str());
         qcdFile.seekg(0, ios::beg);
-        qcdFile >> QCD >> QCDSyUp >> QCDSyDown;
+        qcdFile >> QCD >> QCDSyUp;
+        std::cout << "QCD = " << QCD << " +- " << QCDSyUp <<std::endl;
         totalBkgNum+=QCD;
     }
 
@@ -1979,38 +2276,53 @@ void ZeeDPlotter::GetXSection()
 
     // Systematics for EWK
     double diBosonsSy = diBosons*diBosonsSt/100.;
-    double WBosonsSy  = WBosons*WBosonsSt/100.;
-    double ZBosonsSy  = ZBosons*ZBosonsSt/100.;
+    WBosonsSy  = sqrt(WBosonsSy+pow(WBosons*WBosonsSt/100., 2));
+    ZBosonsSy  = sqrt(ZBosonsSy+pow(ZBosons*ZBosonsSt/100., 2));
     double ttbarSy    = ttbar*ttbarSt/100.;
     double DYSy       = DY*DYSt/100.;
-    QCDSyUp=QCDSyUp/m_czvalue/m_lumi;
-    QCDSyDown=QCDSyDown/m_czvalue/m_lumi;
+    //QCDSyUp=QCDSyUp/m_czvalue/m_lumi;
+    //QCDSyDown=QCDSyDown/m_czvalue/m_lumi;
 
-    double ewkErrSyst = sqrt ( diBosonsSy*diBosonsSy + WBosonsSy*WBosonsSy + ZBosonsSy*ZBosonsSy + ttbarSy*ttbarSy + DYSy*DYSy+pow(m_lumi_err*ewkBg/100.,2));
-    std::cout << "Total number of events " << std::endl;
-    //std::cout << dataEvents << " - " << evkBg << " - " << QCD;
-    std::cout << " Signal events " << std::endl;
-    //std::cout << dataSub << "+-" << ewkErrSyst  << "+-" << QCDSy 
     double dataSub = dataEvents-totalBkgNum;
+    double ewkErrSyst = sqrt ( diBosonsSy*diBosonsSy + WBosonsSy*WBosonsSy + ZBosonsSy*ZBosonsSy + ttbarSy*ttbarSy + DYSy*DYSy+pow(m_lumi_err*ewkBg,2));
+    double ewkErrRel =ewkErrSyst*100./dataSub;
+    double qcdErrRel =QCDSyUp*100./dataSub;
+    double bkgErrTotal=sqrt(ewkErrSyst*ewkErrSyst+QCDSyUp*QCDSyUp);
+    std::cout << "Total number of events " << std::endl;
+    std::cout << dataEvents << " - " << ewkBg << " - " << QCD << std::endl;
+    std::cout << " Signal events " << std::endl;
+    std::cout << dataSub << "+-" << ewkErrSyst  << "+-" << QCDSyUp << endl; 
 
 
     if ( m_czvalue==-1)
         return;
-
-    double sigma = dataSub/m_lumi/ m_czvalue;
-    double sigmaStat = sqrt(dataEvents) /m_lumi/ m_czvalue;
-    double sigmaSysPlus = sqrt((m_czsystUp * sigma)*(m_czsystUp * sigma)+QCDSyUp*QCDSyUp)/100.;
-    double sigmaSysMinus = sqrt((m_czsystDown * sigma)*(m_czsystDown * sigma)+QCDSyDown*QCDSyDown)/ 100.;
-    double sigmaSym = 0.5*(sigmaSysPlus - sigmaSysMinus);
-    double sigmaLumi = m_lumi_err * sigma / 100.;
+    double dataStatErr=1/sqrt(dataEvents)*100;
+    double sigma = 1000*dataSub/m_lumi/ m_czvalue;
+    double sigmaStat = 1000*sqrt(dataEvents) /m_lumi/ m_czvalue;
+    double sigmaSysPlus = sqrt(m_czsystUp*m_czsystUp+ewkErrRel*ewkErrRel)*sigma/100.;
+    double sigmaSysMinus = sqrt(m_czsystDown*m_czsystDown+ewkErrRel*ewkErrRel)*sigma/ 100.;
+    double sigmaSym = 0.5*(fabs(sigmaSysPlus) +fabs(sigmaSysMinus));
+    double sigmaLumi = m_lumi_err * sigma;
 
     double sigmaTot = sigma/m_Az;
     double sigmaTotStat = sigmaStat/m_Az;
-    double sigmaTotSym = sqrt(pow(sigmaSym/sigma,2)+pow((m_AzErr/100.),2))*sigmaTot;
-    double sigmaTotLumi = sigmaTot * m_lumi_err / 100.;
+    double sigmaTotSym = sigmaTot*sigmaSym/sigma;
+    double sigmaTotEx= m_AzErr*sigmaTot/100.;
+    //double sigmaTotSym = sqrt(pow(sigmaSym/sigma,2)+pow((m_AzErr/100.),2))*sigmaTot;
+    double sigmaTotLumi = sigmaTot * m_lumi_err;
 
-    std::cout << "Fiducial cross section = " << sigma  << " +- " << sigmaStat << " + " << sigmaSysPlus << "-" << sigmaSysMinus << std::endl;
-    std::cout << "Total cross section = " << sigmaTot  << " +- " << sigmaTotStat << " +- " << sigmaTotSym << std::endl;
+
+    double sigma13 = sigma/m_Ez;
+    double sigma13Stat = sigmaStat/m_Ez;
+    double sigma13Sym = sigma13*sigmaSym/sigma;
+    double sigma13Ex= m_EzErr*sigma13/100.;
+    //double sigmaTotSym = sqrt(pow(sigmaSym/sigma,2)+pow((m_AzErr/100.),2))*sigmaTot;
+    double sigma13Lumi = sigma13 * m_lumi_err;
+
+
+    std::cout << "Fiducial cross section = " << sigma  << " +- " << sigmaStat << "(stat) + " << sigmaSysPlus << "(-" << sigmaSysMinus << ") (syst) " << sigmaLumi << std::endl;
+    std::cout << "Total cross section = " << sigmaTot  << " +- " << sigmaTotStat << " +- " << sigmaTotSym <<"  "<< sigmaTotLumi << std::endl;
+    std::cout << sigmaSym << std::endl;
 
     FILE * texOut;
     FILE * datOut;
@@ -2025,20 +2337,34 @@ void ZeeDPlotter::GetXSection()
     bgOut   = fopen(bgOutName.c_str(),"w");
 
     // Sigma fidu
-    fprintf( texOut, "\\newcommand{\\sigfid%s}{\\ensuremath{[ %6.1f \\pm %6.1f \\mathrm{(stat)} \\pm %6.1f \\mathrm{(syst)} \\pm %6.1f \\mathrm{(lumi)}]\\;\\mathrm{nb}}}\n",
-            m_nameBos.c_str(), sigma, sigmaStat, sigmaSym, sigmaLumi);
+    //    fprintf( texOut, "\\newcommand{\\sigfid%s}{\\ensuremath{[ %6.1f \\pm %6.1f \\mathrm{(stat)} \\pm %6.1f \\mathrm{(syst)} \\pm %6.1f \\mathrm{(lumi)}]\\;\\mathrm{nb}}}\n",
+    //            m_nameBos.c_str(), this->ceilNN(sigma, 1), this->ceilNN(sigmaStat, 1), this->ceilNN(sigmaSym, 1), this->ceilNN(sigmaLumi, 1));
     fprintf( texOut, "\\newcommand{\\sigfid%snolabel}{\\ensuremath{ %6.1f \\pm %6.1f  \\pm %6.1f  \\pm %6.1f  }} \n",
-            m_nameBos.c_str(), sigma, sigmaStat, sigmaSym, sigmaLumi);
-    fprintf( texOut, "\\newcommand{\\sig%snolabel}{\\ensuremath{ %6.1f \\pm %6.1f  \\pm %6.1f  \\pm %6.1f  }}\n",
-            m_nameBos.c_str(), sigmaTot, sigmaTotStat, sigmaTotSym, sigmaTotLumi); 
+            m_nameBos.c_str(), this->ceilNN(sigma,1), this->ceilNN(sigmaStat,1), this->ceilNN(sigmaSym,1), this->ceilNN(sigmaLumi,1));
+    //    fprintf( texOut, "\\newcommand{\\sig%snolabel}{\\ensuremath{ %6.1f \\pm %6.1f  \\pm %6.1f  \\pm %6.1f  }}\n",
+    //            m_nameBos.c_str(), this->ceilNN(sigmaTot,1), this->ceilNN(sigmaTotStat,1), this->ceilNN(sigmaTotSym,1), this->ceilNN(sigmaTotLumi,1)); 
+
+    // Sigma tot
+    //    fprintf( texOut, "\\newcommand{\\sigtot%s}{\\ensuremath{[ %6.1f \\pm %6.1f \\mathrm{(stat)} \\pm %6.1f \\mathrm{(syst)} \\pm %6.1f \\mathrm{(lumi)} \\pm \\mathrm{(ex)}]\\;\\mathrm{nb}}}\n",
+    //            m_nameBos.c_str(), this->ceilNN(sigmaTot,1), this->ceilNN(sigmaTotStat,1), this->ceilNN(sigmaTotSym,1), this->ceilNN(sigmaTotLumi,1), this->ceilNN(sigmaTotEx,1));
+    fprintf( texOut, "\\newcommand{\\sigtot%snolabel}{\\ensuremath{ %6.1f \\pm %6.1f  \\pm %6.1f  \\pm %6.1f \\pm %6.1f  }} \n",
+            m_nameBos.c_str(), this->ceilNN(sigmaTot,1), this->ceilNN(sigmaTotStat,1), this->ceilNN(sigmaTotSym,1), this->ceilNN(sigmaTotLumi,1), this->ceilNN(sigmaTotEx,1));
+
+    fprintf( texOut, "\\newcommand{\\sigTr%snolabel}{\\ensuremath{ %6.1f \\pm %6.1f  \\pm %6.1f  \\pm %6.1f   }} \n",
+            m_nameBos.c_str(), this->ceilNN(sigma13,1), this->ceilNN(sigma13Stat,1), this->ceilNN(sigma13Sym,1), this->ceilNN(sigma13Lumi,1));
+
 
     // C
+    fprintf( texOut, "\\newcommand{\\systErr%s}{%7.4f} \n", m_nameBos.c_str(), m_czsystUp);
+
+    fprintf( texOut, "\\newcommand{\\stat%s}{%7.2f}\n", m_nameBos.c_str(), dataStatErr);
+    fprintf( texOut, "\\newcommand{\\ewk%s}{%7.2f}\n", m_nameBos.c_str(), ewkErrRel);
+    fprintf( texOut, "\\newcommand{\\qcd%s}{%7.2f}\n", m_nameBos.c_str(), qcdErrRel);
     fprintf( texOut, "\\newcommand{\\C%s}{%7.4f}\n", m_nameBos.c_str(), m_czvalue);
     fprintf( texOut, "\\newcommand{\\C%sStatErr}{%7.4f} \n", m_nameBos.c_str(), m_czstat/100.*m_czvalue);
     fprintf( texOut, "\\newcommand{\\C%sSystUpErr}{%7.4f} \n", m_nameBos.c_str(), m_czsystUp/100.*m_czvalue);
     fprintf( texOut, "\\newcommand{\\C%sSystDownErr}{%7.4f} \n", m_nameBos.c_str(), m_czsystDown/100.*m_czvalue);
-
-
+    fprintf(texOut, "\\newcommand{\\C%sSystErr}{%7.4f} \n", m_nameBos.c_str(), (m_czsystUp-m_czsystDown)/2);
     // Event yields:
     fprintf( texOut, "\\newcommand{\\ntot%s}{%10.0f} \n",   m_nameBos.c_str(), dataEvents);
     //        if (diBosons != 0.0)
@@ -2051,27 +2377,40 @@ void ZeeDPlotter::GetXSection()
     fprintf( texOut, "\\newcommand{\\nttbar%s}{%6.2f} \n",   m_nameBos.c_str(), ttbar / dataEvents * 100.);       
     //       if (DY != 0.0)
     fprintf( texOut, " \\newcommand{\\nDY%s}{%6.2f} \n",   m_nameBos.c_str(), DY / dataEvents * 100.);       
-    fprintf( texOut, " \\newcommand{\\nQCD%s}{%6.2f} \n",   m_nameBos.c_str(), QCD / dataEvents * 100.);       
+    fprintf( texOut, " \\newcommand{\\nQCD%s}{$%6.2f \\pm %8.1f $} \n",   m_nameBos.c_str(), QCD, QCDSyUp);       
 
-    fprintf( texOut, "\\newcommand{\\nEWttbarbkg%s}{$ %6.1f  \\pm %6.1f \\pm %6.1f $} \n",
-            m_nameBos.c_str(), ewkBg, ewkErrStat, ewkErrSyst);
-    fprintf( texOut, "\\newcommand{\\ntotsignal%s}{$ %8.1f \\pm %8.1f \\pm %8.1f $} \n",
-            m_nameBos.c_str(), dataSub, sqrt(dataEvents), sqrt(ewkErrStat*ewkErrStat+ewkErrSyst*ewkErrSyst));
+    fprintf( texOut, "\\newcommand{\\nEWttbarbkg%s}{$ %6.1f  \\pm %6.1f $} \n",
+            m_nameBos.c_str(), ewkBg, ewkErrSyst);
+    if (m_boson == "W" || m_boson == "Wmu"){
+        fprintf( texOut, "\\newcommand{\\ntotsignal%s}{$ %8.1f \\pm %8.1f \\pm %8.1f \\pm %8.1f $} \n",
+                m_nameBos.c_str(), dataSub, sqrt(dataEvents), ewkErrSyst, QCDSyUp);
+        fprintf( texOut, "\\newcommand{\\ntotsignalD%s}{$ %8.1f \\pm %8.1f \\pm %8.1f $} \n",
+                m_nameBos.c_str(), dataSub, ewkErrSyst, QCDSyUp);
+    } else{
+        fprintf( texOut, "\\newcommand{\\ntotsignal%s}{$ %8.1f \\pm %8.1f \\pm %8.1f $} \n",
+                m_nameBos.c_str(), dataSub, sqrt(dataEvents), ewkErrSyst);
+        fprintf( texOut, "\\newcommand{\\ntotsignalD%s}{$ %8.1f \\pm %8.1f  $} \n",
+                m_nameBos.c_str(), dataSub, ewkErrSyst);
+    }
+
+
 
     fclose(texOut);
 
     // Data file:
-    fprintf(datOut, "Sigma_fid %15s %8.2f %8.2f \n", m_nameBos.c_str(), sigma, sigmaStat);
+    fprintf(datOut, "Sigma_fid %15s %8.5f %8.5f \n", m_nameBos.c_str(), sigma, sigmaStat);
     fclose(datOut);
 
     // BG file:
-    fprintf(bgOut, "Top  %8.2f %8.2f \n", ttbarSy / dataEvents*100., -ttbarSy / dataEvents*100.  );
-    fprintf(bgOut, "WBos %8.2f %8.2f \n", WBosonsSy / dataEvents*100., -WBosonsSy / dataEvents*100.  );
-    fprintf(bgOut, "Z %8.2f %8.2f \n", ZBosonsSy / dataEvents*100., -ZBosonsSy / dataEvents*100.  );
-    fprintf(bgOut, "DiBos %8.2f %8.2f \n", diBosonsSy / dataEvents*100., -diBosonsSy / dataEvents*100.  );
-    fprintf(bgOut, "DY %8.2f %8.2f \n", DYSy / dataEvents*100., -DYSy / dataEvents*100.  );
-    fprintf(bgOut, "QCD %8.2f %8.2f \n", QCDSyUp/dataEvents*100., -QCDSyDown/dataEvents*100.);
-    fprintf(bgOut, "BgEWKLumi %8.2f %8.2f \n", m_lumi_err*ewkBg / dataEvents, -m_lumi_err*ewkBg/ dataEvents);
+    fprintf(bgOut, "BkgTotal %8.4f \n", bkgErrTotal/dataEvents*100);
+    fprintf(bgOut, "Top  %8.4f %8.4f \n", ttbarSy / dataEvents*100., -ttbarSy / dataEvents*100.  );
+    fprintf(bgOut, "WBos %8.4f %8.4f \n", WBosonsSy / dataEvents*100., -WBosonsSy / dataEvents*100.  );
+    fprintf(bgOut, "Z %8.4f %8.4f \n", ZBosonsSy / dataEvents*100., -ZBosonsSy / dataEvents*100.  );
+    fprintf(bgOut, "DiBos %8.4f %8.4f \n", diBosonsSy / dataEvents*100., -diBosonsSy / dataEvents*100.  );
+    fprintf(bgOut, "DY %8.4f %8.4f \n", DYSy / dataEvents*100., -DYSy / dataEvents*100.  );
+    fprintf(bgOut, "QCD %8.4f %8.4f \n", QCDSyUp/dataEvents*100., -QCDSyUp/dataEvents*100.);
+    fprintf(bgOut, "EWKBkg %8.4f %8.4f \n", ewkErrSyst/dataEvents*100., -ewkErrSyst/dataEvents*100.);
+    fprintf(bgOut, "BgEWKLumi %8.4f %8.4f \n", m_lumi_err*ewkBg / dataEvents, -m_lumi_err*ewkBg/ dataEvents);
     fclose(bgOut);
     cout << endl << endl << endl;
 
@@ -2079,5 +2418,11 @@ void ZeeDPlotter::GetXSection()
 }
 
 
-
+double ZeeDPlotter::ceilNN(double v, int p)
+{
+    v *= pow(10, p);
+    v = round(v);
+    v /= pow(10, p);
+    return v;
+}
 // ----------------------------------------------------

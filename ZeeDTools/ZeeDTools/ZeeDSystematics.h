@@ -178,6 +178,9 @@ class ZeeDSystematics : public TObject {
         eOffRecEffUp,
         eOffRecEffDown,
         eOffRecEffToyMC,
+        muOffRecEffToyMC,
+        muOffRecEffUp,
+        muOffRecEffDown,
 
         // ---------------------------------------------------------------------
         eOffIsoEffOff,
@@ -296,6 +299,9 @@ eZplusJetPunchThrough_Up,
     HadrRecoilSumEtOff,
     HadrRecoilSumEt,
     HadrRecoilSumEtToyMC,
+    HadrRecoilScaleCorrectionUp,
+    HadrRecoilScaleCorrectionDown,
+    HadrRecoilSmearingOff,
 	// ---------------------------------------------------------------------
         eNumShifts,
 	eNULL

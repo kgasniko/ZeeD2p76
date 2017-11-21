@@ -31,6 +31,7 @@ void ZeeDHistManagerGenInfo::BookHistos()
     const TString BosPt     = ZeeDMisc::FindFile("Binning/BosPt.txt");
 
     AddTH1D("BosPt",        400, 0.0, 200.0,   "P_{T} (Z->ee) ", "", ZeeDHistLevel::Systematics);
+    AddTH1D("BosID",         60,  -30, 30, "BosonID", "");
     AddTH2D("RecVsGenBosPt", 60, 0.0, 60.0, 60, 0.0, 60.0, "Rec P_{T}^{W} [GeV]", "Truth P_{T}^{W} [GeV]"); 
     AddTH2D("BosYPt",   100, -3.5, 3.5, 400, 0, 200., "Y", "Pt");
     AddTH1D("BosPtRew", ZeeDMisc::FindFile("Binning/BosPtRew.txt"), "P_{T}", "");
@@ -41,7 +42,10 @@ void ZeeDHistManagerGenInfo::BookHistos()
     AddTH2D("WeightPtBos", 400 ,    -2.,   4.0,  60,    0.0, 60.0, "Weight", "Pt_{boson}^{truth} [GeV]", ZeeDHistLevel::Systematics);
     AddTH1D("BosY",          BosY,     "Y (Z->ee) ", "", ZeeDHistLevel::ToyMC);
     AddTH1D("BosYFine",   500, -5, 5,   "y (Z->ee)",        "", ZeeDHistLevel::Technical);
-
+    AddTH1D("Wminenu", 1, 0., 1., "", "");
+    AddTH1D("Wminmunu", 1, 0., 1., "","");
+    AddTH1D("Wplusenu", 1, 0., 1., "", "");
+    AddTH1D("Wplusmunu", 1, 0., 1., "", "");
     AddTH1D("BosMass",       50,    66., 116.0, "M (Z->ee) / GeV", "");
 
     AddTH1D("BosMassFine",      500,   0, 250, "M_{Z->ee} / GeV",     "", ZeeDHistLevel::Technical);
@@ -58,13 +62,13 @@ void ZeeDHistManagerGenInfo::BookHistos()
     AddTH1D("PosPt",         50,    0.0, 100.0, "P_{T} e^+ / GeV", "", ZeeDHistLevel::Systematics);
     AddTH1D("PosEta",        50,    -5.0, 5.0,  "#eta e^+  ", "");
     AddTH1D("PosEt",         50,    0.0, 100.0, "E_{T} e^+" , "");
-    AddTH1D("PosID",         20,    -20, 20, "Particle ID", "");
+    AddTH1D("PosID",         40,    -20, 20, "Particle ID", "");
 
     AddTH1D("ElecPtBare",        50,    0.0, 100.0, "P_{T} e^- / GeV", "", ZeeDHistLevel::Systematics);
     AddTH1D("ElecPt",        50,    0.0, 100.0, "P_{T} e^- / GeV", "", ZeeDHistLevel::Systematics);
     AddTH1D("ElecEta",       50,    -5.0, 5.0,  "#eta e^- ", "");
     AddTH1D("ElecEt",       100,    0, 100, "E_{T} e", " ");
-    AddTH1D("ElecID",       20,    -20, 20, "Particle ID", "");
+    AddTH1D("ElecID",       40,    -20, 20, "Particle ID", "");
     AddTH1D("EtMiss",         100,    0, 100, "E_{T} neutrino", " ");
     AddTH1D("id",            13,    -6.5,  6.5,  "parton ID", "");
     AddTH2D("id1_vs_id2",    13,    -6.5,  6.5, 13,    -6.5,  6.5, "parton ID 1", "parton ID 2");
@@ -114,15 +118,14 @@ void ZeeDHistManagerGenInfo::Fill()
         TVector3 vtx = event->Vertex().Get().position;
         FillTH1(vtx.Z(),       genWeight, "ZPosVtx");
     }
-
-    const ZeeDGenParticle* Boson = event->GetGenBoson(ZeeDEnum::MCFSRLevel::Born);
-        
+    const ZeeDGenParticle* Boson = event->GetGenBoson(ZeeDEnum::MCFSRLevel::Born);    
     if (Boson == NULL) {
         return;
     }
+
     int id = Boson->GetParticleID();
 
-	ZeeDGenElectrons genLeptons = event->GetGenLeptons(ZeeDEnum::MCFSRLevel::Born);
+    ZeeDGenElectrons genLeptons = event->GetGenLeptons(ZeeDEnum::MCFSRLevel::Born);
     const ZeeDGenParticle* El    = genLeptons.first;
     const ZeeDGenParticle* Pos   = genLeptons.second;
 
@@ -139,7 +142,7 @@ void ZeeDHistManagerGenInfo::Fill()
 
     FillTH1(fourVector.M(),        genWeight, "BosMass");
     FillTH1(fourVector.M(),        genWeight, "BosMassFine");
-    FillTH1(fourVector.Mt(),       genWeight, "BosMt");
+    FillTH1(Boson->GetMt(),       genWeight, "BosMt");
 
     const ZeeDBosonW* boson = event->GetCurrentBosonW();
     if (boson != NULL) {
@@ -170,12 +173,25 @@ void ZeeDHistManagerGenInfo::Fill()
         FillTH1(PosFV.Eta(),     genWeight, "PosEta");
         FillTH1(PosFV.Et(),      genWeight, "PosEt");
         FillTH1(Pos->GetParticleID(), genWeight, "PosID");
-        if (id == 24 || id == -24) {
-          double EtMiss = fourVector.Et()-PosFV.Et();
-          FillTH1(EtMiss, genWeight, "EtMiss");
-          }
 
     }
+    //std::cout << "Filling gen information " << Pos->GetParticleID() << " " << El->GetParticleID() << std::endl;
+    FillTH1(id, genWeight, "BosID");
+    
+    if (id == - 24){
+           if (El->GetParticleID() == 12){
+              FillTH1(0.5, genWeight, "Wplusenu");
+           }else{
+               FillTH1(0.5, genWeight, "Wplusmunu");
+           }
+    } else if (id == 24) {
+        if (El->GetParticleID()==11){
+            FillTH1(0.5, genWeight, "Wminenu");
+        } else{
+            FillTH1(0.5, genWeight, "Wminmunu");
+        }
+    }
+
 
 	ZeeDGenElectrons genLeptonsBare = event->GetGenLeptons(ZeeDEnum::MCFSRLevel::Bare);
     const ZeeDGenParticle* ElBare    = genLeptonsBare.first;

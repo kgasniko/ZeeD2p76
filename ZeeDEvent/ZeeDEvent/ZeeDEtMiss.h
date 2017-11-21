@@ -158,6 +158,17 @@ public:
         fnMETMuon=n;
     }
 
+    Double_t GetCorRecoilUPar(){
+        return fCorRecoilUPar;
+    }
+    Double_t GetCorRecoilUPerp(){
+        return fCorRecoilUPerp;
+    }
+
+    Double_t GetCorRecoilUParU(){
+        return fCorRecoilUParU;
+    }
+
     /** Blue print */
     void Print(Option_t* option = "") const;
 
@@ -168,6 +179,7 @@ private:
     void SetEt( Double_t et ) {
         fEt = et;
     }
+    
 
     /** Set missing EtX value */
     void SetEtX( Double_t etx ) {
@@ -186,27 +198,39 @@ private:
     // Setters
     /** SetCorRecoil missing Et value */
     void SetCorRecoilEt( Double_t et ) {
-        fEt = et;
+        fCorRecoilEt = et;
     }
 
     /** SetCorRecoil missing EtX value */
     void SetCorRecoilEtX( Double_t etx ) {
-        fEtX = etx;
+        fCorRecoilEtX = etx;
     }
 
     /** SetCorRecoil missing EtY value */
     void SetCorRecoilEtY( Double_t ety ) {
-        fEtY = ety;
+        fCorRecoilEtY = ety;
     }
 
     /** SetCorRecoil phi of missing Et */
     void SetCorRecoilPhi( Double_t phi ) {
-        fPhi = phi;
+        fCorRecoilPhi = phi;
     }
 
     void SetCorRecoilSumet (Double_t sumet) {
 		fCorRecoilSumet=sumet;
 	}
+    
+    void SetCorRecoilUPerp (Double_t uPerp){
+        fCorRecoilUPerp=uPerp;
+    }
+
+    void SetCorRecoilUPar (Double_t uPar){
+        fCorRecoilUPar=uPar;
+    }
+
+    void SetCorRecoilUParU (Double_t uParU){
+        fCorRecoilUParU = uParU;
+    }
 
     /** Missing Et */
     Double_t fEt;
@@ -220,6 +244,9 @@ private:
     Double_t fEtY;
 	Double_t fCorRecoilEtY;
 
+    Double_t fCorRecoilUPar;
+    Double_t fCorRecoilUPerp;
+    Double_t fCorRecoilUParU;
     /** Phi angle of missing Et */
     Double_t fPhi;
 	Double_t fCorRecoilPhi;

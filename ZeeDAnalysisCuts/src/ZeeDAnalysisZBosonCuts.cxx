@@ -23,7 +23,22 @@ Bool_t ZeeDCutPtMinCentralLepZ::evaluate(const ZeeDEvent* event)
     return pt > m_cutval;
 }
 
-//------------------------------------------------------------------------------
+
+Bool_t ZeeDCutBothCombinedMuon::evaluate(const ZeeDEvent* event){
+    const ZeeDBosonZ* z = event->GetCurrentBoson();
+    if (z == NULL) {
+        return kFALSE;
+    }
+    const ZeeDMuon* e1 = (ZeeDMuon*)event->GetCurrentBoson()->GetFirstLep();
+    const ZeeDMuon* e2 = (ZeeDMuon*)event->GetCurrentBoson()->GetSecondLep();
+    if (!e1->Properties().IsSet() || !e2->Properties().IsSet())
+        return kFALSE;
+     const ZeeDMuonBags::Properties prop1 = e1->Properties().Get();
+   const ZeeDMuonBags::Properties prop2 = e2->Properties().Get();
+    return prop1.fisCombinedMuon && prop2.fisCombinedMuon;
+}
+
+//-----------------------------------------------------------------------------
 Bool_t ZeeDCutPtMinForwardLepZ::evaluate(const ZeeDEvent* event)
 {
 
@@ -292,6 +307,25 @@ Bool_t ZeeDCutBothElecIso::evaluate(const ZeeDEvent* event)
 
 }
 
+Bool_t ZeeDCutBothMuonTrackIso::evaluate(const ZeeDEvent* event){
+
+    const ZeeDBosonZ* w = event->GetCurrentBoson();
+    if (w == NULL) {
+        return kFALSE;
+    }
+    const ZeeDMuon* mu1 = (ZeeDMuon*)w->GetFirstLep();
+    const ZeeDMuon* mu2 = (ZeeDMuon*)w->GetSecondLep();
+
+    if (!mu1->Isolation().IsSet() || !mu2->Isolation().IsSet())
+        return kFALSE;
+    const ZeeDMuonBags::Isolation iso1 = mu1->Isolation().Get();
+    const ZeeDMuonBags::Isolation iso2 = mu2->Isolation().Get();
+
+    return ((iso1.fptcone20 < m_cutval && iso2.fptcone20 < m_cutval) == bDecision);
+
+}
+
+
 //------------------------------------------------------------------------------
 Bool_t ZeeDCutTrackCentralLepZ::evaluate(const ZeeDEvent* event)
 {
@@ -319,6 +353,40 @@ Bool_t ZeeDCutTrackCentralLepZ::evaluate(const ZeeDEvent* event)
         return kFALSE;
     }
 }
+
+Bool_t ZeeDCutBothEtCone20overEt::evaluate (const ZeeDEvent* event)
+{
+    const ZeeDBosonZ* w = event->GetCurrentBoson();
+    if (w == NULL) {
+        return kFALSE;
+    }
+    // if (w.GetBosonType() != BosonType::Value::Wenu){
+    //       return kFALSE;
+    //       }
+    const ZeeDElectron* elec = (ZeeDElectron*)w->GetFirstLep(); 
+    const ZeeDElectron* elec2 = (ZeeDElectron*)w->GetSecondLep(); 
+
+    const TLorentzVector& elec_fourVec = elec->GetFourVector();
+    const Double_t elec_et = elec_fourVec.Et();
+    if(!elec->Shower().IsSet() || !elec->CaloIsoCor().IsSet())
+        return kFALSE;
+    const ZeeDElectronBags::Shower elec1_shower = elec->Shower().Get();
+    double elec1_etcone20 = elec1_shower.etcone20/1000.;
+    const Double_t elec1_etcone20overEt   = elec1_etcone20/elec_et;
+
+    const TLorentzVector& elec_fourVec2 = elec2->GetFourVector();
+    const Double_t elec_et2 = elec_fourVec2.Et();
+    if(!elec2->Shower().IsSet() || !elec2->CaloIsoCor().IsSet())
+        return kFALSE;
+    const ZeeDElectronBags::Shower elec1_shower2 = elec2->Shower().Get();
+    double elec1_etcone20_2 = elec1_shower2.etcone20/1000.;
+    const Double_t elec1_etcone20overEt2   = elec1_etcone20_2/elec_et2;
+
+
+    return elec1_etcone20overEt < m_EtCut && elec1_etcone20overEt2 < m_EtCut;
+
+}
+
 
 //------------------------------------------------------------------------------
 Bool_t ZeeDCutVertexPresentBothLepZ::evaluate(const ZeeDEvent* event)

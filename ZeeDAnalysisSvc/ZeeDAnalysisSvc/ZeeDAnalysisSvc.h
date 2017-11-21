@@ -142,6 +142,10 @@ public:
         return bRecalcEtMiss;
     }
 
+    bool CorrectSumet()                                 const {
+        return bCorrectSumet;
+    }
+
     bool HadrRecoilFull()                              const {
         return bHadrRecoilFull;
     }
@@ -149,6 +153,18 @@ public:
     bool DeleteSoftTerm()                              const {
         return bDeleteSoftTerm;
     }
+    
+    double EtScaleFactor()                            const {
+        return bEtScaleFactor;
+    }  
+
+    double EtSmearFactor()                             const {
+        return bEtSmearFactor;
+    } 
+    
+    std::string SumetCorFile()                         const {
+       return bSumetCorFile;
+    } 
 
     bool CalcW()                                       const {
         return bCalcW;
@@ -1036,8 +1052,12 @@ private:
 
     bool bReadEtMiss;
     bool bRecalcEtMiss;
+    bool bCorrectSumet;
     bool bHadrRecoilFull;
     bool bDeleteSoftTerm;
+    double bEtScaleFactor;
+    double bEtSmearFactor;
+    std::string bSumetCorFile;
     bool bCalcW;
     bool bCalcWmu;
     bool bCalcZmumu;

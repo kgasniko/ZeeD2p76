@@ -22,8 +22,9 @@
 #include "ZeeDMisc/ZeeDMisc.h"
 #include "ZeeDArrays/ZeeDHistTools.h"
 
-#include "ZeeDAnalysisCuts/ZeeDIdentifier.h"
-#include "ZeeDAnalysisCuts/ZeeDFinder.h"
+#include "ZeeDAnalysisCuts/ZeeDIdentifierZCC.h"
+#include "ZeeDAnalysisCuts/ZeeDFinderZCC.h"
+
 #include "ZeeDAnalysisCuts/ZeeDIdentifierW.h"
 #include "ZeeDAnalysisCuts/ZeeDFinderW.h"
 #include "ZeeDAnalysisCuts/ZeeDIdentifierWmu.h"
@@ -163,10 +164,10 @@ ZeeDIdentifier* ZeeDAnalysisLoop::AddIdentifier(ZeeDFinderWmu* finder, TString n
 
 // Setting of identifier for Z-> ee boson
 //------------------------------------------------------
-ZeeDIdentifier* ZeeDAnalysisLoop::AddIdentifier(ZeeDFinder* finder, TString name)
+ZeeDIdentifier* ZeeDAnalysisLoop::AddIdentifier(ZeeDFinderZCC* finder, TString name)
 {
 
-    ZeeDIdentifier* identifier = new ZeeDIdentifier(name);
+    ZeeDIdentifierZCC* identifier = new ZeeDIdentifierZCC(name);
 
     if( finder != NULL ) {
         finder->BookCuts();
@@ -175,7 +176,22 @@ ZeeDIdentifier* ZeeDAnalysisLoop::AddIdentifier(ZeeDFinder* finder, TString name
 
     fIdentifiers[name] = identifier;
 
-    return identifier;
+    return (ZeeDIdentifier*)identifier;
+}
+
+ZeeDIdentifier* ZeeDAnalysisLoop::AddIdentifier(ZeeDFinderZmumu* finder, TString name)
+{
+
+    ZeeDIdentifierZmumu* identifier = new ZeeDIdentifierZmumu(name);
+
+    if( finder != NULL ) {
+        finder->BookCuts();
+        identifier->SetFinder(finder);
+    }
+
+    fIdentifiers[name] = identifier;
+
+    return (ZeeDIdentifier*)identifier;
 }
 
 //------------------------------------------------------

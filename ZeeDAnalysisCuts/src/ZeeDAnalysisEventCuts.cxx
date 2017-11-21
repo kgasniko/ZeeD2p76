@@ -228,8 +228,8 @@ Bool_t ZeeDCutMassTransvBornW::evaluate (const ZeeDEvent* event){
     if  (event->GetGenBoson(ZeeDEnum::MCFSRLevel::Born) == NULL) {
         return kFALSE;
     }
-    const TLorentzVector& bosL = event->GetGenBoson(ZeeDEnum::MCFSRLevel::Born)->GetMCFourVector();
-    const Double_t mt = bosL.Mt();
+    const Double_t mt = event->GetGenBoson(ZeeDEnum::MCFSRLevel::Born)->GetMt();
+
     return mt > m_cutval;
 }
 

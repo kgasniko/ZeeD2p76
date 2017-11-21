@@ -9,6 +9,7 @@
 #include <TObject.h>
 #include <TH1D.h>
 #include <TFile.h>
+#include <TRandom.h>
 
 // ZeeD analysis includes
 #include "ZeeDAnalysisSvc/IZeeDAnalysisSvc.h"
@@ -66,7 +67,7 @@ private:
     void ApplyLineShapeWeight();
     void ApplyUnofficialPtWeight();
     void GeneratePileupMCWeight();
-
+    void CorrectSumet();
     /**  Zvtx weight for 2010 data */
     void ApplyZvWeight();
 
@@ -81,7 +82,8 @@ private:
     void AddBosonPtReweightingTool(std::string targetName, bool defaultTool);
     BosonPtReweightingTool* rwTool_DefaultTarget;
     std::map<TString, BosonPtReweightingTool*> rwToolMap;
-
+    TFile* fileSF;
+    TObjArray* correctSumet, *toys;
     TH1D* NTrkVtx;
 
     ZeeDPDF::Flavour enumConverter(int id);
@@ -90,7 +92,7 @@ private:
     ServiceHandle<IZeeDAnalysisSvc>* fAnaOptions;      //!
 
     TH1D* weighthist;
-    TFile* fileSF;
+    TRandom* rndm; 
 
     VertexPositionReweightingTool* zvtxrwTool;
 

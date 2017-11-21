@@ -22,6 +22,8 @@
 #include "ZeeDAnalysisCuts/ZeeDIdentifierWmu.h"
 #include "ZeeDAnalysisCuts/ZeeDFinderZmumu.h"
 #include "ZeeDAnalysisCuts/ZeeDIdentifierZmumu.h"
+#include "ZeeDAnalysisCuts/ZeeDIdentifierZCC.h"
+#include "ZeeDAnalysisCuts/ZeeDFinderZCC.h"
 
 class ZeeDHistManager;
 class ZeeDCutHistManager;
@@ -124,9 +126,10 @@ public:
     void AddHistManager(ZeeDHistManager* histManager, ZeeDNoCutsBundle* bundle);
 
     /** Add identifier */
-    ZeeDIdentifier* AddIdentifier(ZeeDFinder* finder, TString name="");
+    ZeeDIdentifier* AddIdentifier(ZeeDFinderZCC* finder, TString name="");
     ZeeDIdentifier* AddIdentifier(ZeeDFinderW* finder, TString name="");
     ZeeDIdentifier* AddIdentifier(ZeeDFinderWmu* finder, TString name="");
+    ZeeDIdentifier* AddIdentifier(ZeeDFinderZmumu* finder, TString name="");
 
     /** Add CutHistManager, coupled to identifier */
     void AddCutHistManager(ZeeDCutHistManager* cutHM,  ZeeDCutCache* cutCache, ZeeDAnalysisChainBundle* list = NULL);

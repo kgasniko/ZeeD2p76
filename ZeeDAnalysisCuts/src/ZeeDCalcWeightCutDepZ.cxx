@@ -483,7 +483,8 @@ void ZeeDCalcWeightCutDepZ::ApplyTrigSFDiLep(__attribute__((unused)) ZeeDEnum::I
     Double_t TrtigSc_mc_lep2    = lep2->TriggerSF().IsSet() ? lep2->TriggerSF().Get().SFTrig : 1.0;
 
     if ( lep1->TriggerSF().IsSet() && lep2->TriggerSF().IsSet() && lep1->TriggerSF().Get().TrigEff != -1 && lep2->TriggerSF().Get().TrigEff != -1){
-	Double_t TrigEff_mc_lep1    = lep1->TriggerSF().IsSet() ? lep1->TriggerSF().Get().TrigEff : 1.0;
+        std::cout << "HERE!"<< std::endl;
+    Double_t TrigEff_mc_lep1    = lep1->TriggerSF().IsSet() ? lep1->TriggerSF().Get().TrigEff : 1.0;
 
     Double_t TrigEff_mc_lep2    = lep2->TriggerSF().IsSet() ? lep2->TriggerSF().Get().TrigEff : 1.0;
 
@@ -491,8 +492,8 @@ void ZeeDCalcWeightCutDepZ::ApplyTrigSFDiLep(__attribute__((unused)) ZeeDEnum::I
     Double_t TrigEff_data_lep1  = TrtigSc_mc_lep1 * TrigEff_mc_lep1;
     Double_t TrigEff_data_lep2  = TrtigSc_mc_lep2 * TrigEff_mc_lep2;
 	
-    Double_t Numenator          =  TrigEff_data_lep1 + (1 - TrigEff_data_lep1) * TrigEff_data_lep2;
-    Double_t Denumenator        =  TrigEff_mc_lep1 + (1 - TrigEff_mc_lep1) * TrigEff_mc_lep2;
+    Double_t Numenator          =  TrigEff_data_lep1 - (1 - TrigEff_data_lep1) * TrigEff_data_lep2;
+    Double_t Denumenator        =  TrigEff_mc_lep1 - (1 - TrigEff_mc_lep1) * TrigEff_mc_lep2;
 
     Double_t TrigWeght          = Numenator / Denumenator;
 
@@ -506,7 +507,7 @@ void ZeeDCalcWeightCutDepZ::ApplyTrigSFDiLep(__attribute__((unused)) ZeeDEnum::I
 
 	}else {
 
-    eff_weight = TrtigSc_mc_lep1+(1-TrtigSc_mc_lep1)*TrtigSc_mc_lep2;
+    eff_weight = TrtigSc_mc_lep1*TrtigSc_mc_lep2;
 
     fEventWeight *= eff_weight;
 

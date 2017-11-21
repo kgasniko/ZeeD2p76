@@ -85,7 +85,7 @@ void ZeeDCalcEventInfo::Calculate(ZeeDEvent* event)
         this->CalcGenBosons();
         this->CalcGenLeptons();
 
-        this->CalcDressing(); // Add dressed objects too.
+        // this->CalcDressing(); // Add dressed objects too.
 
 
     }
@@ -177,14 +177,23 @@ void ZeeDCalcEventInfo::CalcGenBosons()
     }
 
     // Useful to specify loop over Born abd Bare  explicitly:
-    const ZeeDEnum::MCFSRLevel::Value FSRLevels[] = {ZeeDEnum::MCFSRLevel::Born , ZeeDEnum::MCFSRLevel::Bare};
-    //const ZeeDEnum::MCFSRLevel::Value FSRLevels[] = {ZeeDEnum::MCFSRLevel::Born};
-    for (int i =0; i<2; i++) {
+    //const ZeeDEnum::MCFSRLevel::Value FSRLevels[] = {ZeeDEnum::MCFSRLevel::Born , ZeeDEnum::MCFSRLevel::Bare};
+    const ZeeDEnum::MCFSRLevel::Value FSRLevels[] = {ZeeDEnum::MCFSRLevel::Born};
+    for (int i =0; i<1; i++) {
         ZeeDEnum::MCFSRLevel::Value FSRLevel = FSRLevels[i];
-        for ( Int_t boson_idx = 0; boson_idx < genBosonArray->GetEntriesFast(); ++boson_idx ) {   
-            ZeeDGenParticle* pGenBoson  = static_cast< ZeeDGenParticle* >( genBosonArray->At(boson_idx) );
-            if ( pGenBoson->GetParticleStatus() == FSRLevel ) {
-                fEventInProcess->SetGenBoson(pGenBoson, FSRLevel);
+        if (genBosonArray->GetEntriesFast() == 1){
+            ZeeDGenParticle* pGenBoson = static_cast< ZeeDGenParticle* >( genBosonArray->At(0) );
+            //std::cout << pGenBoson->GetParticleID() << std::endl;
+            fEventInProcess->SetGenBoson(pGenBoson, FSRLevel);
+        }else {
+            for ( Int_t boson_idx = 0; boson_idx < genBosonArray->GetEntriesFast(); ++boson_idx ) {   
+                ZeeDGenParticle* pGenBoson  = static_cast< ZeeDGenParticle* >( genBosonArray->At(boson_idx) );
+
+                const TLorentzVector vec = pGenBoson->GetMCFourVector();
+                //std::cout << vec.Pt() << std::endl;
+                if ( pGenBoson->GetParticleStatus() == FSRLevel ) {
+                    fEventInProcess->SetGenBoson(pGenBoson, FSRLevel);
+                }
             }
         }
     }
@@ -194,9 +203,9 @@ void ZeeDCalcEventInfo::CalcGenBosons()
 void ZeeDCalcEventInfo::CalcGenLeptons() 
 {
     // Useful to specify loop over Born, Bare and Dressed explicitly:
-    const ZeeDEnum::MCFSRLevel::Value FSRLevels[] = {ZeeDEnum::MCFSRLevel::Born , ZeeDEnum::MCFSRLevel::Bare, ZeeDEnum::MCFSRLevel::Dressed};
-
-    for (int i =0; i<2; i++) {
+    //   const ZeeDEnum::MCFSRLevel::Value FSRLevels[] = {ZeeDEnum::MCFSRLevel::Born , ZeeDEnum::MCFSRLevel::Bare, ZeeDEnum::MCFSRLevel::Dressed};
+    const ZeeDEnum::MCFSRLevel::Value FSRLevels[] = {ZeeDEnum::MCFSRLevel::Born};
+    for (int i =0; i<1; i++) {
         ZeeDEnum::MCFSRLevel::Value FSRLevel = FSRLevels[i];
 
         ZeeDGenParticle* lep1 = NULL;
@@ -224,7 +233,6 @@ void ZeeDCalcEventInfo::CalcGenLeptons()
                 static_cast< ZeeDGenParticle* >( genDecayProducts->At(elec_idx) );
 
             Int_t partID     = PgenDecayProducts->GetParticleID();
-
 
             // Select leptons
             if ( abs(partID) == ZeeDEnum::PID::electron
@@ -258,13 +266,38 @@ void ZeeDCalcEventInfo::CalcGenLeptons()
             }
 
         }
-
+        if (lep1Found && lep2Found){
+            //std::cout << "Two leptons found " << std::endl;
+           // std::cout << lep1->GetParticleID() << " " <<lep2->GetParticleID() <<std::endl;
+          
+            const TLorentzVector& ElFV  = lep1->GetMCFourVector();
+            const TLorentzVector& PosFV = lep2->GetMCFourVector();
+            Double_t elecPt = ElFV.Pt();
+            Double_t posPt  = PosFV.Pt();
+            Double_t elecPhi = ElFV.Phi();
+            Double_t posPhi = PosFV.Phi();
+            Double_t Mt = 2 * elecPt * (posPt);
+            Mt *= 1 - TMath::Cos(elecPhi - posPhi);
+            Mt = TMath::Sqrt(Mt);
+            const TObjArray* genBosonArray = fEventInProcess->GetGenBosons();
+            if (genBosonArray->GetEntriesFast() == 1){
+                ZeeDGenParticle* pGenBoson = static_cast< ZeeDGenParticle* >( genBosonArray->At(0) );
+                pGenBoson->SetMt(Mt);
+            }else {
+                for ( Int_t boson_idx = 0; boson_idx < genBosonArray->GetEntriesFast(); ++boson_idx ) {   
+                    ZeeDGenParticle* pGenBoson  = static_cast< ZeeDGenParticle* >( genBosonArray->At(boson_idx) );
+                    if ( pGenBoson->GetParticleStatus() == FSRLevel ) {
+                        pGenBoson->SetMt(Mt);
+                    }
+                }
+            }
         DEBUG_VAR(lep1);
         DEBUG_VAR(lep2);
 
         const ZeeDGenElectrons leptons(lep1, lep2);
 
         fEventInProcess->SetGenLeptons(leptons, FSRLevel );
+        }
     }    
 }
 
@@ -276,14 +309,19 @@ void ZeeDCalcEventInfo::CalcDressing()
 
     // Start with the bare list:
     const ZeeDGenParticle* boson = fEventInProcess->GetGenBoson( ZeeDEnum::MCFSRLevel::Bare );
+    //std::cout << boson->GetParticleID() << std::endl;
     if (boson == NULL)
         return;
+    // Get the two leptons:
+    const ZeeDGenElectrons leptons =  fEventInProcess->GetGenLeptons(  ZeeDEnum::MCFSRLevel::Bare );
+
+    if (leptons.first == NULL || leptons.second == NULL){
+        return;
+    }
+
     // copy
     ZeeDGenParticle* bosDressed = new ZeeDGenParticle( *boson );
     ZeeDGenParticle* bosBare    = new ZeeDGenParticle( *boson );
-
-    // Get the two leptons:
-    const ZeeDGenElectrons leptons =  fEventInProcess->GetGenLeptons(  ZeeDEnum::MCFSRLevel::Bare );
 
     // Update bare-boson four momentum:
     bosBare->SetMCFourVector( leptons.first->GetMCFourVector() + leptons.second->GetMCFourVector() );

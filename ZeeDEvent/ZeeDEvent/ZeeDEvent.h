@@ -425,6 +425,7 @@ public:
         fEventWeight = weight;
     }
     void SetGenWeight(Double_t weight) {
+        //std::cout << "Setting weight "<<fGenWeight << std::endl;
         fGenWeight = weight;
     }
 

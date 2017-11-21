@@ -2,6 +2,7 @@
 
 // std includes
 #include <iostream>
+#include "ZeeDHistManager/ZeeDHistManagerCut.h"
 
 // ZeeD analysis includes
 #include "ZeeDAnalysisSvc/IZeeDAnalysisSvc.h"
@@ -14,6 +15,7 @@
 #include "ZeeDHistManager/ZeeDHistManagerMuon.h"
 #include "ZeeDHistManager/ZeeDHistManagerBoson.h"
 #include "ZeeDHistManager/ZeeDHistManagerEvent.h"
+#include "ZeeDHistManager/ZeeDHistManagerEtmiss.h"
 #include "ZeeDHistManager/ZeeDHistManagerGenInfo.h"
 #include "ZeeDHistManager/ZeeDHistManagerTagAndProbeLepton.h"
 #include "ZeeDHistManager/ZeeDHistManagerMCTrigEffLepton.h"
@@ -36,10 +38,15 @@ ZeeDAnalysisCutHistManagerZmumu::~ZeeDAnalysisCutHistManagerZmumu()
 //------------------------------------------------------
 void ZeeDAnalysisCutHistManagerZmumu::BookCutHistManager()
 {   
-    TString selection = "IsEMMediumPPBothMuonZ+PtMinBothMuonZ+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+ZMassZ+NTracksAtPrimVtx+EventEtMiss+ZeeDCutLArEventVeto+EF_mu10+MuonTrig";
+
+    TString selectionEvent = "NTracksAtPrimVtx+ZeeDCutLArEventVeto+PriVtxZ+EF_mu10";
+    TString selectionMuon = "ChargeBothLepOppositeZ+PtMinBothMuonZ+EtaMaxBothMuonZ+MuonTrig+IsEMMediumPPBothMuonZ+comb+trIso";
+    TString selectionBoson="ZMassZ";
+    TString selection=selectionEvent + "+" +selectionMuon+"+"+selectionBoson;
+    //TString selection = "IsEMMediumPPBothMuonZ+PtMinBothMuonZ+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+ZMassZ+NTracksAtPrimVtx+ZeeDCutLArEventVeto+EF_mu10+MuonTrig";
 	TString genSel        = "GenEta+GenPt+GenMt";
 //	TString genSel        = "GenMt";
-	TString genSelNEW     = "GenEta+GenPtNEW+GenMt";
+	TString genSelNew     = "GenEta+GenPtNEW+GenMt";
    	TString jpsiSelection =  "PtMinBothMuonJpsi+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+Jpsi+NTracksAtPrimVtx+EventEtMiss+ZeeDCutLArEventVeto";
 
  
@@ -66,6 +73,14 @@ void ZeeDAnalysisCutHistManagerZmumu::BookCutHistManager()
     this->SetDefaultDoWeight(doWeight);
 
     //this->SetDefaultDoWeight(doWeightNone);
+     ZeeDHistManagerCut* eventCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Event");
+    ZeeDHistManagerCut* leptonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Lepton");
+    ZeeDHistManagerCut* bosonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
+    this->AddMaskLoose(selectionEvent, eventCut, doWeightNone);
+    this->AddMaskLoose(selectionEvent+"+"+selectionMuon, leptonCut);
+    this->AddMaskLoose(selection, bosonCut);
+
+
 
 
     ServiceHandle<IZeeDAnalysisSvc>* ZeeDAnaOptions = fSvcHelper.GetAnaSvc();
@@ -74,13 +89,15 @@ void ZeeDAnalysisCutHistManagerZmumu::BookCutHistManager()
 	if ((*ZeeDAnaOptions)->IsMC() && (*ZeeDAnaOptions)->FillGenInfo()){
         ZeeDHistManagerGenInfo * gen = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfo");
         this->AddMaskLoose(genSel, gen, doWeightNone);
-		ZeeDHistManagerGenInfo * genNew = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfoNew");
-        this->AddMaskLoose(genSelNEW, genNew, doWeightNone);
+        
+        ZeeDHistManagerGenInfo * genNew = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfo13");
+        this->AddMaskLoose(genSelNew, genNew, doWeightNone);
+
 
     }
-    this->AddMaskLoose("PtMinBothMuonZ+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+ZMassZ+NTracksAtPrimVtx+EventEtMiss+ZeeDCutLArEventVeto+EF_mu10", new ZeeDHistManagerTagAndProbeLepton(this->getName() + "/" + "ProbeLeptons"), doWeightTag);
+    this->AddMaskLoose("PtMinBothMuonZ+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+ZMassZ+NTracksAtPrimVtx+EventEtMiss+ZeeDCutLArEventVeto+EF_mu10+comb", new ZeeDHistManagerTagAndProbeLepton(this->getName() + "/" + "ProbeLeptons"), doWeightTag);
 
-    this->AddMaskLoose("IsEMMediumPPBothMuonZ+PtMinBothMuonZ+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+ZMassZ+NTracksAtPrimVtx+EventEtMiss+ZeeDCutLArEventVeto+EF_mu10", new ZeeDHistManagerMCTrigEffLepton(this->getName()+"/"+"MCEffTrig"), doWeightTag);
+    this->AddMaskLoose("IsEMMediumPPBothMuonZ+PtMinBothMuonZ+EtaMaxBothMuonZ+ChargeBothLepOppositeZ+ZMassZ+NTracksAtPrimVtx+EventEtMiss+ZeeDCutLArEventVeto+EF_mu10+comb", new ZeeDHistManagerMCTrigEffLepton(this->getName()+"/"+"MCEffTrig"), doWeightTag);
 
    this->AddMaskLoose(jpsiSelection+"+EF_mu10", new ZeeDHistManagerMCTrigEffLepton(this->getName()+"/"+"MCEffTrigJpsi"), doWeightTag);
 	this->AddMaskLoose(jpsiSelection+"+IsEMMediumPPBothMuonZ", new ZeeDHistManagerTagAndProbeLepton(this->getName()+"/"+"ProbeLeptonsJpsi"), doWeightNone);	
@@ -89,7 +106,10 @@ void ZeeDAnalysisCutHistManagerZmumu::BookCutHistManager()
     this->AddMaskLoose(selection, bosonHist);
     ZeeDHistManagerEvent* eventHist = new ZeeDHistManagerEvent (this->getName() + "/" + "Event");   
     this->AddMaskLoose(selection, eventHist);
+    ZeeDHistManagerEvent* eventHist2 = new ZeeDHistManagerEvent (this->getName() + "/" + "Event2");   
+    this->AddMaskLoose("", eventHist2);
     ZeeDHistManagerMuon* muonHist = new ZeeDHistManagerMuon (this->getName()+"/"+"Muon");
     this->AddMaskLoose(selection, muonHist);   
-
+    ZeeDHistManagerEtmiss* etMissHist = new ZeeDHistManagerEtmiss(this->getName()+"/"+"EtMiss");
+    this->AddMaskLoose(selection, etMissHist);
 }

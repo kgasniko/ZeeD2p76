@@ -117,7 +117,7 @@ ZeeDEvent::ZeeDEvent() : fElecArray(NULL),
 
     fTauArray = new TObjArray();
     toBeDeleted.Add(fTauArray);
-    
+     
     //toBeDeleted.Add(fCurrentW);
 
     for (Int_t i = 0; i < toBeDeleted.GetEntriesFast(); ++i) {
@@ -398,6 +398,7 @@ ZeeDEvent::~ZeeDEvent()
 
     // Remove bare boson
     if ( fGenBareBoson != NULL ) {
+        std::cout << fGenBareBoson->GetDaughters()->GetSize();
         delete fGenBareBoson ;        
     }
 
@@ -503,6 +504,9 @@ const  ZeeDGenElectrons ZeeDEvent::GetGenLeptons(ZeeDEnum::MCFSRLevel::Value lep
 const ZeeDGenParticle* ZeeDEvent::GetGenBoson(ZeeDEnum::MCFSRLevel::Value bosonType) const
 {
     // Attention: This function by default will return fGenBornBoson! It was set just for compiling 2.3.9 release.
+    if (fGenZBosArray->GetEntriesFast() == 1){
+        return static_cast< ZeeDGenParticle* >( fGenZBosArray->At(0));
+    }
     switch (bosonType) {
         case ZeeDEnum::MCFSRLevel::Born: return fGenBornBoson;
         case ZeeDEnum::MCFSRLevel::Bare: return fGenBareBoson;            
@@ -556,6 +560,7 @@ Double_t ZeeDEvent::GetWeight() const
 Double_t ZeeDEvent::GetGenWeight() const
 {
     // Returns gen weight
+    //std::cout << fGenWeight << std::endl;
     return fGenWeight;
 }
 

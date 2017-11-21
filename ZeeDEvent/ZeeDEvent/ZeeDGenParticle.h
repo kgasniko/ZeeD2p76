@@ -36,6 +36,10 @@ public:
     Int_t GetParticleID()     const {
         return fParticleID;
     }
+    
+    Double_t GetMt()       const {
+        return fBosMt;
+    }
 
     ZeeDEnum::MCFSRLevel::Value GetParticleStatus() const {
         return fParticleStatus;
@@ -60,6 +64,10 @@ public:
     void SetParticleStatus(ZeeDEnum::MCFSRLevel::Value FSRstatus) {
         fParticleStatus = FSRstatus;
     }
+    
+    void SetMt (Double_t bosMt){
+        fBosMt=bosMt;
+    }
 
     /** Blue print */
     void Print(Option_t* option = "") const;
@@ -72,6 +80,7 @@ private:
     TObjArray* fDaughters;                   //!
     Int_t fParticleID;                       //!
 	ZeeDEnum::MCFSRLevel::Value  fParticleStatus;                  //!
+    Double_t fBosMt;
 
     friend class ZeeDROOTGenParticle;
 

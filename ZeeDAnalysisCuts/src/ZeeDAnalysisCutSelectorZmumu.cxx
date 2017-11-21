@@ -60,7 +60,7 @@ void ZeeDAnalysisCutSelectorZmumu::BookCuts()
   	 this->AddCut(new ZeeDCutTrigger("EF_mu10", ZeeDEnum::Trigger::EF_mu10));
      this->AddCut(new ZeeDCutTriggerWithMatching("MuonTrig", ZeeDEnum::Trigger::EF_mu10));	
      //this->AddCut(new ZeeDCutOQMaps("OQMaps"));
-
+    this->AddCut(new ZeeDCutPriVtxZ("PriVtxZ", 300.0));
     // Electrons have opposite charge
     this->AddCut(new ZeeDCutChargeBothLepZ("ChargeBothLepOppositeZ"));
 
@@ -68,9 +68,10 @@ void ZeeDAnalysisCutSelectorZmumu::BookCuts()
     this->AddCut(new ZeeDCutZMassZ("ZMassZ", 66, 116));
 	this->AddCut(new ZeeDCutZMassZ("Jpsi", 10, 50));
 	this->AddCut(new ZeeDCutAsymmetricalLepPt("PtMinBothMuonJpsi", 15., 15.));
-
+    this->AddCut(new ZeeDCutBothCombinedMuon("comb"));
     // Cut on number of Tracks at Primary Vertex
     this->AddCut(new ZeeDCutPriVtxNtrack("NTracksAtPrimVtx", minNumTrkCut));
+    this->AddCut(new ZeeDCutBothMuonTrackIso ("trIso", 0.8));
 
     // Event missing Et
     this->AddCut(new ZeeDCutEventMaxMissEt("EventEtMiss", 25));
@@ -81,7 +82,7 @@ void ZeeDAnalysisCutSelectorZmumu::BookCuts()
         this->AddCut(new ZeeDCutEtaMaxBothBornElecZ("GenEta", 2.5));
         this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPt", 20.));
         this->AddCut(new ZeeDCutMassBornBoson("GenMt", 66, 116));
-        this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPtNEW", 25.));
+         this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPtNEW", 25.));
          
         }
  

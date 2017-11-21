@@ -38,9 +38,12 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
     //basic event selection 
     TString selectionEvent = "PriVtxZ+LAr+NTracksAtPrimVtx+LepTrig";
     //electron selection
-    TString selectionElectron = "ElecClustEtaMaxW+EtaCrackElecW+ElecClustEtMinW+ElMediumPP+EtCone20+OQMaps";
+    TString selectionElectronBase= "ElecClustEtaMaxW+EtaCrackElecW+ElecClustEtMinW+EtCone20+OQMaps";
+    TString selectionElectron=selectionElectronBase+"+ElMediumPP";
+    //TString selectionElectron = "ElecClustEtaMaxW+EtaCrackElecW+ElecClustEtMinW+ElMediumPP+EtCone20+OQMaps";
+    TString selectionBosonBase="MassTransvW";
     //boson selection
-    TString selectionBoson = "EtMissMinW+MassTransvW";
+    TString selectionBoson = "EtMissMinW+"+selectionBosonBase;
 
     //full selection (also for W+-)
     TString selection = selectionEvent + "+" +selectionElectron+"+"+ selectionBoson;
@@ -49,6 +52,7 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
 
     //fiducial phase-space
     TString genSel        = "GenEta+GenPt+GenMt+GenEt";
+    TString genSelNew        = "GenEta+GenPtNEW+GenMtNEW+GenEtNEW";
 
     //end of booking selection
 
@@ -116,10 +120,14 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
 
 
 
+        TString QCDMtsel = selectionEvent+"+"+selectionElectron+"+EtMissMinW";
+        TString QCDMtselPos = QCDMtsel+"+WPlus";
+        TString QCDMtselNeg = QCDMtsel+"+WMinus";
 
         //QCD EtMiss fit
         // selection 
-        TString QCDEtsel    = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+ElecClustEtMinW+LepTrig+LAr+ElMediumPP+MassTransvW+EtCone20";
+        TString QCDEtsel = selectionEvent+"+"+selectionElectron+"+"+selectionBosonBase;
+        //TString QCDEtsel    = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+ElecClustEtMinW+LepTrig+LAr+ElMediumPP+MassTransvW+EtCone20";
         TString QCDEtselPos = QCDEtsel+"+WPlus";
         TString QCDEtselNeg = QCDEtsel+"+WMinus";
 
@@ -130,21 +138,32 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         ZeeDHistManagerQCDBkgW* QCDEtselNegPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/etMiss/QCDFit/"+"Minus");
         this->AddMaskLoose(QCDEtselNeg, QCDEtselNegPlot);
 
-        /*
-        //QCD Pt fit
-        //TString QCDFitPt = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+LepTrig+ElMediumPP+LAr+EtCone20";
-        TString QCDFitPt  = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+LepTrig+ElMediumPP+LAr+EtCone20";
+        ZeeDHistManagerQCDBkgW* QCDMtselPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/mtW/QCDFit/"+"Boson");
+        this->AddMaskLoose(QCDMtsel, QCDMtselPlot);
+        ZeeDHistManagerQCDBkgW* QCDMtselPosPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/mtW/QCDFit/"+"Plus");
+        this->AddMaskLoose(QCDMtselPos, QCDMtselPosPlot);
+        ZeeDHistManagerQCDBkgW* QCDMtselNegPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/mtW/QCDFit/"+"Minus");
+        this->AddMaskLoose(QCDMtselNeg, QCDMtselNegPlot);
 
-        ZeeDHistManagerQCDBkgW* QCDPtPlot = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/mtW/QCDFit/"+"Boson");
-        this->AddMaskLoose(QCDFitPt, QCDPtPlot);
-        ZeeDHistManagerQCDBkgW* QCDPtPosPlot = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/mtW/QCDFit/"+"Plus");
-        this->AddMaskLoose(QCDFitPt+"+WPlus", QCDPtPosPlot);
-        ZeeDHistManagerQCDBkgW* QCDPtNegPlot = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/mtW/QCDFit/"+"Minus");
-        this->AddMaskLoose(QCDFitPt+"+WMinus", QCDPtNegPlot);
-        */
+        TString QCDMt      = selectionEvent+"+"+selectionElectronBase+"+EtMissMinW+nElMediumPP";
+            TString QCDMtPos   = QCDMt+"+WPlus";
+            TString QCDMtNeg   = QCDMt+"+WMinus";
+            //QCD MtW template	
+            ZeeDHistManagerQCDBkgW* QCDMtPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/mtW/QCDTempl/"+"Boson");
+            this->AddMaskLoose(QCDMt, QCDMtPlot);
+            ZeeDHistManagerQCDBkgW* QCDMtPosPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/mtW/QCDTempl/"+"Plus");
+            this->AddMaskLoose(QCDMtPos, QCDMtPosPlot);
+            ZeeDHistManagerQCDBkgW* QCDMtNegPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/mtW/QCDTempl/"+"Minus");
+            this->AddMaskLoose(QCDMtNeg, QCDMtNegPlot);
 
+
+
+    }
+
+    if ((*ZeeDAnaOptions)->FillBkgHistograms() && fSys->isShiftInUse(ZeeDSystematics::eNoShift)) {
         //EtMiss QCD
-        TString QCD    = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+ElecClustEtMinW+LepTrig+LAr+nElMediumPP+MassTransvW";
+        TString QCD    = selectionEvent+"+"+selectionElectronBase+"+nElMediumPP+"+selectionBosonBase;
+        //TString QCD    = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+ElecClustEtMinW+LepTrig+LAr+nElMediumPP+MassTransvW";
         TString QCDPos = QCD+"+WPlus";
         TString QCDNeg = QCD+"+WMinus";
 
@@ -157,10 +176,6 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         ZeeDHistManagerQCDBkgW* QCDNegPlot = new ZeeDHistManagerQCDBkgW(this->getName()+"/QCD/etMiss/QCDTempl/"+"Minus");
         this->AddMaskLoose(QCDNeg, QCDNegPlot);
 
-
-    }
-
-    if ((*ZeeDAnaOptions)->FillBkgHistograms() && fSys->isShiftInUse(ZeeDSystematics::eNoShift)) {
 
         ZeeDHistManagerElectron* electronPlots = new ZeeDHistManagerElectron(this->getName()+"/"+"Electron");
         this->AddMaskLoose(selection, electronPlots);
@@ -187,7 +202,8 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
         //QCD Hist Managers 
         if ((*ZeeDAnaOptions)->FillBkgHistograms()) {
             //Check of Fit
-            TString QCDCheckFit = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+MassTransvW+LepTrig+LAr+EtCone20";
+            TString QCDCheckFit=selectionEvent+"+"+selectionElectronBase+"+"+selectionBosonBase;
+            //TString QCDCheckFit = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+ElecClustEtMinW+MassTransvW+LepTrig+LAr+EtCone20";
             ZeeDHistManagerQCDBkgW* QCDPlotsCh1 = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/etMiss/QCDVar/"+"Plus/Tight");
             this->AddMaskLoose(QCDCheckFit+"+nElTightPP+WPlus", QCDPlotsCh1, doWeight);
 
@@ -205,7 +221,7 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
 
             ZeeDHistManagerQCDBkgW* QCDPlotsCh6 = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/etMiss/QCDVar/"+"Boson/Loose");
             this->AddMaskLoose(QCDCheckFit+"+nElLoosePP+WPlus", QCDPlotsCh6, doWeight);
-
+/*
 
             //QCD Pt 
             //TString QCDSelectionPt = "PriVtxZ+EtaCrackElecW+ElecClustEtaMaxW+NTracksAtPrimVtx+EtMissMinW+ElecClustEtMinW+LepTrig+nElMediumPP+LAr+EtCone20+ElLoosePP";
@@ -240,12 +256,21 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
 
             ZeeDHistManagerQCDBkgW* QCDPlotsPt6 = new ZeeDHistManagerQCDBkgW (this->getName()+"/QCD/mtW/QCDVar/"+"Boson/Loose");
             this->AddMaskLoose(QCDPtVar+"+nElLoosePP", QCDPlotsPt6, doWeightQCD);
-
+*/
 
         }
         //end of QCD plots    
     }
-    if ((*ZeeDAnaOptions)->IsMC()){
+
+    if ((*ZeeDAnaOptions)->IsMC()){ 
+        ZeeDHistManagerGenInfo * gen = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfo");
+        this->AddMaskLoose(genSel, gen, doWeightNone);
+        ZeeDHistManagerGenInfo * genNew = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfo13");
+        this->AddMaskLoose(genSelNew, genNew, doWeightNone);
+
+
+    }
+    if ((*ZeeDAnaOptions)->IsMC() && (*ZeeDAnaOptions)->EvaluateSystematics()){
         
         //booking histograms for systematics checks
         ZeeDControlHistManagerW* wSim = new ZeeDControlHistManagerW(this->getName()+"/"+"BosonSim");
@@ -256,9 +281,6 @@ void ZeeDAnalysisCutHistManagerW::BookCutHistManager()
 
         ZeeDControlHistManagerW* wnegSim = new ZeeDControlHistManagerW(this->getName()+"/"+"MinusSim");
         this->AddMaskLoose(selectionMinus+"+EtaSim", wnegSim, doWeight);
-
-        ZeeDHistManagerGenInfo * gen = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfo");
-        this->AddMaskLoose(genSel, gen, doWeightNone);
     }
     /*
     //Book plots for gen level information    

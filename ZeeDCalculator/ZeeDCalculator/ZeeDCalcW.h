@@ -44,8 +44,8 @@ class ZeeDCalcW : public TObject {
 
         /** Reads et miss object from event */
         void ReadEtMiss();
-        TH2D* pCor, *pCorElec, *pCorMuon;
-
+        std::vector<TObject*> pCor, pCorElec, pCorMuon;
+        double sfBeg, sfEnd, size;
         ZeeDBosonW* CreateW (const ZeeDLepton* elec);
 
         /** Missing Et object */
@@ -59,8 +59,8 @@ class ZeeDCalcW : public TObject {
 
         /** Pointer to etMiss object */
         ZeeDEtMiss* fEtMiss;
-
-        /** Service helper */
+        std::vector<std::vector<TH2D*> > toys, toysElec, toysMuon;
+         /** Service helper */
         ZeeDSvcHelper fSvcHelper;
         /** Service handle to job options file */
         ServiceHandle<IZeeDAnalysisSvc> *fAnaOptions;

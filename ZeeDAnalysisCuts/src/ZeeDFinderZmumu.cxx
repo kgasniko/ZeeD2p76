@@ -83,6 +83,7 @@ void ZeeDFinderZmumu::BookCuts()
 
     // Declare cuts for preselecting best Zmumu bosons
     this->AddCut(new ZeeDCutEtaMaxBothLepZ("EtaMaxBothMuonZ", 2.5));
+    this->AddCut(new ZeeDCutBothCombinedMuon("comb"));
 
     this->AddCut(new ZeeDCutAsymmetricalLepPt("PtMinBothMuonZ", 20., 20.));
     this->AddCut(new ZeeDCutChargeBothLepZ("ChargeBothLepOppositeZ"));
@@ -91,6 +92,6 @@ void ZeeDFinderZmumu::BookCuts()
     CutWeights.push_back(new CutWeight("EtaMaxBothMuonZ", 100., getBitMask("EtaMaxBothMuonZ")));
     CutWeights.push_back(new CutWeight("PtMinBothMuonZ", 100., getBitMask("PtMinBothMuonZ")));
     CutWeights.push_back(new CutWeight("ChargeBothLepOppositeZ", 100., getBitMask("ChargeBothLepOppositeZ")));
-
+    CutWeights.push_back(new CutWeight("comb", 100., getBitMask("comb")));
 
 }

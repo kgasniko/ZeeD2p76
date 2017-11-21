@@ -21,17 +21,20 @@ void ZeeDHistManagerQCDBkgW::BookHistos()
 
 
 	AddTH1D("etMiss",    ZeeDMisc::FindFile("Binning/etMiss.txt")   , "E_{T}^{miss} [GeV]",     "", ZeeDHistLevel::Systematics);
-    AddTH1D("etMissBigRange",    ZeeDMisc::FindFile("Binning/etMissBigRange.txt")   , "E_{T}^{miss} [GeV]",     "", ZeeDHistLevel::Systematics);
-    AddTH1D("etMissBigBin",    ZeeDMisc::FindFile("Binning/etMissBigBin.txt")   , "E_{T}^{miss} [GeV]",     "", ZeeDHistLevel::Systematics);
-    AddTH1D("etMissSmallBin",    ZeeDMisc::FindFile("Binning/etMissSmallBin.txt")   , "E_{T}^{miss} [GeV]",     "", ZeeDHistLevel::Systematics);
-	AddTH1D("etMissSmallRange",    ZeeDMisc::FindFile("Binning/etMissSmallRange.txt")   , "E_{T}^{miss} [GeV]",     "", ZeeDHistLevel::Systematics);
+    AddTH1D("etMissFit",    ZeeDMisc::FindFile("Binning/etMiss.txt")   , "E_{T}^{miss} [GeV]",     "", ZeeDHistLevel::Systematics);
+    AddTH1D("etMissBigRange",    ZeeDMisc::FindFile("Binning/etMissBigRange.txt")   , "E_{T}^{miss} [GeV]",     "");
+    AddTH1D("etMissBigBin",    ZeeDMisc::FindFile("Binning/etMissBigBin.txt")   , "E_{T}^{miss} [GeV]",     "");
+    AddTH1D("etMissSmallBin",    ZeeDMisc::FindFile("Binning/etMissSmallBin.txt")   , "E_{T}^{miss} [GeV]",     "");
+	AddTH1D("etMissSmallRange",    ZeeDMisc::FindFile("Binning/etMissSmallRange.txt")   , "E_{T}^{miss} [GeV]",     "");
 
 
     AddTH1D("lepEta",   ZeeDMisc::FindFile("Binning/LepEta.txt"), "#eta^{lep}",          "");
     AddTH1D("lepPhi",   20,   -4.0,   4.0, "#varphi^{lep} [rad]", "");
     AddTH1D("dPhi" ,    20,   -4.0,   4.0, "d#varphi^{lep} [rad]", "");
-    AddTH1D("lepPt",    ZeeDMisc::FindFile("Binning/LepPt.txt"), "P_{T}^{lep} [GeV]","",  ZeeDHistLevel::Systematics);
+    AddTH1D("lepPt",    ZeeDMisc::FindFile("Binning/LepPt.txt"), "P_{T}^{lep} [GeV]","" );
 	AddTH1D("mtW",       ZeeDMisc::FindFile("Binning/BosMassTransv.txt"), "M_{T}^{W} [GeV]",         "" );
+    AddTH1D("lepPtFit",    ZeeDMisc::FindFile("Binning/LepPt.txt"), "P_{T}^{lep} [GeV]","");
+	AddTH1D("mtWFit",       ZeeDMisc::FindFile("Binning/BosMassTransvFit.txt"), "M_{T}^{W} [GeV]",         "", ZeeDHistLevel::Systematics );
     AddTH1D("ptW",            50,    0.0, 120.0, "P_{T}^{W} [GeV]",         "" );
 
     AddTH1D("ElecEtCone20overEt", 250,-1.,3.,"Et cone 20/ Et cluster","");
@@ -52,13 +55,13 @@ void ZeeDHistManagerQCDBkgW::BookHistos()
     AddTH1D("sElecEtCone20_PtNPVCorrectedoverEt", 250,-1.,3.,"mean Et cone 20/ Et cluster","");
     AddTH1D("sElecEtCone30_PtNPVCorrectedoverEt", 250,-1.,3.,"mean Et cone 30/ Et cluster","");
 
-	AddTH2D("etMissmtW", ZeeDMisc::FindFile("Binning/EtMissBosMt.txt"), "E_{T}^{miss} [GeV]", "M_{T,W} [GeV]");
-	AddTH2D("etMisslepPt", ZeeDMisc::FindFile("Binning/EtMissLepPt.txt"), "E_{T}^{miss} [GeV]", "P_{t, lep} [GeV]");
-	AddTH2D("etMisslepEta", ZeeDMisc::FindFile("Binning/EtMissLepEta.txt"), "E_{T}^{miss} [GeV]", "#eta^{}");
-	AddTH2D("EtMisslepPhi", 50, 0.0, 100.0, 20, -4.0, 4.0,  "E_{T}^{miss} [GeV]", "#varphi^{} [rad]");
-    AddTH2D("lepPtmtW", 50, 1.0, 100.0, 50, 0.0, 100.0, "P_{t, lep} [GeV]", "M_{T,W} [GeV]");	
-  	AddTH2D("lepPtlepEta", 50, 1.0, 100.0, 25, -2.5, 2.5, "P_{t, lep} [GeV]", "#eta");
-	AddTH2D("lepPtlepPhi", 50, 1.0, 100.0, 20, -4.0, 4.0, "P_{t, lep} [GeV]", 	"#varphi^{} [rad]");
+	AddTH2D("etMissmtW", ZeeDMisc::FindFile("Binning/etMissBosMassTransv.txt"), "E_{T}^{miss} [GeV]", "M_{T}^{W} [GeV]");
+	AddTH2D("etMisslepPt", ZeeDMisc::FindFile("Binning/etMissLepPt.txt"), "E_{T}^{miss} [GeV]", "P_{T}^{lep} [GeV]");
+	AddTH2D("etMisslepEta", ZeeDMisc::FindFile("Binning/etMissLepEta.txt"), "E_{T}^{miss} [GeV]", "#eta^{lep}");
+	AddTH2D("EtMisslepPhi", 50, 0.0, 100.0, 20, -4.0, 4.0,  "E_{T}^{miss} [GeV]", "#varphi^{lep} [rad]");
+    AddTH2D("lepPtmtW", ZeeDMisc::FindFile("Binning/LepPtBosMassTransv.txt"), "P_{T}^{lep} [GeV]", "M_{T}^{W} [GeV]");	
+  	AddTH2D("lepPtlepEta", ZeeDMisc::FindFile("Binning/LepPtLepEta.txt"), "P_{T}^{lep} [GeV]", "#eta^{lep}");
+	//AddTH2D("lepPtlepPhi", , "P_{T}^{lep} [GeV]", 	"#varphi^{lep} [rad]");
 
     //--
 
@@ -82,14 +85,16 @@ void ZeeDHistManagerQCDBkgW::Fill()
 
     const Double_t etMiss = boson->GetEtMiss();
     FillTH1(etMiss, Weight, "etMiss");
+    FillTH1(etMiss, Weight, "etMissFit");
         FillTH1(etMiss, Weight, "etMissBigRange");
    FillTH1(etMiss, Weight, "etMissBigBin");
    FillTH1(etMiss, Weight, "etMissSmallBin");
    FillTH1(etMiss, Weight, "etMissSmallRange");
 
     //-------------------------------------------------------------------------
-    const Double_t boson_M = boson_fourVec.Mt();
+    const Double_t boson_M = boson->GetMt();
     FillTH1(boson_M, Weight, "mtW");
+    FillTH1(boson_M, Weight, "mtWFit");
 	FillTH1(boson_fourVec.Pt(), Weight, "ptW");
 
 
@@ -99,6 +104,7 @@ void ZeeDHistManagerQCDBkgW::Fill()
 	const Double_t lep_eta = lep_fourVec.Eta();
     const Double_t lep_phi = lep_fourVec.Phi();
 	FillTH1(lep_pt, Weight, "lepPt");
+    FillTH1(lep_pt, Weight, "lepPtFit");
 	FillTH1(lep_phi, Weight, "lepPhi");
 	FillTH1(lep_eta, Weight, "lepEta");
 	FillTH2(etMiss, lep_eta, Weight, "etMisslepEta");

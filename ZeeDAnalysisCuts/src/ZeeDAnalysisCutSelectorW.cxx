@@ -55,8 +55,9 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
 
 
     // Et of  electron is larger than elecEtCut
-    this->AddCut(new ZeeDCutElecClustEtMinW("ElecClustEtMinW", elecEtCut));
-    this->AddCut(new ZeeDCutElecClustEtMinW("ElecClustEtMinWQCD", 10)); 
+    //this->AddCut(new ZeeDCutElecClustEtMinW("ElecClustEtMinW", elecEtCut));
+    this->AddCut(new ZeeDCutLepPtMinW("ElecClustEtMinW", elecEtCut));
+    this->AddCut(new ZeeDCutLepPtMinW("ElecClustEtMinWQCD", 10)); 
 	this->AddCut(new ZeeDCutEtCone20overEtCorW("EtCone20", 0.1));
     this->AddCut(new ZeeDCutLepTrackEtaWSim("EtaSim"));
 
@@ -67,13 +68,13 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
     
     // Minium missing et requirement
     //this->AddCut(new ZeeDCutEventMinMissEt("EtMissMinW", etMissCut));
-    this->AddCut(new ZeeDCutCorRecoilEtMissW ("EtMissMinW", etMissCut));
+    this->AddCut(new ZeeDCutEventMinMissEt ("EtMissMinW", etMissCut));
 
     // Cut away transition EMEC-EMB
-    this->AddCut(new ZeeDCutEtaCrackElecW("EtaCrackElecW", etaCrackMin, etaCrackMax));
+    this->AddCut(new ZeeDCutCrackLepTrackEtaW("EtaCrackElecW", etaCrackMin, etaCrackMax));
 
     // Cut on maximal eta of the electron
-    this->AddCut(new ZeeDCutElecClustEtaMaxW("ElecClustEtaMaxW", elecEtaMax));
+    this->AddCut(new ZeeDCutLepTrackEtaW("ElecClustEtaMaxW", elecEtaMax));
 
     // Cut on existence and quality cut of vertex
     this->AddCut(new ZeeDCutPriVtxNtrack("NTracksAtPrimVtx", minNumTrkCut));
@@ -81,9 +82,6 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
     // Cut on primary vertex Z position
     this->AddCut(new ZeeDCutPriVtxZ("PriVtxZ", vertexZCut));
     
-    
-    this->AddCut(new ZeeDCutNumberGoodW("oneGoodW", 1));
-    this->AddCut(new ZeeDCutNumberGoodWmu("noGoodWmu", 0)); 
 
     // Cuts on electrons identification
     this->AddCut(new ZeeDCutLepIdentW("ElMediumPP", &ZeeDLeptonBags::IsEM::isMediumPP));
@@ -114,13 +112,13 @@ void ZeeDAnalysisCutSelectorW::BookCuts()
         this->AddCut(new ZeeDCutMassTransvBornW("GenMt", massTransvCut));
         //this->AddCut(new ZeeDCutCrackBornElecW("GenCrack"));
         this->AddCut(new ZeeDCutEtMissBornW("GenEt", etMissCut));
-/*      this->AddCut(new ZeeDCutEtaMaxBornElecW("GenEtaNEW", 2.5));
+        //this->AddCut(new ZeeDCutEtaMaxBornElecW("GenEtaNEW", 2.5));
         this->AddCut(new ZeeDCutPtBornElectronW("GenPtNEW", 25));
         this->AddCut(new ZeeDCutMassTransvBornW("GenMtNEW", 50));
         this->AddCut(new ZeeDCutEtMissBornW("GenEtNEW", 25));
          
-        this->AddCut(new ZeeDCutElecClustEtMinW("ElecClustEtMinWNEW", 30));
-        this->AddCut(new ZeeDCutElecClustEtaMaxW("ElecClustEtaMaxWNEW", 2.5));
+  /*    this->AddCut(new ZeeDCutLepPtMinW("ElecClustEtMinWNEW", 30));
+        this->AddCut(new ZeeDCutLepTrackEtaW("ElecClustEtaMaxWNEW", 2.5));
         this->AddCut(new ZeeDCutMassTransvW("MassTransvWNEW", 50));*/
         }
    

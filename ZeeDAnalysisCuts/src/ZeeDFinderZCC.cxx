@@ -85,7 +85,7 @@ void ZeeDFinderZCC::BookCuts()
     this->AddCut(new ZeeDCutEtaCrackBothElecZ    ("EtaCrackBothElecZ", 1.37, 1.52));
 
     // Both electrons pass author cut "isElectron"
-    this->AddCut(new ZeeDCutAuthorBothElecZ      ("AuthorBothElecZ"));
+//    this->AddCut(new ZeeDCutAuthorBothElecZ      ("AuthorBothElecZ"));
 
 
     // Set cuts for the boson selector
@@ -93,7 +93,7 @@ void ZeeDFinderZCC::BookCuts()
     CutWeights.push_back(new CutWeight("PtMinBothElecZ",    10., getBitMask("PtMinBothElecZ")));
     //CutWeights.push_back(new CutWeight("ZMassZ",            10., getBitMask("ZMassZ")));
     CutWeights.push_back(new CutWeight("EtaCrackBothElecZ",  1., getBitMask("EtaCrackBothElecZ")));
-    CutWeights.push_back(new CutWeight("AuthorBothElecZ",    1., getBitMask("AuthorBothElecZ")));
+//    CutWeights.push_back(new CutWeight("AuthorBothElecZ",    1., getBitMask("AuthorBothElecZ")));
 
 }
 

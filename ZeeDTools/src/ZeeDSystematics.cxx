@@ -121,7 +121,6 @@ void ZeeDSystematics::addZeeSystematics() {
                     this->addSingleSystematics(ZeeDSystematics::eElecPedestalUp, "eElecPedestalUp", ZeeDSystematics::phaseSpaceShift);
                     this->addSingleSystematics(ZeeDSystematics::eElecPedestalDown, "eElecPedestalDown", ZeeDSystematics::phaseSpaceShift);
                     */    } else {
-/*
                         this->addSingleSystematics(ZeeDSystematics::eElecEnOff, "ElecEnOff", ZeeDSystematics::phaseSpaceShift);
                         this->addSingleSystematics(ZeeDSystematics::eElecEnZeeStatUp, "ElecEnZeeStatUp", ZeeDSystematics::phaseSpaceShift);
                         this->addSingleSystematics(ZeeDSystematics::eElecEnZeeMethodUp, "ElecEnZeeMethodUp", ZeeDSystematics::phaseSpaceShift);
@@ -137,9 +136,9 @@ void ZeeDSystematics::addZeeSystematics() {
                         this->addSingleSystematics(ZeeDSystematics::eElecEnR12StatDown, "ElecEnR12StatDown", ZeeDSystematics::phaseSpaceShift);
                         this->addSingleSystematics(ZeeDSystematics::eElecEnPSStatDown, "ElecEnPSStatDown", ZeeDSystematics::phaseSpaceShift);
                         this->addSingleSystematics(ZeeDSystematics::eElecEnLowPtDown, "ElecEnLowPtDown", ZeeDSystematics::phaseSpaceShift);
-                        this->addSingleSystematics(ZeeDSystematics::eElecEnMC, "ElecEnMC", ZeeDSystematics::phaseSpaceShift);*/
-                        this->addSingleSystematics(ZeeDSystematics::eElecEnAllUp, "ElecEnAllUp", ZeeDSystematics::phaseSpaceShift);
-                        this->addSingleSystematics(ZeeDSystematics::eElecEnAllDown, "ElecEnAllDown", ZeeDSystematics::phaseSpaceShift);
+                        this->addSingleSystematics(ZeeDSystematics::eElecEnMC, "ElecEnMC", ZeeDSystematics::phaseSpaceShift);
+                        //this->addSingleSystematics(ZeeDSystematics::eElecEnAllUp, "ElecEnAllUp", ZeeDSystematics::phaseSpaceShift);
+                        //this->addSingleSystematics(ZeeDSystematics::eElecEnAllDown, "ElecEnAllDown", ZeeDSystematics::phaseSpaceShift);
                     }
         }
 
@@ -173,50 +172,49 @@ void ZeeDSystematics::addZeeSystematics() {
         //      this->addSingleSystematics(ZeeDSystematics::eOffTrigOff, "TrigOff", ZeeDSystematics::weightShift);
         if ((*fAnaOptions)->DoCombToyMC()){
             this->addSingleSystematics(ZeeDSystematics::eOffTrigToyMC, "TrigToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers());
-            this->addSingleSystematics(ZeeDSystematics::muOffTrigToyMC, "muTrigToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers());
-        }
-       // } else {
+            //this->addSingleSystematics(ZeeDSystematics::muOffTrigToyMC, "muTrigToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers());
+        } else {
             this->addSingleSystematics(ZeeDSystematics::eOffTrigUp, "TrigUp", ZeeDSystematics::weightShift);
-           this->addSingleSystematics(ZeeDSystematics::eOffTrigDown, "TrigDown", ZeeDSystematics::weightShift);
-             this->addSingleSystematics(ZeeDSystematics::muOffTrigUp, "muTrigUp", ZeeDSystematics::weightShift);
-           this->addSingleSystematics(ZeeDSystematics::muOffTrigDown, "muTrigDown", ZeeDSystematics::weightShift);
-       //}
+            this->addSingleSystematics(ZeeDSystematics::eOffTrigDown, "TrigDown", ZeeDSystematics::weightShift);
+        }
+        this->addSingleSystematics(ZeeDSystematics::muOffTrigUp, "muTrigUp", ZeeDSystematics::weightShift);
+        this->addSingleSystematics(ZeeDSystematics::muOffTrigDown, "muTrigDown", ZeeDSystematics::weightShift);
 
         if ((*fAnaOptions)->DoCombToyMC()) {        
             this->addSingleSystematics(ZeeDSystematics::eOffRecEffToyMC, "RecEffToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers());       
-        
-       // }
-            } else { 
+            //this->addSingleSystematics(ZeeDSystematics::muOffRecEffToyMC, "muRecEffToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers());        
+        } else { 
             // this->addSingleSystematics(ZeeDSystematics::eOffRecEffOff, "RecEffOff", ZeeDSystematics::weightShift);
             this->addSingleSystematics(ZeeDSystematics::eOffRecEffUp,    "RecEffUp",    ZeeDSystematics::weightShift);
             this->addSingleSystematics(ZeeDSystematics::eOffRecEffDown,  "RecEffDown",  ZeeDSystematics::weightShift);
+            //this->addSingleSystematics(ZeeDSystematics::muOffRecEffUp,    "muRecEffUp",    ZeeDSystematics::weightShift);
+            //this->addSingleSystematics(ZeeDSystematics::muOffRecEffDown,  "muRecEffDown",  ZeeDSystematics::weightShift);
         }
 
         if ((*fAnaOptions)->DoCombToyMC()) {      
             this->addSingleSystematics(ZeeDSystematics::eOffIDEffToyMC, "IDEffToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers()); 
             this->addSingleSystematics(ZeeDSystematics::muOffIDEffToyMC, "muIDEffToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers());
-        }
-            //} else {
+        } else {
             //      this->addSingleSystematics(ZeeDSystematics::eOffIDEffOff, "IDEffOff", ZeeDSystematics::weightShift);
             this->addSingleSystematics(ZeeDSystematics::eOffIDEffUp, "IDEffUp",       ZeeDSystematics::weightShift);
             this->addSingleSystematics(ZeeDSystematics::eOffIDEffDown, "IDEffDown",   ZeeDSystematics::weightShift);
             this->addSingleSystematics(ZeeDSystematics::muOffIDEffUp, "muIDEffUp",       ZeeDSystematics::weightShift);
             this->addSingleSystematics(ZeeDSystematics::muOffIDEffDown, "muIDEffDown",   ZeeDSystematics::weightShift);
 
-        //}
+        }
 
         //      this->addSingleSystematics(ZeeDSystematics::eOffIsoEffOff, "IsoEffOff", ZeeDSystematics::weightShift);
-//        this->addSingleSystematics(ZeeDSystematics::eOffIsoEffUp, "IsoEffUp", ZeeDSystematics::weightShift);
-//        this->addSingleSystematics(ZeeDSystematics::eOffIsoEffDown, "IsoEffDown", ZeeDSystematics::weightShift);
+        //        this->addSingleSystematics(ZeeDSystematics::eOffIsoEffUp, "IsoEffUp", ZeeDSystematics::weightShift);
+        //        this->addSingleSystematics(ZeeDSystematics::eOffIsoEffDown, "IsoEffDown", ZeeDSystematics::weightShift);
 
-        if ((*fAnaOptions)->EvalSysPtZReweighting()) {
+        //if ((*fAnaOptions)->EvalSysPtZReweighting()) {
         //    this->addSingleSystematics(ZeeDSystematics::eZPtRew, "ZPtRew", ZeeDSystematics::weightShift, ZeeDLevel::Systematics,
         //            (*fAnaOptions)->BosonPtReweightingAdditionalTargets().size());
-        this->addSingleSystematics(ZeeDSystematics::eZPtRew, "ZPtRew", ZeeDSystematics::weightShift);
+        //  this->addSingleSystematics(ZeeDSystematics::eZPtRew, "ZPtRew", ZeeDSystematics::weightShift);
         //}
 
-        this->addSingleSystematics(ZeeDSystematics::eZvRewOff, "ZvRewOff", ZeeDSystematics::weightShift);
-        }
+        //this->addSingleSystematics(ZeeDSystematics::eZvRewOff, "ZvRewOff", ZeeDSystematics::weightShift);
+        //}
 
         if ((*fAnaOptions)->EvalSysLineShapeCorrection()) {
             this->addSingleSystematics(ZeeDSystematics::eLineShapeOff, "LineShapeOff", ZeeDSystematics::weightShift);
@@ -225,12 +223,11 @@ void ZeeDSystematics::addZeeSystematics() {
         if ((*fAnaOptions)->EvalSysForwardIDCorrection()) {
             if ((*fAnaOptions)->DoCombToyMC()) {
                 this->addSingleSystematics(ZeeDSystematics::eOffIDEffFwdToyMC, "IDEffFwdToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers()); 
-            }
-                //} else {    
+            } else {    
                 this->addSingleSystematics(ZeeDSystematics::eOffIDEffFwdOff,   "IDEffFwdOff",   ZeeDSystematics::weightShift);
                 this->addSingleSystematics(ZeeDSystematics::eOffIDEffFwdUp,    "IDEffFwdUp",    ZeeDSystematics::weightShift); 
                 this->addSingleSystematics(ZeeDSystematics::eOffIDEffFwdDown,  "IDEffFwdDown",  ZeeDSystematics::weightShift);    
-            //}      
+            }      
         }
 
         if ((*fAnaOptions)->EvalSysChargeCorrection()) {
@@ -239,14 +236,14 @@ void ZeeDSystematics::addZeeSystematics() {
             this->addSingleSystematics(ZeeDSystematics::eChMIDDown, "ChMIDOff", ZeeDSystematics::weightShift);
         }
 
-    } // isMC
+} // isMC
 
 }
 
 void ZeeDSystematics::addWSystematics() {
     if ((*fAnaOptions)->IsMC()) {
-        this->addSingleSystematics(ZeeDSystematics::muSmearScaleUp, "MuSmearingScaleUp", ZeeDSystematics::phaseSpaceShift);
-        this->addSingleSystematics(ZeeDSystematics::muSmearScaleDown, "MuSmearingScaleDown", ZeeDSystematics::phaseSpaceShift);
+        this->addSingleSystematics(ZeeDSystematics::muSmearScaleUp, "MuScaleUp", ZeeDSystematics::phaseSpaceShift);
+        this->addSingleSystematics(ZeeDSystematics::muSmearScaleDown, "MuScaleDown", ZeeDSystematics::phaseSpaceShift);
         this->addSingleSystematics(ZeeDSystematics::muSmearMSUp , "MuSmearingMSUp", ZeeDSystematics::phaseSpaceShift);
         this->addSingleSystematics(ZeeDSystematics::muSmearMSDown , "MuSmearingMSDown", ZeeDSystematics::phaseSpaceShift);
         this->addSingleSystematics(ZeeDSystematics::muSmearIDUp , "MuSmearingIDUp", ZeeDSystematics::phaseSpaceShift);
@@ -278,12 +275,13 @@ void ZeeDSystematics::addWSystematics() {
                 this->addSingleSystematics(ZeeDSystematics::EtMissResoSoftTermUp, "EtMissResoSoftTermUp", ZeeDSystematics::phaseSpaceShift);   
             }
             else {
+                this->addSingleSystematics(ZeeDSystematics::HadrRecoilScaleCorrectionUp, "HadronRecoilScaleCorrectionUp", ZeeDSystematics::phaseSpaceShift);
+                this->addSingleSystematics(ZeeDSystematics::HadrRecoilScaleCorrectionDown, "HadronRecoilScaleCorrectionDown", ZeeDSystematics::phaseSpaceShift);
+                this->addSingleSystematics(ZeeDSystematics::HadrRecoilSmearingOff, "HadronRecoilSmearingOff", ZeeDSystematics::phaseSpaceShift);
                 if ((*fAnaOptions)->DoCombToyMC()) {
-                    // this->addSingleSystematics(ZeeDSystematics::HadrRecoilSumEtToyMC, "HadrRecoilSumetToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, (*fAnaOptions)->MCSystNumbers());
-                    this->addSingleSystematics(ZeeDSystematics::HadrRecoilSumEt, "HadrRecoilSumet", ZeeDSystematics::weightShift);
-                } else {    
-                    this->addSingleSystematics(ZeeDSystematics::HadrRecoilSumEtDown, "HadrRecoilSumetDown", ZeeDSystematics::weightShift);
-                    this->addSingleSystematics(ZeeDSystematics::HadrRecoilSumEtUp, "HadrRecoilSumetUp", ZeeDSystematics::weightShift);
+                    //this->addSingleSystematics(ZeeDSystematics::HadrRecoilSumEtToyMC, "HadrRecoilSumetToyMC", ZeeDSystematics::weightShift, ZeeDLevel::ToyMC, 25);
+                    this->addSingleSystematics(ZeeDSystematics::HadrRecoilSumEt, "HadrRecoilSumetOff", ZeeDSystematics::weightShift);
+                } else {
                     this->addSingleSystematics(ZeeDSystematics::HadrRecoilSumEtOff, "HadrRecoilSumetOff", ZeeDSystematics::weightShift);
                 }
             }

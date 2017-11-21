@@ -56,7 +56,7 @@ void ZeeDAnalysisCutHistManagerZCC::BookCutHistManager() {
     std::vector < std::string > Stages;
 
     TString selectionEvent = "PriVtxZ+LAr+NTracksAtPrimVtx+EF_e15_loose1";
-    TString selectionElectron= "ChargeBothElecOppositeZ+PtMinBothElecZ+EtaMaxBothElecZ+EtaCrackBothElecZ+ElecTrig+IsEMMediumPPBothElecZ+OQMaps";
+    TString selectionElectron= "ChargeBothElecOppositeZ+PtMinBothElecZ+EtaMaxBothElecZ+EtaCrackBothElecZ+ElecTrig+IsEMMediumPPBothElecZ+OQMaps+etCone";
     TString selectionBoson = "ZMassZ+ExistZ";
     //full selection
     TString selection = selectionEvent + "+" +selectionElectron+"+"+ selectionBoson;
@@ -96,7 +96,7 @@ void ZeeDAnalysisCutHistManagerZCC::BookCutHistManager() {
 
 
     // Set default mask
-    this->SetDefaultMask(selection);
+    //this->SetDefaultMask(selection);
 
     // Set event weights calculator
     ZeeDCalcWeightCutDepZ* cw = new ZeeDCalcWeightCutDepZ();
@@ -116,21 +116,33 @@ void ZeeDAnalysisCutHistManagerZCC::BookCutHistManager() {
     doWeightIso.IDSFBothMediumPP = kTRUE;
 
     ZeeDDoWeight doWeightNone;
+    doWeightNone.IDSFBothMediumPP = kFALSE;
+	doWeightNone.RecSF = kFALSE;
+    doWeight.TrigSFDiMediumPP = kFALSE;
+
 
     // Plots after all cuts
-    this->AddMaskLoose("DEFAULT", new ZeeDHistManagerBoson(this->getName() + "/" + "Boson"));
-    this->AddMaskLoose("DEFAULT", new ZeeDHistManagerElectron(this->getName() + "/" + "Electron"));
-    this->AddMaskLoose("DEFAULT", new ZeeDHistManagerEvent(this->getName() + "/" + "Event"));
-    this->AddMaskLoose("DEFAULT", new ZeeDHistManagerEtmiss(this->getName() + "/" + "Etmiss"));
+    this->AddMaskLoose(selection, new ZeeDHistManagerBoson(this->getName() + "/" + "Boson"));
+    this->AddMaskLoose(selection, new ZeeDHistManagerElectron(this->getName() + "/" + "Electron"));
+    this->AddMaskLoose(selection, new ZeeDHistManagerEvent(this->getName() + "/" + "Event"));
+    this->AddMaskLoose(selection, new ZeeDHistManagerEtmiss(this->getName() + "/" + "Etmiss"));
+    this->AddMaskLoose("", new ZeeDHistManagerEvent(this->getName() + "/" + "Event2"));
 
+/*    if ((*fAnaOptions)->FillCalibrator()) {
+    // Calibrator:
+    this->AddMaskLoose("DEFAULT", new ZeeDCalibratorHM(this->getName() + "/Calib"));
+    }
+*/
     //    this->AddMaskLoose("", new ZeeDHistManagerMuon(this->getName() + "/" + "Muon"));
 
     if ((*fAnaOptions)->IsMC() && (*fAnaOptions)->FillGenInfo()){
         ZeeDHistManagerGenInfo * gen = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfo");
-        this->AddMaskLoose(genSel, gen);
+        this->AddMaskLoose(genSel, gen, doWeightNone);
     }
 
-    ZeeDHistManagerEvent* eventCut = new ZeeDHistManagerEvent(this->getName()+"/CutFlow/Event");
+     ZeeDHistManagerGenInfo* gen2 = new ZeeDHistManagerGenInfo (this->getName()+"/"+"GenInfo2");
+    this->AddMaskLoose("", gen2, doWeightNone);
+     ZeeDHistManagerCut* eventCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Event");
     ZeeDHistManagerCut* leptonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Lepton");
     ZeeDHistManagerCut* bosonCut = new ZeeDHistManagerCut(this->getName()+"/CutFlow/Boson");
     this->AddMaskLoose(selectionEvent, eventCut, doWeightNone);
@@ -247,9 +259,5 @@ void ZeeDAnalysisCutHistManagerZCC::BookCutHistManager() {
     }
     }
 
-    if ((*fAnaOptions)->FillCalibrator()) {
-    // Calibrator:
-    this->AddMaskLoose("DEFAULT", new ZeeDCalibratorHM(this->getName() + "/Calib"));
-    }
     */
 }

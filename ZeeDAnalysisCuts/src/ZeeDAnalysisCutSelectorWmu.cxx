@@ -54,6 +54,8 @@ void ZeeDAnalysisCutSelectorWmu::BookCuts()
     //const Double_t isoCut       = 0.05;
     const Double_t d0Cut        = 0.1;    //mm
 
+	this->AddCut(new ZeeDCutLepPtMinW("ptMu", ptCut));
+    this->AddCut(new ZeeDCutLepPtMinW("ptMuQCD", 10.));
     // Cut on existence and quality cut of vertex
     this->AddCut(new ZeeDCutPriVtxNtrack("NTracksAtPrimVtx", minNumTrkCut));
 
@@ -72,15 +74,12 @@ void ZeeDAnalysisCutSelectorWmu::BookCuts()
     // Cut on muon trigger
     this->AddCut(new ZeeDCutTrigger("EFmu10", ZeeDEnum::Trigger::EF_mu10));
     this->AddCut(new ZeeDCutTrigLepW("MuonTrig", ZeeDEnum::Trigger::EF_mu10));
-	this->AddCut(new ZeeDCutLepPtMinW("ptMu", ptCut));
     //this->AddCut(new ZeeDCutMediumID("MuonMedium"));
 //    this->AddCut(new ZeeDCutMuonMediumID("NotMuonMedium", kFALSE));
     this->AddCut(new ZeeDCutLepIdentW("MuonLoose", &ZeeDLeptonBags::IsEM::isLoose));
-    this->AddCut(new ZeeDCutLepIdentW("MuonTight", &ZeeDLeptonBags::IsEM::isTight));
     this->AddCut(new ZeeDCutLepIdentW("MuonMedium", &ZeeDLeptonBags::IsEM::isMedium));
 	this->AddCut(new ZeeDCutLepIdentW("notLoose", &ZeeDLeptonBags::IsEM::isLoose, kFALSE));
 	this->AddCut(new ZeeDCutLepIdentW("notMediumPP", &ZeeDLeptonBags::IsEM::isMedium, kFALSE));
-	this->AddCut(new ZeeDCutLepIdentW("notTight", &ZeeDLeptonBags::IsEM::isTight, kFALSE));
 	//Cut on boson charge 
     this->AddCut(new ZeeDCutLepChargePosW("pos"));
     this->AddCut(new ZeeDCutLepChargePosW("neg", kFALSE));
@@ -95,28 +94,20 @@ void ZeeDAnalysisCutSelectorWmu::BookCuts()
    // Cut on muon eta
     this->AddCut(new ZeeDCutLepTrackEtaW  ("eta", muEtaMax));
     //this->AddCut(new ZeeDCutCrackLepTrackEtaW("etaCrack", etaCrackMin, etaCrackMax));
-    this->AddCut(new ZeeDCutNumberGoodW("noGoodW", 0));
-    this->AddCut(new ZeeDCutNumberGoodWmu("oneGoodWmu", 1)); 
    // Cut on minimal EtMiss in event
     //this->AddCut(new ZeeDCutEventMinMissEt ("WmuEtMiss", etMissCut));
-	this->AddCut(new ZeeDCutCorRecoilEtMissW ("WmuEtMiss", etMissCut));
-    this->AddCut(new ZeeDCutGenWPlus("WGenPlus", true));
-    this->AddCut(new ZeeDCutGenWPlus("WGenMinus", false));
+	this->AddCut(new ZeeDCutEventMinMissEt ("WmuEtMiss", etMissCut));
 
     if (ZeeDAnaOptions->IsMC() && ZeeDAnaOptions->FillGenInfo()) {
         this->AddCut(new ZeeDCutEtaMaxBornElecW("GenEta", muEtaMax));
         this->AddCut(new ZeeDCutPtBornElectronW("GenPt", ptCut));
         this->AddCut(new ZeeDCutMassTransvBornW("GenMt", massTransvCut));
-        this->AddCut(new ZeeDCutCrackBornElecW("GenCrack"));
         this->AddCut(new ZeeDCutEtMissBornW("GenEt", etMissCut));
-        this->AddCut(new ZeeDCutEtaMaxBornElecW("GenEtaNEW", 2.5));
-        this->AddCut(new ZeeDCutPtBornElectronW("GenPtNEW", 25));
-        this->AddCut(new ZeeDCutMassTransvBornW("GenMtNEW", 50));
-        this->AddCut(new ZeeDCutEtMissBornW("GenEtNEW", 25));
-        
-        this->AddCut(new ZeeDCutMassTransvW("MassTransvWNEW", 50));
-        this->AddCut(new ZeeDCutLepPtMinW("ptMuNEW", 30));
-        this->AddCut(new ZeeDCutLepTrackEtaW  ("etaNEW", 2.5));
+ 
+        this->AddCut(new ZeeDCutPtBornElectronW("GenPtNEW", 25.));
+        this->AddCut(new ZeeDCutMassTransvBornW("GenMtNEW", 50.));
+        this->AddCut(new ZeeDCutEtMissBornW("GenEtNEW", 25.));
+       
        }
 
 }

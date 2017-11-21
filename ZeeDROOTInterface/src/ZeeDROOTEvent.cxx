@@ -311,12 +311,13 @@ Int_t ZeeDROOTEvent::fillOut (RawEvent* const event) const
 
     }
 
+    
     for(UInt_t d=0; d != fGenZBosArray.size(); ++d) {
 
         ZeeDGenParticle* daughter = new ZeeDGenParticle();
         ZeeDROOTGenParticle* rootDaughter = fGenZBosArray[d];
-        rootDaughter->fillOut(daughter);
 
+        rootDaughter->fillOut(daughter);
         event->fGenZBosArray->Add(daughter);
 
     }

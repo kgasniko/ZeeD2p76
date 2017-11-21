@@ -71,8 +71,12 @@ ZeeDAnalysisSvc::ZeeDAnalysisSvc(const std::string& name, ISvcLocator* sl)
 
     declareProperty("ReadEtMiss"                    , bReadEtMiss                   = false        , "");
     declareProperty("RecalcEtMiss"                  , bRecalcEtMiss                 = false        , "");
+    declareProperty("CorrectSumet",                   bCorrectSumet                 = false        , "");
     declareProperty("HadrRecoilFull"                , bHadrRecoilFull               = false        , "");
     declareProperty("DeleteSoftTerm"                , bDeleteSoftTerm               = false        , "");
+    declareProperty("EtScaleFactor"              , bEtScaleFactor             = 1.0          , "");
+    declareProperty("EtSmearFactor"                  , bEtSmearFactor                 = 0.0          , "");
+    declareProperty("SumetCorFile"                  , bSumetCorFile                 = "/afs/desy.de/user/k/kgasniko/ZeeD/share/HadronRecoil/SF_Pol2.root", "");
     declareProperty("CalcW"                         , bCalcW                        = false        , "");
     declareProperty("CalcWmu"                       , bCalcWmu                      = false        , "");
     declareProperty("CalcJets"                      , bCalcJets                     = false        , "");
@@ -659,6 +663,9 @@ const std::string ZeeDAnalysisSvc::print() const
     s << " \n \n Flags for tupes of Analysis \n	";
     s << " Read EtMiss "                              << ReadEtMiss()                             << std::endl;
     s << " Delete Soft Term "                         << DeleteSoftTerm()                         << std::endl;
+    s << " Et scale factor"                           << EtScaleFactor()                       << std::endl;
+    s << " Et smear factor"                           << EtSmearFactor()                          << std::endl;
+    s << " SumetCorFile "                             << SumetCorFile ()                          << std::endl;
     s << " Calculate hadron recoil using all of the leptons in EtMiss" << HadrRecoilFull()        << std::endl;
     s << " W "                                        << CalcW()                                  << std::endl;
     s << " Wmu "                                      << CalcWmu()                                << std::endl;

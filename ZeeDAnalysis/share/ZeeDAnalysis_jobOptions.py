@@ -7,13 +7,20 @@ ZeeDTruthJets=False
 ZeeDUseTrigger=True
 ZeeDDoTriggerMatching=True
 ZeeDreadType=2
-ZeeDOneBinMuonSF = True
-ZeeDChargedMuonSD= False
+#ZeeDOneBinMuonSF = False
+#ZeeDChargedMuonSD= True
+#ZeeDEtScale=1.0
 
 class readType:
     AOD = 1
     TTree = 2
     InlineZ = 3
+
+try:
+    checkVariable("ZeeDEtScale", ZeeDEtScale)
+except NameError:
+    ZeeDEtScale=defaultVariable("ZeeDEtScale", 1.0)
+
 
 #-------------------------------------------------------------------------------
 try:
@@ -44,6 +51,7 @@ except NameError:
     ZeeDChargedMuonSD=defaultVariable("ZeeDChargedMuonSD", False)
 ZeeDAnalysisSvc.MuonChargedTriggerSF=ZeeDChargedMuonSD
 
+ZeeDAnalysisSvc.EtScaleFactor=ZeeDEtScale
 # Read in the files ------------------------------------------------------------
 try:
     checkVariable("ZeeDreadType", ZeeDreadType)

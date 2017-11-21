@@ -40,6 +40,40 @@ private:
     Double_t m_cutval;
 };
 
+class ZeeDCutBothCombinedMuon: public ZeeDCut{
+    public:
+        ZeeDCutBothCombinedMuon (TString cutName, Bool_t dec = kTRUE): ZeeDCut(cutName){
+            bDecision = dec;}
+        Bool_t evaluate(const ZeeDEvent* event);
+    private:
+        Bool_t bDecision;
+};
+
+class ZeeDCutBothEtCone20overEt : public ZeeDCut {
+    public:
+        ZeeDCutBothEtCone20overEt (TString cutName, Double_t cut) : ZeeDCut (cutName){
+            m_EtCut = cut;
+        }
+        Bool_t evaluate(const ZeeDEvent* event);
+    private:
+        Double_t  m_EtCut;
+};
+
+
+class ZeeDCutBothMuonTrackIso: public ZeeDCut{
+    public:
+        ZeeDCutBothMuonTrackIso(TString cutName, Double_t cut, Bool_t dec = kTRUE) : ZeeDCut (cutName){
+            m_cutval = cut;
+            bDecision = dec;
+        }
+        Bool_t evaluate(const ZeeDEvent* event);
+    private :
+        Double_t m_cutval;
+        Bool_t bDecision;
+};
+
+
+
 //-----------------------------------------------
 
 /**  cut on minimal pt of the electrons */

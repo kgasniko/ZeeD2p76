@@ -3,6 +3,8 @@
 // Root libraries
 #include <TSystem.h>
 #include <TLorentzVector.h>
+#include <TRandom2.h>
+#include <ctime>
 
 // Athena includes
 #include "GaudiKernel/StatusCode.h"
@@ -14,6 +16,7 @@
 #include "ZeeDEvent/ZeeDLepton.h"
 #include "ZeeDEvent/ZeeDEvent.h"
 #include "ZeeDEvent/ZeeDElectron.h"
+#include "ZeeDEvent/ZeeDGenParticle.h"
 #include "ZeeDEvent/ZeeDMuon.h"
 #include "ZeeDEvent/ZeeDTau.h"
 #include "ZeeDEvent/ZeeDPhoton.h"
@@ -47,7 +50,7 @@ ZeeDCalcEtMiss::ZeeDCalcEtMiss() : fSvcHelper("ZeeDCalcEtMiss"),
     fMETTrackUtil->init("RefJetJVFCUT.config", "/afs/desy.de/user/k/kgasniko/ZeeD/Reconstruction/MET/METTrackUtil/share");
     fSystTool = new METSystTool();
     fSystTool->initialise("METTrack_2012.config");
-
+    rndm=new TRandom3(0);
     fSys = ZeeDSystematics::getInstance();
     //fMETUtility->setSoftJetCut(20.); // Equivalent to switching to  GeV 
 }
@@ -666,6 +669,7 @@ void ZeeDCalcEtMiss::Calculate(ZeeDEvent* event)
 
         Int_t nObjMET(etMiss->GetMETCompositionElectron_index().size());
 
+        //Finding lepton part of EtMiss
         TLorentzVector lepPt;
         int i_elec = 0;
         const TObjArray* electrons = event->GetElectrons();
@@ -725,10 +729,84 @@ void ZeeDCalcEtMiss::Calculate(ZeeDEvent* event)
             etMiss->SetnMETMuon(i_muon);
         }
 
-        TLorentzVector newLv;
-        newLv.SetPxPyPzE(etMiss->GetCorRecoilEtX(), etMiss->GetCorRecoilEtY(), 0, etMiss->GetCorRecoilEt());
-        newLv+=lepPt;
+        //Finding hadron recoil part of sumet
 
+        TLorentzVector corRecoilLv;
+
+        double sf=(*fAnaOptions)->EtScaleFactor();
+        if ((*fAnaOptions)->IsData()){
+            sf=1.0;
+        }
+        if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilScaleCorrectionUp)){
+            sf+=0.014;
+        }else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilScaleCorrectionDown)){
+            sf-=0.014;
+        }
+
+        double smear = (*fAnaOptions)->EtSmearFactor();
+        if ((*fAnaOptions)->IsData() || fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSmearingOff)){
+            smear=0;
+
+        }
+
+        corRecoilLv.SetPxPyPzE(sf*etMiss->GetCorRecoilEtX(), sf*etMiss->GetCorRecoilEtY(), 0, sf*etMiss->GetCorRecoilEt());
+        //std::cout << "Before " << std::endl;
+        //std::cout << corRecoilLv.Px() << "  " << corRecoilLv.Py() << " " << corRecoilLv.Et() << std::endl;
+
+        const ZeeDGenParticle* Boson = event->GetGenBoson(ZeeDEnum::MCFSRLevel::Born); 
+        if (Boson == NULL){
+            corRecoilLv.SetPxPyPzE(sf*etMiss->GetCorRecoilEtX(), sf*etMiss->GetCorRecoilEtY(), 0, sf*etMiss->GetCorRecoilEt());
+        } else{
+       
+            double rndmPerp = rndm->Gaus(0, smear);
+            double rndmPar = rndm->Gaus(0, smear);
+
+            const TLorentzVector& bosVec = Boson->GetMCFourVector();
+            TVector3 bos3 = TVector3(bosVec.Px(), bosVec.Py(), 0);
+            TVector3 unitBos = bos3.Unit();
+            TVector3 lCorRecoil3 = TVector3(sf*etMiss->GetCorRecoilEtX(), sf*etMiss->GetCorRecoilEtY(), 0);
+            
+            //unitBos*=rndmPar;
+            double uPar = lCorRecoil3.Dot(unitBos);
+            TVector3 uParVect=unitBos*uPar;
+            TVector3 uPerpV = lCorRecoil3-uParVect;
+            double uPerp=uPerpV.Mag();
+            //std::cout << uPerpV.Dot(uParVect) << std::endl;
+            ////std::cout << "uPar before " << lCorRecoil3.Dot(bos3);
+            // double uPerp = uPerpV.Mag()+rndmPerp;
+            double uPerpNew=uPerp+rndmPerp;
+            double uParNew =uPar+rndmPar; 
+            //std::cout << " U par " << uPar << " "<< uParNew <<std::endl;
+            //std::cout << " U perp " << uPerp << " " << uPerpNew << std::endl;
+
+            etMiss->SetCorRecoilUPerp(uPerpNew);
+            if (uPerpV.DeltaPhi(bos3)<0){
+                etMiss->SetCorRecoilUPerp(-1*uPerpNew);
+            }else{
+                etMiss->SetCorRecoilUPerp(uPerpNew);
+            }
+            //summing up smeared components
+            uPerpV*=uPerpNew/uPerp;
+            uParVect*=uParNew/uPar;
+            //std::cout << uPerpV.Mag() << " " << uParVect.Mag() << std::endl;
+            TVector3 lCorRecoil3New= uPerpV+uParVect;      
+            //std::cout << uParNew << std::endl; 
+            //std::cout << " CorRecoilX " << lCorRecoil3.X() << " "<< lCorRecoil3New.X() << std::endl;
+            //std::cout << " CorRecoilY " << lCorRecoil3.Y() << " "<< lCorRecoil3New.Y() << std::endl;
+            //std::cout << " CorRecoilMag " << lCorRecoil3.Mag() << " "<< lCorRecoil3New.Mag() << std::endl;
+            etMiss->SetCorRecoilUParU(uParNew+bosVec.Pt());
+            etMiss->SetCorRecoilUPar(-uParNew);
+            corRecoilLv.SetPxPyPzE(lCorRecoil3New.X(), lCorRecoil3New.Y(), 0, lCorRecoil3New.Mag()); 
+            etMiss->SetCorRecoilEtX(corRecoilLv.Px());
+            etMiss->SetCorRecoilEtY(corRecoilLv.Py());
+            etMiss->SetCorRecoilEt(corRecoilLv.Et());
+            etMiss->SetCorRecoilPhi(corRecoilLv.Phi());
+        }
+        //std::cout << "After " <<std::endl;
+        //std::cout << corRecoilLv.Px() << "  " << corRecoilLv.Py() << " " << corRecoilLv.Et() << std::endl << std::endl;
+
+        TLorentzVector newLv=TLorentzVector(corRecoilLv);
+        newLv+=lepPt;
         double Et2 =newLv.Px()*newLv.Px()+newLv.Py()*newLv.Py();
         Et2=TMath::Sqrt(Et2);
         newLv.SetPxPyPzE(-newLv.Px(),-newLv.Py(), 0, Et2);
@@ -740,7 +818,7 @@ void ZeeDCalcEtMiss::Calculate(ZeeDEvent* event)
         //Calculating corrections for hadrRecoil
 
     } else { //leaving in Hadron Recoil just part with lepton in W
-        
+
     }
     //------------------------------------------------------
 

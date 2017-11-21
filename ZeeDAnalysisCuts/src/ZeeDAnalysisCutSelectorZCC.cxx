@@ -57,6 +57,7 @@ void ZeeDAnalysisCutSelectorZCC::BookCuts()
 
     // Max |Eta| over two electrons is smaller than elecEtaCut
     this->AddCut(new ZeeDCutEtaMaxBothElecZ("EtaMaxBothElecZ", 2.47));
+    this->AddCut(new ZeeDCutBothEtCone20overEt("etCone", 0.1)); 
 
     // Both Electrons are outside Eta crack defined by EtaCrackMin,EtaCrackMax
     this->AddCut(new ZeeDCutEtaCrackBothElecZ("EtaCrackBothElecZ", 1.37, 1.52));
@@ -96,7 +97,8 @@ void ZeeDAnalysisCutSelectorZCC::BookCuts()
         this->AddCut(new ZeeDCutEtaMaxBothBornElecZ("GenEta", 2.5));
         this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPt", 20.));
         this->AddCut(new ZeeDCutMassBornBoson("GenMt", 66, 116));
-        this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPtNEW", 25.));
+ 
+        this->AddCut(new ZeeDCutPtMinBothBornElecZ("GenPtNew", 25.));
          
         }
  

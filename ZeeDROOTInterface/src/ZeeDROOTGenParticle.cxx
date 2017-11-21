@@ -23,12 +23,12 @@ Int_t ZeeDROOTGenParticle::fillOut (ZeeDGenParticle* const genParticle) const
     genParticle->fMCFourVector   = fMCFourVector;
     genParticle->fParticleID     = fParticleID;
     genParticle->fParticleStatus = fParticleStatus;
-    //std::cout << "Gen level information " << std::endl << " ID = " << fParticleID << " number of daughters " << fDaughters.size() << std::endl;
     genParticle->fDaughters->Clear();
     
     for(UInt_t d=0; d != fDaughters.size(); ++d) {
 
         ZeeDGenParticle* daughter = new ZeeDGenParticle();
+        
         ZeeDROOTGenParticle* rootDaughter = fDaughters[d];
         rootDaughter->fillOut(daughter);
 

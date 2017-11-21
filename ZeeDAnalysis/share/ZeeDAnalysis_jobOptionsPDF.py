@@ -1,5 +1,13 @@
 # Helper------------------------------------------------------------------------
 include("ZeeDAnalysis/ZeeDAnalysis_Helper.py")
+ZeeDOutputLevel=ERROR
+ZeeDEvtMax=-1
+ZeeDCalcJets=False
+ZeeDTruthJets=False
+ZeeDUseTrigger=True
+ZeeDDoTriggerMatching=True
+ZeeDreadType=2
+
 
 class readType:
     AOD = 1

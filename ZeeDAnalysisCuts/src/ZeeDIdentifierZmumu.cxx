@@ -17,9 +17,11 @@ void ZeeDIdentifierZmumu::IdentifyRecBosons(ZeeDEvent* event)
     // safe current boson - loop will change it for weight calculation
     const ZeeDBosonZ* currentBosonSafe = event->GetCurrentBoson();
     
+    ZeeDFinderZmumu* finder = (ZeeDFinderZmumu*)this->GetFinder();
+
     //ZeeDFinderZmumu* finder = (ZeeDFinderZmumu*)this->GetFinder();
-    //TObjArray selectedBosons = finder->SelectBosons(event);
-    TObjArray selectedBosons = *event->GetZmumuBosons(); 
+    TObjArray selectedBosons = finder->SelectBosons(event);
+//    TObjArray selectedBosons = *event->GetZmumuBosons(); 
     
     for(Int_t sb = 0; sb != selectedBosons.GetEntriesFast(); ++sb) {
         const ZeeDBosonZ* selectedBoson = static_cast<const ZeeDBosonZ*>(selectedBosons[sb]);

@@ -3,6 +3,7 @@
 // Root includes
 #include <TLorentzVector.h>
 #include <TObjArray.h>
+#include <math.h>
 
 // Analysis includes
 #include "ZeeDEvent/ZeeDEvent.h"
@@ -49,7 +50,10 @@ void ZeeDHistManagerBoson::BookHistos()
     AddTH2D("BosCosThStarCSvsZFD", 20, -1., 1., 20, -1., 1., "Cos(#Theta *)_{CS}",  "Cos(#Theta *)_{ZFD}", ZeeDHistLevel::Technical);
     AddTH2D("BosCosThStarCSvsBD",  20, -1., 1., 20, -1., 1., "Cos(#Theta *)_{CS}",  "Cos(#Theta *)_{BD}",  ZeeDHistLevel::Technical);
     AddTH2D("BosCosThStarZFDvsBD", 20, -1., 1., 20, -1., 1., "Cos(#Theta *)_{ZFD}", "Cos(#Theta *)_{BD}",  ZeeDHistLevel::Technical);
-
+    AddTH1D("uDivPt", 50, -1, 2, "u_{||}/p_{T}^{leplep}" , "");
+    AddTH1D("uMinPt", 50, -20, 20, "u_{||}-p_{T}^{leplep} [GeV]" , "");
+    AddTH1D("uPar", 50, 0, 100., "u_{||} [GeV]", "");
+    AddTH1D("uPerp", 50, -15, 15, "u_{#perp} [GeV]", ""); 
 }
 
 //-----------------------------------------------------
@@ -75,6 +79,36 @@ void ZeeDHistManagerBoson::FillBosonHists(const ZeeDBoson* boson)
     // kinematics
     const TLorentzVector& fourVector = boson->GetFourVector();
     const double bosMass = fourVector.M();
+    
+    const ZeeDEvent* event= GetEvent();
+    ZeeDEtMiss* etMiss=(ZeeDEtMiss*)event->GetEtMissArray()->At(0);
+    double sf=(*fAnaOptions)->EtScaleFactor();
+    if ((*fAnaOptions)->IsData()){
+        sf=1.0;
+    }
+    
+
+    TVector3 lCorRecoil3= TVector3(etMiss->GetCorRecoilEtX(), etMiss->GetCorRecoilEtY(), 0);
+    TVector3 bosV3=TVector3(fourVector.Px(), fourVector.Py(), 0);
+    bosV3.SetMag(1);
+    //std::cout << etMiss->GetCorRecoilEt() << " "<< fourVector.Pt() << std::endl;
+    double uPar = lCorRecoil3.Dot(bosV3);
+    bosV3.SetMag(uPar);
+    TVector3 uPerpV = lCorRecoil3-bosV3;
+    //double angl = uPerpV.Angle(bosV3);
+    //double uPerp=lCorRecoil3.Perp(bosV3);
+    double uPerp= uPerpV.Mag();
+    if (uPerpV.DeltaPhi(bosV3)<0){
+        uPerp*=-1;
+    }
+    //std::cout << uPerp << std::endl;
+    //std::cout << angl <<  uPerpV.DeltaPhi(bosV3) << std::endl;
+    //std::cout << uPar << " " << lCorRecoil3.Mag() << " "<<bosV3.Mag() << std::endl;
+    //std::cout << uPar/bosV3.Mag() << std::endl << std::endl;
+    FillTH1(-uPar/fourVector.Pt(), Weight, "uDivPt");
+    FillTH1(uPerp, Weight, "uPerp");
+    FillTH1(uPar+fourVector.Pt(), Weight, "uMinPt");
+    FillTH1(-uPar, Weight, "uPar");
 
     FillTH1(bosMass, Weight, "BosMass");
     FillTH1(fourVector.Pt(), Weight, "BosPt");

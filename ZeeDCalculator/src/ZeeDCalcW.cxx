@@ -5,6 +5,7 @@
 // std libraries
 #include <string>
 #include <iostream>
+#include <sstream>
 
 // Root libraries
 #include <TSystem.h>
@@ -38,11 +39,6 @@ ZeeDCalcW::ZeeDCalcW() :
 
     fSys = ZeeDSystematics::getInstance();
 
-    // Constructor
-    TFile* fileSF = new TFile("/afs/desy.de/user/k/kgasniko/ZeeD/share/SF_Mu.root");
-    TFile* fileSF2 = new TFile("/afs/desy.de/user/k/kgasniko/ZeeD/share/SF_E.root");
-    pCorElec= (TH2D*) fileSF2->Get("SF");
-    pCorMuon= (TH2D*)  fileSF->Get("SF");
 }
 
 //------------------------------------------------------
@@ -70,38 +66,19 @@ void ZeeDCalcW::Calculate(ZeeDEvent* event)
 
     event->ClearWBosons();
     event->ClearWmuBosons();
-    //Double_t eMax=0;
-    //int indMax=0;
-    /*    
-          for (int elecIndex=0; elecIndex< electrons->GetEntriesFast(); elecIndex++) {
-          ZeeDElectron* electron = static_cast< ZeeDElectron* >(electrons->At(elecIndex));
-          TLorentzVector fourVector = electron->GetFourVector();
-
-          if (fourVector.E() > eMax){
-          eMax=fourVector.E();
-          indMax=elecIndex;
-          }
-          }
-          if (eMax != 0)
-          event->AddWBoson(this->CreateW((ZeeDElectron*)electrons->At(indMax)));*/    
     // Select event with exaclty one electron candidate
     // FIXME: one shall consider also more general
     // case with several W candiates
 
-
     for (int elIndex=0; elIndex< electrons->GetEntriesFast(); elIndex++) {
         ZeeDLepton* electron = static_cast< ZeeDLepton* >(electrons->At(elIndex));
         if (electron == NULL) return;
-        pCor=pCorElec;
-        TLorentzVector fourVector = electron->GetFourVector();
         event->AddWBoson(this->CreateW(electron));         
     }
 
     for (int muIndex=0; muIndex< muons->GetEntriesFast(); muIndex++) {
         ZeeDLepton* mu = static_cast< ZeeDLepton* >(muons->At(muIndex));
         if (mu == NULL) return;
-        pCor=pCorMuon;
-        TLorentzVector fourVector = mu->GetFourVector();
         event->AddWmuBoson(this->CreateW(mu));         
     }
 
@@ -118,7 +95,7 @@ ZeeDBosonW* ZeeDCalcW::CreateW (const ZeeDLepton* elec){
     W->SetLepton(elec);
 
     const TLorentzVector elec4Vec = elec->GetFourVector();
-
+    float charge = elec->getCharge();
     Double_t elecPt  = elec4Vec.Pt();
     Double_t elecPhi = elec4Vec.Phi();
 
@@ -135,28 +112,8 @@ ZeeDBosonW* ZeeDCalcW::CreateW (const ZeeDLepton* elec){
 
 
     ZeeDEtMiss* fEtMiss= (ZeeDEtMiss*) etMissArray->At(0);
-    if (!(*fAnaOptions)->RecalcEtMiss() && !(*fAnaOptions)->HadrRecoilFull()){
-
-        TLorentzVector newLv;
-
-        newLv.SetPxPyPzE(fEtMiss->GetCorRecoilEtX(), fEtMiss->GetCorRecoilEtY(), 0, fEtMiss->GetCorRecoilEt());
-        double corEtX=fEtMiss->GetCorRecoilEtX();
-        double corEtY=fEtMiss->GetCorRecoilEtY();
-        //cout << "EtMiss = " << TMath::Sqrt(corEtX*corEtX+corEtY*corEtY) << newLv.Et()<< endl;
-
-        newLv+=p_el;
-
-        double Et2 =newLv.Px()*newLv.Px()+newLv.Py()*newLv.Py();
-        Et2=TMath::Sqrt(Et2);
-        newLv.SetPxPyPzE(-newLv.Px(),-newLv.Py(), 0, Et2);
-        fEtMiss->SetEt(Et2);
-        fEtMiss->SetEtX(newLv.Px());
-        fEtMiss->SetEtY(newLv.Py());
-        fEtMiss->SetPhi(newLv.Phi());
-    }
 
     W->SetEtMissPtr(fEtMiss);  
-
 
     // Make transverse neutrino 4-vector
     TLorentzVector p_nu;
@@ -183,32 +140,6 @@ ZeeDBosonW* ZeeDCalcW::CreateW (const ZeeDLepton* elec){
 
 
     //double bias=0;
-    //if ((*fAnaOptions)->IsMC() && (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEt))){
-    if ((*fAnaOptions)->IsMC()){
-    //double ptW=p_W.Pt();
-        //Calculate HadronRecoilCorrections
-        int binYn = pCor->GetYaxis()->FindBin(p_W.Pt());
-        int binXn = pCor->GetXaxis()->FindBin(fEtMiss->GetCorRecoilSumet());
-        int totBin = pCor->GetBin(binXn, binYn);
-        double sf = pCor->GetBinContent(totBin);
-        double sfErr = pCor->GetBinError(totBin);
-        /*
-           if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtUp))     {
-           sf += sfErr;
-           } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtDown)) {
-           sf -= sfErr;
-           } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtOff)){
-           sf=1;
-           } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtToyMC)){
-           sf = fSys->getToySystematics(sf, sfErr);
-           }
-           */      
-        //        std::cout << sf << std::endl;
-        W->SetWeight(sf);
-
-
-    }
-
     return W;
 }
 

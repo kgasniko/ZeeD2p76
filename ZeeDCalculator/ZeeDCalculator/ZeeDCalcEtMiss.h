@@ -6,6 +6,7 @@
 ////////////////////////////////////////////////////////
 
 #include <TObject.h>
+#include <TRandom3.h>
 
 #include "ZeeDAnalysisSvc/IZeeDAnalysisSvc.h"
 #include "ZeeDTools/ZeeDSvcHelper.h"
@@ -33,6 +34,7 @@ private:
     ZeeDSvcHelper fSvcHelper;
     ServiceHandle<IZeeDAnalysisSvc>* fAnaOptions;   
 
+    TRandom3* rndm; 
     ZeeDSystematics* fSys; 
     METSyst::METSystTool* fSystTool;
     METUtility* fMETUtility;

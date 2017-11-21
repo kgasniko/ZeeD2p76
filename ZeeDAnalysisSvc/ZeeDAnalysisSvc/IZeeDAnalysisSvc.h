@@ -84,8 +84,12 @@ public:
 
     virtual bool ReadEtMiss()                 const = 0;
     virtual bool RecalcEtMiss()               const = 0;
+    virtual bool CorrectSumet()               const = 0;
     virtual bool HadrRecoilFull()             const = 0;
     virtual bool DeleteSoftTerm()             const = 0;
+    virtual double EtScaleFactor()         const = 0;
+    virtual double EtSmearFactor()            const = 0;
+    virtual std::string SumetCorFile()        const = 0;
 
     virtual bool CalcW()                      const = 0;
     virtual bool CalcWmu()                    const = 0;

@@ -92,9 +92,12 @@ private:
 	double m_Az;
 	double m_AzErr;
 
+    double m_Ez;
+    double m_EzErr;
+
     double m_QCD;
     double m_QCDErr;
-
+    double ceilNN(double v, int p);
 	double m_lumi;
     double m_lumi_err;
     string m_dataname;

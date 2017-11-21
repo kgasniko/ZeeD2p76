@@ -30,7 +30,7 @@ Bool_t ZeeDCutMuonTrackIso::evaluate(const ZeeDEvent* event){
         return kFALSE;
     const ZeeDMuonBags::Isolation iso = mu->Isolation().Get();
 
-    return ((iso.fptcone40 < m_cutval) == bDecision);
+    return ((iso.fptcone20 < m_cutval) == bDecision);
 
 }
 
@@ -141,7 +141,6 @@ Bool_t ZeeDCutLepPtMinW::evaluate(const ZeeDEvent* event)
     Double_t pt = muon->GetFourVector().Pt();
     return pt > m_cutval;
 }
-
 
 
 Bool_t ZeeDCutEtCone20overEtW::evaluate (const ZeeDEvent* event)

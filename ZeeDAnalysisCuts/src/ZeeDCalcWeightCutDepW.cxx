@@ -43,17 +43,14 @@ Double_t ZeeDCalcWeightCutDepW::CalculateEventWeight(const ZeeDEvent* event)
             !(fSys->isShiftInUse(ZeeDSystematics::eOffIDEffOff) ) )  {
         this->ApplyIDSFLepW(ZeeDEnum::IsEM_t::MediumPP);
     }
-
     if ( fDoWeight.IDSFBothLoosePP &&  (*fAnaOptions)->IsMC() &&  (*fAnaOptions)->ApplyCentralIDCorrection() &&
             !(fSys->isShiftInUse(ZeeDSystematics::eOffIDEffOff) ) )  {
         this->ApplyIDSFLepW(ZeeDEnum::IsEM_t::LoosePP);
     }
-
     if ( fDoWeight.RecSF &&  (*fAnaOptions)->IsMC() &&  (*fAnaOptions)->ApplyRecoCorrection() &&
             !(fSys->isShiftInUse(ZeeDSystematics::eOffRecEffOff) ) )  {
         this->ApplyRecSFW();
     }
-
     if ( fDoWeight.TrigSFSingle &&  (*fAnaOptions)->IsMC() &&  (*fAnaOptions)->ApplyTrigCorr() &&
             !(fSys->isShiftInUse(ZeeDSystematics::eOffTrigOff) ) )  {
         this->ApplyTrigSFDefCF();
@@ -62,7 +59,6 @@ Double_t ZeeDCalcWeightCutDepW::CalculateEventWeight(const ZeeDEvent* event)
             !(fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtOff) ) )  {
         this->ApplyHadrRecoilSF();
     }
-    
     return fEventWeight;
 }
 

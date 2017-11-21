@@ -6,6 +6,7 @@
 #include <TH1D.h>
 #include <TMath.h>
 #include <TROOT.h>
+#include <iostream>
 
 // ZeeD analysis includes
 #include "ZeeDEvent/ZeeDGenParticle.h"
@@ -126,6 +127,71 @@ ZeeDCalcEventWeight::ZeeDCalcEventWeight() :
             zvtxrwTool = new VertexPositionReweightingTool(MCtag, WeightROOTfile.Data());
             Info("ZeeDCalcEventWeight::ZeeDCalcEventWeight", "Initialize ZPosVtx reweighting for %s", MCtag.c_str());
         }
+        if ((*fAnaOptions)->IsMC() && (*fAnaOptions)->CorrectSumet()){
+            TString fileHad = ZeeDMisc::FindFile((*fAnaOptions)->SumetCorFile());
+            TFile* sumEtCorFile= new TFile(fileHad);
+            correctSumet=new TObjArray();
+
+            correctSumet->SetOwner(kTRUE);
+            correctSumet->Add((TH2D*)sumEtCorFile->Get("SF_EP"));
+            correctSumet->Add((TH2D*)sumEtCorFile->Get("SF_EM"));
+            correctSumet->Add((TH2D*)sumEtCorFile->Get("SF_MP"));
+            correctSumet->Add((TH2D*)sumEtCorFile->Get("SF_MM"));
+            if ((*fAnaOptions)->DoCombToyMC()){
+                toys=new TObjArray();
+                TObjArray* ep, *em, *mp, *mm;
+                TDirectoryFile* dirEm, *dirEp, *dirMm, *dirMp;
+                toys->SetOwner(kTRUE);
+                std::string names[4] ={"EP", "EM", "MP", "MM"};
+                std::ostringstream convert;
+                for (int i =0 ; i<25; i++){
+                    convert.str("");
+                    convert.clear();
+                    convert << i;
+                    string ii = convert.str();
+                    for (int j=0; j<4; j++){
+                        std::string nameEp="Toy"+names[j]+ii;
+                        TH2D* hist = (TH2D*)sumEtCorFile->Get(nameEp.c_str());
+                        toys->Add(hist);
+                        std::cout << hist->GetName() << " " << hist->ClassName() << std::endl;
+                    }
+                }
+                //TH2D* histEp = (TH2D*)sumEtCorFile->Get(
+                //dirEp=(TDirectoryFile*)sumEtCorFile->Get("Toy_EP"); 
+                //dirEm=(TDirectoryFile*)sumEtCorFile->Get("Toy_EM");
+                //dirMp=(TDirectoryFile*)sumEtCorFile->Get("Toy_MP");
+                //dirMm=(TDirectoryFile*)sumEtCorFile->Get("Toy_MM");
+                /*ep=new TObjArray();
+                  ep->SetOwner(kTRUE);
+                  em=new TObjArray();
+                  em->SetOwner(kTRUE);
+                  mp=new TObjArray();
+                  mp->SetOwner(kTRUE);
+                  mm=new TObjArray();
+                  mm->SetOwner(kTRUE);
+                  std::ostringstream convert;
+                  for (int i=0; i<25; i++){
+                  convert << i;
+                  string ii = convert.str();
+                  ii="Toy"+ii;
+                  ep->Add(TH2D(*dirEp->Get(ii.c_str())));
+                  em->Add(TH2D(*dirEm->Get(ii.c_str())));
+                  mp->Add(TH2D(*dirMp->Get(ii.c_str())));
+                  mm->Add(TH2D(*dirMm->Get(ii.c_str())));
+                  }
+                  toys->Add(ep);
+                  toys->Add(em);
+                  toys->Add(mp);
+                  toys->Add(mm);*/
+
+                //toys->Add(dirEp);
+                //toys->Add(dirEm);
+                //toys->Add(dirMp);
+                //toys->Add(dirMm);
+            }
+            std::cout << "CORRECTION!" << std::endl;
+            std::cout << correctSumet->At(0)->GetName() << " "<< correctSumet->At(1)->GetName() << " " <<correctSumet->At(2)->GetName() << " " <<correctSumet->At(3)->GetName() <<std::endl;
+        }
 
     }
 
@@ -156,7 +222,9 @@ ZeeDCalcEventWeight::~ZeeDCalcEventWeight() {
         fPileupTool->WriteToFile((*fAnaOptions)->PileupMCGenFile());
 
     }
-
+    if ((*fAnaOptions)->IsMC() && (*fAnaOptions)->CorrectSumet()){
+        delete(correctSumet);
+    }
 }
 
 //------------------------------------------------------
@@ -165,6 +233,7 @@ void ZeeDCalcEventWeight::Calculate(ZeeDEvent* event) {
 
     fEvent = event;
     fGenWeight = event->GetRawEvent()->GetGenWeight();
+    fGenWeight = 1.0;
     fEventWeight = 1.0;
 
     // configuration needs MCtype which is picked up from the first event
@@ -224,8 +293,17 @@ void ZeeDCalcEventWeight::Calculate(ZeeDEvent* event) {
         this->ApplyGenBosMassWeight();
     }
 
+    if ((*fAnaOptions)->IsMC() && (*fAnaOptions)->CorrectSumet()){
+        this->CorrectSumet();   
+    }
+
+    if (fGenWeight <0){
+        fGenWeight=0.0;
+    }
+
     // must be last!
     if ((*fAnaOptions)->IsMC()) {
+        
         fEventWeight *= fGenWeight;
     }
 
@@ -234,6 +312,90 @@ void ZeeDCalcEventWeight::Calculate(ZeeDEvent* event) {
     fEvent->SetWeight(fEventWeight);
 
 }
+
+void ZeeDCalcEventWeight::CorrectSumet(){
+
+    const ZeeDGenParticle* Boson = fEvent->GetGenBoson(ZeeDEnum::MCFSRLevel::Born);
+    if (Boson == NULL)
+        return;
+    int id = Boson->GetParticleID();
+    const TLorentzVector& fourVector = Boson->GetMCFourVector();
+    ZeeDGenElectrons genLeptons = fEvent->GetGenLeptons(ZeeDEnum::MCFSRLevel::Born);
+    const ZeeDGenParticle* El    = genLeptons.first; 
+    const ZeeDGenParticle* Pos   = genLeptons.second;
+    if (El==NULL || Pos==NULL)
+        return;
+    int elId=El->GetParticleID();
+    int posId=Pos->GetParticleID();
+
+    TH2D* sfObj=NULL;
+    if (posId == -11)
+        sfObj=(TH2D*)correctSumet->At(0);
+    else if (posId == -13)
+        sfObj=(TH2D*)correctSumet->At(2);
+    else if (elId == 11)
+        sfObj=(TH2D*)correctSumet->At(1);
+    else if (elId == 13)
+        sfObj=(TH2D*)correctSumet->At(3);
+    ZeeDEtMiss* fEtMiss=(ZeeDEtMiss*)fEvent->GetEtMissArray()->At(0);
+    std::cout << sfObj->GetName() << std::endl;
+    if ((*fAnaOptions)->DoCombToyMC() && fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtToyMC)){
+        /*TObjArray* dir = NULL;
+          if (posId == -11)
+          dir=(TObjArray*)correctSumet->At(0);
+          else if (posId == -13)
+          dir=(TObjArray*)correctSumet->At(2);
+          else if (elId == 11)
+          dir=(TObjArray*)correctSumet->At(1);
+          else if (elId == 13)
+          dir=(TObjArray*)correctSumet->At(3);
+          ZeeDSystematics::ZeeDSingleSystematics* toyMCsyst = fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtToyMC);
+          int idxToy = toyMCsyst->toyMCIndex;
+          sfObj=(TH2D*)dir->At(idxToy);    
+        //std::cout << sfObj << std::endl;
+        std::cout << sfObj->GetName() << std::endl;*/
+        //TDirectoryFile* dir= NULL;
+        std::string ss;
+        if (posId == -11)
+            ss="EP"; 
+        else if (posId == -13)
+            ss="MP";
+        else if (elId == 11)
+            ss="EM";
+        else if (elId == 13)
+            ss="MM";
+        ZeeDSystematics::ZeeDSingleSystematics* toyMCsyst = fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtToyMC);
+        int idxToy = toyMCsyst->toyMCIndex;
+        std::ostringstream convert;
+        convert.str("");
+        convert.clear();
+        //std::cout << dir->ClassName() << " " << dir->GetNkeys() << std::endl;
+        convert << idxToy;
+        string ii = convert.str();
+        ii="Toy"+ss+ii;
+        sfObj=(TH2D*)toys->FindObject(ii.c_str());
+        //TObject* oB = dir->FindObjectAny(ii.c_str());
+        //std::cout << oB->ClassName() << std::endl;
+        //sfObj=(TH2D*)dir->FindObjectAny(ii.c_str());
+
+    }
+
+    //int binYn = sfObj->GetYaxis()->FindBin(fEtMiss->GetCorRecoilEt());
+    int binYn = sfObj->GetYaxis()->FindBin(fourVector.Pt());
+    int binXn = sfObj->GetXaxis()->FindBin(fEtMiss->GetCorRecoilSumet());
+    //int binXn=sfObj->GetXaxis()->FindBin(fEtMiss->GetCorRecoilSumet()-1.75*fEtMiss->GetCorRecoilEt());
+
+
+    int totBin = sfObj->GetBin(binXn, binYn);
+    double sf = sfObj->GetBinContent(totBin);
+    if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtOff)){
+        sf=1;
+    } 
+
+    fEventWeight*=sf;
+    //fGenWeight*=sf;
+}
+
 
 //------------------------------------------------------
 void ZeeDCalcEventWeight::ApplyMCVtxWeight() {
@@ -406,28 +568,28 @@ void ZeeDCalcEventWeight::ApplyUnofficialPtWeight(){
                     pCor = NULL;
             }
             /*
-            switch (El->GetParticleID()){
-                case 11:
-                  pCor = (TH1D*)fileSF->Get("SFWminusE");
-                  break;
-                case 13:
-                  pCor = (TH1D*)fileSF->Get("SFWminusMu");
-                  break;
-                case 12:
-                  pCor = (TH1D*)fileSF->Get("SFWplusE");
-                  break;
-                case 14:
-                  pCor = (TH1D*)fileSF->Get("SFWplusMu");
-                  break;
-            }
-            */
+               switch (El->GetParticleID()){
+               case 11:
+               pCor = (TH1D*)fileSF->Get("SFWminusE");
+               break;
+               case 13:
+               pCor = (TH1D*)fileSF->Get("SFWminusMu");
+               break;
+               case 12:
+               pCor = (TH1D*)fileSF->Get("SFWplusE");
+               break;
+               case 14:
+               pCor = (TH1D*)fileSF->Get("SFWplusMu");
+               break;
+               }
+               */
             /*
-            if (pCor != NULL) {
-                int binX = pCor->GetXaxis()->FindBin(fourVector.Pt());
-                //if (fourVector.Pt() < 10)
-                    pt_weight = pCor->GetBinContent(binX);
+               if (pCor != NULL) {
+               int binX = pCor->GetXaxis()->FindBin(fourVector.Pt());
+            //if (fourVector.Pt() < 10)
+            pt_weight = pCor->GetBinContent(binX);
             }*/
-            
+
             if (pCor != NULL) {
 
                 int binYn = pCor->GetYaxis()->FindBin(fourVector.Rapidity());
@@ -435,20 +597,20 @@ void ZeeDCalcEventWeight::ApplyUnofficialPtWeight(){
                 int totBin = pCor->GetBin(binXn, binYn);
                 pt_weight = pCor->GetBinContent(totBin);
                 double sfErr = pCor->GetBinError(totBin);
-               
+
                 /*
-                if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtUp))     {
-                    pt_weight += sfErr;
-                } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtDown)) {
-                    pt_weight -= sfErr;
-                }
-                */
+                   if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtUp))     {
+                   pt_weight += sfErr;
+                   } else if (fSys->isShiftInUse(ZeeDSystematics::HadrRecoilSumEtDown)) {
+                   pt_weight -= sfErr;
+                   }
+                   */
 
             }
 
         }
     }
-//    std::cout << pt_weight << std::endl;
+    //    std::cout << pt_weight << std::endl;
     fGenWeight *= pt_weight;
 }
 

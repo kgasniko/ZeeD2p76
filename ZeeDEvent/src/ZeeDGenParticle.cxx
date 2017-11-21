@@ -11,7 +11,8 @@ ZeeDGenParticle::ZeeDGenParticle() :
     fParent(NULL),
     fDaughters(NULL),
     fParticleID(-999),
-    fParticleStatus(ZeeDEnum::MCFSRLevel::Born)
+    fParticleStatus(ZeeDEnum::MCFSRLevel::Born),
+    fBosMt(-999)
 {
     // Constructor
     fMCFourVector.SetXYZT(0., 0., 0., 0.);
@@ -29,6 +30,7 @@ ZeeDGenParticle::ZeeDGenParticle(const ZeeDGenParticle& particle) : TObject(part
     fParent         = particle.fParent;
     fParticleID     = particle.fParticleID;
     fParticleStatus = particle.fParticleStatus;
+    fBosMt          = particle.fBosMt;
 
     fDaughters = new TObjArray();
     //fDaughters->SetOwner(kFALSE);
@@ -45,7 +47,8 @@ ZeeDGenParticle::ZeeDGenParticle(const ZeeDGenParticle& particle) : TObject(part
 ZeeDGenParticle::~ZeeDGenParticle()
 {
     // Destructor
-    delete fDaughters;
+    if (fDaughters != NULL)
+        delete fDaughters;
 }
 
 //------------------------------------------------------

@@ -81,7 +81,7 @@ void ZeeDFinderWmu::BookCuts()
 
 
     this->AddCut(new ZeeDCutLepTrackEtaW  ("eta", 2.5));
-    this->AddCut(new ZeeDCutLepPtMinW("ptMu", 20));
+    this->AddCut(new ZeeDCutLepPtMinW("ptMu", 10));
     //this->AddCut(new ZeeDCutCombinedMuon("comb"));
     this->AddCut(new ZeeDCutTrigLepW("MuonTrig", ZeeDEnum::Trigger::EF_mu10));
 

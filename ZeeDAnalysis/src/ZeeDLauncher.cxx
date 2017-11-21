@@ -30,6 +30,7 @@
 #include "ZeeDHistManager/ZeeDHistManagerEvent.h"
 #include "ZeeDHistManager/ZeeDHistManagerElectron.h"
 #include "ZeeDHistManager/ZeeDHistManagerMuon.h"
+#include "ZeeDHistManager/ZeeDHistManagerEtmiss.h"
 #include "ZeeDHistManager/ZeeDHistManagerBoson.h"
 #include "ZeeDHistManager/ZeeDHistManagerQCDBkg.h"
 #include "ZeeDHistManager/ZeeDHistManagerZjet.h"
@@ -58,6 +59,7 @@
 #include "ZeeDAnalysisCuts/ZeeDIdentifierW.h"
 #include "ZeeDAnalysisCuts/ZeeDIdentifierWmu.h"
 #include "ZeeDAnalysisCuts/ZeeDIdentifierZmumu.h"
+#include "ZeeDAnalysisCuts/ZeeDIdentifierZCC.h"
 
 
 
@@ -247,14 +249,14 @@ void ZeeDLauncher::initializeIdentifiers()
 
     this->AddIdentifier(new ZeeDFinderZCC("FinderZCC"), "IdentifierZCC");
 
-    this->AddIdentifier(new ZeeDFinderZCC("FinderZCC_QCD"), "IdentifierZCC_QCD");
+    //this->AddIdentifier(new ZeeDFinderZCC("FinderZCC_QCD"), "IdentifierZCC_QCD");
 
-    this->AddIdentifier(new ZeeDFinderZCF("FinderZCF"), "IdentifierZCF");
+    //this->AddIdentifier(new ZeeDFinderZCF("FinderZCF"), "IdentifierZCF");
  
     this->AddIdentifier(new ZeeDFinderZmumu("FinderZmumu"), "IdentifierZmumu");
 
 
-    this->AddIdentifier(new ZeeDFinderTrigger("FinderTrigger"), "IdentifierTrigger");
+    //this->AddIdentifier(new ZeeDFinderTrigger("FinderTrigger"), "IdentifierTrigger");
     
     this->AddIdentifier(new ZeeDFinderW("FinderW"), "IdentifierW");
 
@@ -315,8 +317,8 @@ void ZeeDLauncher::initializeCutSelectors()
 // Adding of cut selectors for bosons 
 
     this->addCutSelector(new ZeeDAnalysisCutSelectorZCC("ZCC"));
-    this->addCutSelector(new ZeeDAnalysisCutSelectorZCCCutFlow("ZCCCutFlow"));
-    this->addCutSelector(new ZeeDAnalysisCutSelectorZCF("ZCF"));
+    //this->addCutSelector(new ZeeDAnalysisCutSelectorZCCCutFlow("ZCCCutFlow"));
+//    this->addCutSelector(new ZeeDAnalysisCutSelectorZCF("ZCF"));
     this->addCutSelector(new ZeeDAnalysisCutSelectorPreSelection("Preselection"));
     this->addCutSelector(new ZeeDAnalysisCutSelectorW("W"));
     this->addCutSelector(new ZeeDAnalysisCutSelectorWmu("Wmu"));
@@ -332,7 +334,7 @@ void ZeeDLauncher::initializeCutCaches()
     this->addCutCache(new ZeeDCutCache("ZCC",
                                        this->getIdentifier("IdentifierZCC"),
                                        this->getCutSelector("ZCC")));
-
+/*
     this->addCutCache(new ZeeDCutCache("ZCCCutFlow",
                                        this->getIdentifier("IdentifierZCC"),
                                        this->getCutSelector("ZCCCutFlow")));
@@ -340,11 +342,11 @@ void ZeeDLauncher::initializeCutCaches()
     this->addCutCache(new ZeeDCutCache("ZCCQCD",
                                        this->getIdentifier("IdentifierTrigger"),
                                        this->getCutSelector("ZCC")));
-
-    this->addCutCache(new ZeeDCutCache("ZCF",
+*/
+/*    this->addCutCache(new ZeeDCutCache("ZCF",
                                        this->getIdentifier("IdentifierZCF"),
                                        this->getCutSelector("ZCF")));
-   
+  */ 
     this->addCutCache(new ZeeDCutCache("W",
                                        (ZeeDIdentifierW*) this->getIdentifier("IdentifierW"),
                                        this->getCutSelector("W")));
@@ -407,6 +409,10 @@ ZeeDNoCutsBundle* ZeeDLauncher::initializeNoCutsReplica(TString sysName, TString
     ZeeDHistManagerElectron* electronHM = new ZeeDHistManagerElectron(name_HM_electron, kTRUE);
     electronHM->SetProperties(kTRUE);
     this->AddHistManager(electronHM, bundle);
+
+    TString name_HM_etmiss = TString(shelfName+"/"+sysName+"/NoCuts/EtMiss");
+    ZeeDHistManagerEtmiss* etMissHM = new ZeeDHistManagerEtmiss(name_HM_etmiss);
+    this->AddHistManager(etMissHM, bundle);
 
     TString name_HM_muon = TString (shelfName+"/"+sysName+"/NoCuts/Muon/");
     ZeeDHistManagerMuon* muonHM= new ZeeDHistManagerMuon(name_HM_muon, kTRUE);
@@ -505,7 +511,7 @@ ZeeDAnalysisChainBundle* ZeeDLauncher::initializeAnalysisChainsReplica(TString s
     }
 
 
-       
+      /* 
     if( (*fAnaOptions)->CalcZ() && (*fAnaOptions)->RunZCFAna() ) {
         // Add Z CF analysis cut-histogram mamanger
         TString nameCF = TString(shelfName+"/"+sysName+"/ZCF/");
@@ -515,7 +521,7 @@ ZeeDAnalysisChainBundle* ZeeDLauncher::initializeAnalysisChainsReplica(TString s
         // Bundle cut hist manager with CF identifier:
         this->AddCutHistManager(CutsHistsZCF, this->getCutCache("ZCF"), bundle);
     }
-
+*/
     if( (*fAnaOptions)->CalcZ() && (*fAnaOptions)->RunZBaselineAna() ) {
 
         TString nameZBaseline(shelfName+"/"+sysName);
